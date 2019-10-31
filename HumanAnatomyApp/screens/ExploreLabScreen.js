@@ -11,10 +11,10 @@ import {
 } from 'react-native';
 import colors from '../assets/colors';
 
-export default class FlashcardsScreen extends Component {
+export default class ExploreLabScreen extends Component {
   
   static navigationOptions = {
-    title: 'Flashcards',
+    title: 'Explore Lab',
     headerStyle: {
       backgroundColor: colors.primary
     },

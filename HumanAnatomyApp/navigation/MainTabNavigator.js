@@ -6,6 +6,7 @@ import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import QuizzesScreen from '../screens/QuizzesScreen';
 import FlashcardsScreen from '../screens/FlashcardsScreen';
+import ExploreLabScreen from '../screens/ExploreLabScreen';
 import colors from '../assets/colors';
 
 const config = Platform.select({
@@ -35,6 +36,22 @@ HomeStack.navigationOptions = {
 };
 
 HomeStack.path = '';
+
+const ExploreLabStack = createStackNavigator(
+  {
+    ExploreLab: ExploreLabScreen,
+  },
+  config
+);
+
+ExploreLabStack.navigationOptions = {
+  tabBarLabel: 'Explore Lab',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-body' : 'md-body'} />
+  ),
+};
+
+ExploreLabStack.path = '';
 
 const QuizzesStack = createStackNavigator(
   {
@@ -70,6 +87,7 @@ FlashcardsStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
+  ExploreLabStack,
   QuizzesStack,
   FlashcardsStack,
 },

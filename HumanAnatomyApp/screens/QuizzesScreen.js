@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import { ExpoLinksView } from '@expo/samples';
 import colors from '../assets/colors';
 
 export default class Quizzes extends Component {
