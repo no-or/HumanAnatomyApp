@@ -4,9 +4,9 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import colors from '../resources/colors';
+import QuizzesScreen from '../screens/QuizzesScreen';
+import FlashcardsScreen from '../screens/FlashcardsScreen';
+import colors from '../assets/colors';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -36,42 +36,42 @@ HomeStack.navigationOptions = {
 
 HomeStack.path = '';
 
-const LinksStack = createStackNavigator(
+const QuizzesStack = createStackNavigator(
   {
-    Links: LinksScreen,
+    Quizzes: QuizzesScreen,
   },
   config
 );
 
-LinksStack.navigationOptions = {
+QuizzesStack.navigationOptions = {
   tabBarLabel: 'Quizzes',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-document' : 'md-document'} />
   ),
 };
 
-LinksStack.path = '';
+QuizzesStack.path = '';
 
-const SettingsStack = createStackNavigator(
+const FlashcardsStack = createStackNavigator(
   {
-    Settings: SettingsScreen,
+    Flashcards: FlashcardsScreen,
   },
   config
 );
 
-SettingsStack.navigationOptions = {
+FlashcardsStack.navigationOptions = {
   tabBarLabel: 'Flashcards',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-filing' : 'md-filing'} />
   ),
 };
 
-SettingsStack.path = '';
+FlashcardsStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
-  LinksStack,
-  SettingsStack,
+  QuizzesStack,
+  FlashcardsStack,
 },
 {tabBarOptions: {
   activeTintColor: colors.tabActive,

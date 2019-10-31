@@ -11,9 +11,7 @@ import {
   Button
 } from 'react-native';
 
-import colors from '../resources/colors';
-
-import { MonoText } from '../components/StyledText';
+import colors from '../assets/colors';
 
 export default function HomeScreen() {
   return (
