@@ -2,11 +2,11 @@ const express = require("express");
 const QuizModel = require("../models/quizzes");
 
 const initializeQuizRoutes = (app) => {
-    const questionRouter = express.Router();
-    app.use('/quiz', questionRouter);
+    const quizRouter = express.Router();
+    app.use('/quiz', quizRouter);
 
     /* create a quiz */
-    questionRouter.post('/', async (req, res) => {
+    quizRouter.post('/', async (req, res) => {
         const question = new QuizModel(req.body);
         try {
             await question.save().then((item) => res.send(item));
@@ -18,7 +18,7 @@ const initializeQuizRoutes = (app) => {
     });
 
     /* get a quiz with id */
-    questionRouter.get('/:id', async (req, res) => {
+    quizRouter.get('/:id', async (req, res) => {
         try {
             const question = await QuizModel.findById(req.params.id);
             res.status(200);
