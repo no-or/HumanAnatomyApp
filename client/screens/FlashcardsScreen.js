@@ -22,7 +22,7 @@ export default class FlashcardsScreen extends Component {
     headerTitleStyle: {
         fontWeight: 'bold',
     },
-  }
+  };
 
   render() {
     return (

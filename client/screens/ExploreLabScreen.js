@@ -22,7 +22,7 @@ export default class ExploreLabScreen extends Component {
     headerTitleStyle: {
         fontWeight: 'bold',
     },
-  }
+  };
 
   render() {
     return (

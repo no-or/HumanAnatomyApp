@@ -13,7 +13,7 @@ export default class Quizzes extends Component {
     headerTitleStyle: {
         fontWeight: 'bold',
     },
-  }
+  };
 
   render() {
     return (
