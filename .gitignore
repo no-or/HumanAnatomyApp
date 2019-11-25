@@ -13,7 +13,7 @@ dev.env
 .env
 .DS_Store
 .vscode
-.idea
+.idea/
 *.log
 tmp/
 
