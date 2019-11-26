@@ -21,13 +21,10 @@ export default class WelcomeScreen extends Component {
       <SafeAreaView style={styles.wrapper}>
         <View style={styles.content}>
           <Text style={styles.heading}>WELCOME</Text>
-          <InputStyled
-            style={styles.text}
-            placeholder="     What is your university?"
-          />
+          <InputStyled placeholder="     What is your university?" />
           <InputStyled placeholder="     What is your degree?" />
           <InputStyled placeholder="     What is your degree level?" />
-          <InputStyled placeholder="     What is your current yea?" />
+          <InputStyled placeholder="     What is your current year?" />
           {/* // TODO why do we need this information? */}
           <ButtonStyled
             text="Continue"
