@@ -113,6 +113,10 @@ const TabNavigator = createBottomTabNavigator(
 
 TabNavigator.path = "";
 
+// const QuizStackNavigator = createStackNavigator({
+//   Quiz: _
+// })
+
 const RootNavigator = createSwitchNavigator(
   {
     Welcome: {

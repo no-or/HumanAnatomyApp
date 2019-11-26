@@ -21,10 +21,14 @@ export default class WelcomeScreen extends Component {
       <SafeAreaView style={styles.wrapper}>
         <View style={styles.content}>
           <Text style={styles.heading}>WELCOME</Text>
-          <InputStyled placeholder="     Insert the name of your university" />
+          <InputStyled
+            style={styles.text}
+            placeholder="     What is your university?"
+          />
           <InputStyled placeholder="     What is your degree?" />
           <InputStyled placeholder="     What is your degree level?" />
-          <InputStyled placeholder="     Which year are you?" />
+          <InputStyled placeholder="     What is your current yea?" />
+          {/* // TODO why do we need this information? */}
           <ButtonStyled
             text="Continue"
             onPress={() => this.props.navigation.navigate("Root")}
@@ -58,5 +62,9 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     padding: 32
+  },
+  text: {
+    alignSelf: "center",
+    textAlign: "center"
   }
 });

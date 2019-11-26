@@ -1,44 +1,39 @@
-import React, { Component } from 'react';
-import {
-    Image,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-} from 'react-native';
+import React, { Component } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 export default class Card extends Component {
-    render() {
-        return (
-            <TouchableOpacity style={styles.card}>
-                <Image style={styles.cardImage} source={{uri: this.props.uri}} />
-                <Text style={styles.cardText}>{this.props.cardTitle}</Text>
-            </TouchableOpacity>
-        );
-    }
+  render() {
+    return (
+      <TouchableOpacity style={styles.card} onPress={this.props.callback}>
+        <Image style={styles.cardImage} source={{ uri: this.props.uri }} />
+        <Text style={styles.cardText}>{this.props.cardTitle}</Text>
+      </TouchableOpacity>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    card: {
-        backgroundColor: '#fff',
-        marginBottom: 10,
-        marginLeft: '2%',
-        width: '96%',
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowRadius: 1,
-        shadowOffset: {
-            width: 3,
-            height: 3
-        },
-        elevation: 1
+  card: {
+    backgroundColor: "#fff",
+    marginBottom: 10,
+    marginLeft: "2%",
+    width: "96%",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+    shadowOffset: {
+      width: 3,
+      height: 3
     },
-    cardImage: {
-        width: '100%',
-        height: 200,
-        resizeMode: 'cover',
-    },
-    cardText: {
-        padding: 10,
-        fontSize: 16
-    }
+    elevation: 1
+  },
+  cardImage: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover"
+  },
+  cardText: {
+    padding: 10,
+    fontSize: 16
+  }
 });
