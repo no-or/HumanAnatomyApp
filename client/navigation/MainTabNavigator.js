@@ -5,6 +5,7 @@ import {
   createBottomTabNavigator,
   createSwitchNavigator
 } from "react-navigation";
+import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import { fromRight } from "react-navigation-transitions";
 
 import TabBarIcon from "../components/TabBarIcon";
@@ -15,12 +16,9 @@ import FlashcardsScreen from "../screens/FlashcardsScreen";
 import ExploreLabScreen from "../screens/ExploreLabScreen";
 import colors from "../assets/colors";
 
-//Todo how do we switch from welcome to home
 const HomeStack = createStackNavigator(
   {
-    Home: {
-      screen: HomeScreen
-    }
+    Home: HomeScreen
   },
   { initialRouteName: "Home", transitionConfig: () => fromRight() }
 );
@@ -94,28 +92,22 @@ FlashcardsStack.navigationOptions = {
 
 FlashcardsStack.path = "";
 
-const TabNavigator = createBottomTabNavigator(
+const TabNavigator = createMaterialBottomTabNavigator(
   {
     Home: HomeStack,
-    Explore: ExploreLabStack,
     Quiz: QuizzesStack,
-    Flash: FlashcardsStack
+    Flash: FlashcardsStack,
+    Explore: ExploreLabStack
   },
   {
-    TabBarOptions: {
-      activeTintColor: colors.tabActive,
-      activeBackgroundColor: colors.primary,
-      inactiveBackgroundColor: colors.primary,
-      inactiveTintColor: colors.tabInactive
-    }
+    initialRouteName: "Home",
+    activeColor: colors.tabActive,
+    inactiveColor: colors.tabInactive,
+    barStyle: { backgroundColor: colors.primary }
   }
 );
 
 TabNavigator.path = "";
-
-// const QuizStackNavigator = createStackNavigator({
-//   Quiz: _
-// })
 
 const RootNavigator = createSwitchNavigator(
   {

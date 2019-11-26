@@ -29,16 +29,16 @@ export default class FlashcardsScreen extends Component {
                 cardTitle="Respiratory System"
               />
               <Card
-                uri="https://st.depositphotos.com/2363887/2564/i/950/depositphotos_25640047-stock-photo-man-anatomy-thorax-cutaway-with.jpg"
-                cardTitle="Thorax"
-              />
-              <Card
                 uri="https://www.simtics.com/media/28745/mlla.jpg"
                 cardTitle="Lower Limb"
               />
               <Card
                 uri="http://www.interactive-biology.com/wp-content/uploads/2012/10/Hand-and-arm-bone-1280x640.jpg"
                 cardTitle="Upper Limb"
+              />
+              <Card
+                uri="https://st.depositphotos.com/2363887/2564/i/950/depositphotos_25640047-stock-photo-man-anatomy-thorax-cutaway-with.jpg"
+                cardTitle="Thorax"
               />
               <Card
                 uri="https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg"

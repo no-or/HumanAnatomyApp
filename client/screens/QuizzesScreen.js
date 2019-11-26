@@ -28,6 +28,7 @@ export default class Quizzes extends Component {
                 style={styles.card}
                 uri="http://www.aljanh.net/data/archive/img/3085128125.jpeg"
                 cardTitle="Heart"
+                callback={() => this.props.navigation.navigate("HeartQuiz")}
               />
               <Card
                 style={styles.card}
