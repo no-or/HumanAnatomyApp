@@ -1,4 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
+import Card from '../components/Card'
+
 import React from 'react';
 import {
   Image,
@@ -19,6 +21,10 @@ export default function HomeScreen() {
       {/* <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}> */}
+
+        <View>
+            <Card cardTitle="Test" uri="http://stmedia.stimg.co/4EMOJI111417.jpg"></Card>
+        </View>
 
       <View
         style={styles.homeButtons} >
@@ -70,6 +76,7 @@ HomeScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   container: {
+      display: 'flex',
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',

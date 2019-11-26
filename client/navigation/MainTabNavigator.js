@@ -1,103 +1,128 @@
-import React from 'react';
-import { Platform } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import React from "react";
+import { Platform } from "react-native";
+import {
+  createStackNavigator,
+  createBottomTabNavigator,
+  createSwitchNavigator
+} from "react-navigation";
+import { fromRight } from "react-navigation-transitions";
 
-import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import QuizzesScreen from '../screens/QuizzesScreen';
-import FlashcardsScreen from '../screens/FlashcardsScreen';
-import ExploreLabScreen from '../screens/ExploreLabScreen';
-import colors from '../assets/colors';
+import TabBarIcon from "../components/TabBarIcon";
+import WelcomeScreen from "../screens/WelcomeScreen";
+import HomeScreen from "../screens/HomeScreen";
+import QuizzesScreen from "../screens/QuizzesScreen";
+import FlashcardsScreen from "../screens/FlashcardsScreen";
+import ExploreLabScreen from "../screens/ExploreLabScreen";
+import colors from "../assets/colors";
 
-const config = Platform.select({
-  web: { headerMode: 'screen' },
-  default: {},
-});
-
+//Todo how do we switch from welcome to home
 const HomeStack = createStackNavigator(
   {
-    Home: HomeScreen,
-  }, 
-  config
+    Home: {
+      screen: HomeScreen
+    }
+  },
+  { initialRouteName: "Home", transitionConfig: () => fromRight() }
 );
 
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+  tabBarLabel: "Home",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? 'ios-home'
-          : 'md-home'
-      }
+      name={Platform.OS === "ios" ? "ios-home" : "md-home"}
     />
-  ),
+  )
 };
 
-HomeStack.path = '';
+HomeStack.path = "";
 
 const ExploreLabStack = createStackNavigator(
   {
-    ExploreLab: ExploreLabScreen,
+    ExploreLab: ExploreLabScreen
   },
-  config
+  { initialRouteName: "ExploreLab", transitionConfig: () => fromRight() }
 );
 
 ExploreLabStack.navigationOptions = {
-  tabBarLabel: 'Explore Lab',
+  tabBarLabel: "Explore Lab",
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-body' : 'md-body'} />
-  ),
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === "ios" ? "ios-body" : "md-body"}
+    />
+  )
 };
 
-ExploreLabStack.path = '';
+ExploreLabStack.path = "";
 
 const QuizzesStack = createStackNavigator(
   {
-    Quizzes: QuizzesScreen,
+    Quizzes: QuizzesScreen
   },
-  config
+  { initialRouteName: "Quizzes", transitionConfig: () => fromRight() }
 );
 
 QuizzesStack.navigationOptions = {
-  tabBarLabel: 'Quizzes',
+  tabBarLabel: "Quizzes",
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-document' : 'md-document'} />
-  ),
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === "ios" ? "ios-document" : "md-document"}
+    />
+  )
 };
 
-QuizzesStack.path = '';
+QuizzesStack.path = "";
 
 const FlashcardsStack = createStackNavigator(
   {
-    Flashcards: FlashcardsScreen,
+    Flashcards: FlashcardsScreen
   },
-  config
+  { initialRouteName: "Flashcards", transitionConfig: () => fromRight() }
 );
 
 FlashcardsStack.navigationOptions = {
-  tabBarLabel: 'Flashcards',
+  tabBarLabel: "Flashcards",
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-filing' : 'md-filing'} />
-  ),
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === "ios" ? "ios-filing" : "md-filing"}
+    />
+  )
 };
 
-FlashcardsStack.path = '';
+FlashcardsStack.path = "";
 
-const tabNavigator = createBottomTabNavigator({
-  HomeStack,
-  ExploreLabStack,
-  QuizzesStack,
-  FlashcardsStack,
-},
-{tabBarOptions: {
-  activeTintColor: colors.tabActive,
-  activeBackgroundColor: colors.primary,
-  inactiveBackgroundColor: colors.primary,
-  inactiveTintColor: colors.tabInactive
-}});
+const TabNavigator = createBottomTabNavigator(
+  {
+    HomeStack,
+    ExploreLabStack,
+    QuizzesStack,
+    FlashcardsStack
+  },
+  {
+    TabBarOptions: {
+      activeTintColor: colors.tabActive,
+      activeBackgroundColor: colors.primary,
+      inactiveBackgroundColor: colors.primary,
+      inactiveTintColor: colors.tabInactive
+    }
+  }
+);
 
-tabNavigator.path = '';
+TabNavigator.path = "";
 
-export default tabNavigator;
+const RootNavigator = createSwitchNavigator(
+  {
+    Welcome: {
+      screen: WelcomeScreen
+    },
+    Root: TabNavigator
+  },
+  {
+    initialRouteName: "Welcome"
+  }
+);
+
+export default RootNavigator;
