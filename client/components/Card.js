@@ -30,10 +30,14 @@ const styles = StyleSheet.create({
   cardImage: {
     width: "100%",
     height: 200,
-    resizeMode: "cover"
+    resizeMode: "cover",
+    borderWidth: 2
   },
   cardText: {
     padding: 10,
-    fontSize: 16
+    fontSize: 16,
+    backgroundColor: "#002145",
+    color: "white",
+    fontFamily: "Helvetica"
   }
 });

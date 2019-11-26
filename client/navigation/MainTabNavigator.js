@@ -96,10 +96,10 @@ FlashcardsStack.path = "";
 
 const TabNavigator = createBottomTabNavigator(
   {
-    HomeStack,
-    ExploreLabStack,
-    QuizzesStack,
-    FlashcardsStack
+    Home: HomeStack,
+    Explore: ExploreLabStack,
+    Quiz: QuizzesStack,
+    Flash: FlashcardsStack
   },
   {
     TabBarOptions: {

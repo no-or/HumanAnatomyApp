@@ -15,21 +15,25 @@ export default class HomeScreen extends React.Component {
             contentContainerStyle={styles.contentContainer}
           >
             <Card
+              style={styles.card}
               uri="http://www.aljanh.net/data/archive/img/3085128125.jpeg"
               cardTitle="New Quiz"
-              callback={() => this.props.navigation.navigate("QuizzesStack")}
+              callback={() => this.props.navigation.navigate("Quiz")}
             />
             <Card
               uri="https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg"
               cardTitle="Recommended Quiz"
+              callback={() => this.props.navigation.navigate("Quiz")}
             />
             <Card
               uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
-              cardTitle="Recommended Flashcards"
+              cardTitle="New Flashcards"
+              callback={() => this.props.navigation.navigate("Flash")}
             />
             <Card
               uri="https://st.depositphotos.com/2363887/2564/i/950/depositphotos_25640047-stock-photo-man-anatomy-thorax-cutaway-with.jpg"
-              cardTitle="New Flashcards"
+              cardTitle="Recommended Flashcards"
+              callback={() => this.props.navigation.navigate("Flash")}
             />
           </ScrollView>
         </View>
