@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput, Platform } from "react-native";
 
 export const InputStyled = props => (
   <TextInput
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#051d63",
     fontWeight: "500",
-    fontFamily: "Helvetica",
+    fontFamily: Platform.OS === "ios" ? "Helvetica" : "Roboto",
     fontSize: 15
   }
 });

@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  Platform
+} from "react-native";
 
 export default class Card extends Component {
   render() {
@@ -38,6 +44,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: "#002145",
     color: "white",
-    fontFamily: "Helvetica"
+    fontFamily: Platform.OS === "ios" ? "Helvetica" : "Roboto"
   }
 });

@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Button, Text, StyleSheet, SafeAreaView, View } from "react-native";
+import {
+  Button,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Platform
+} from "react-native";
 import colors from "../assets/colors";
 import { InputStyled } from "../components/InputStyled";
 import { ButtonStyled } from "../components/ButtonStyled";
@@ -46,7 +53,7 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "700",
     marginBottom: 16,
-    fontFamily: "Helvetica"
+    fontFamily: Platform.OS === "ios" ? "Helvetica" : "Roboto"
   },
   wrapper: {
     flex: 1,
