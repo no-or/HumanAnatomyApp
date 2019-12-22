@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - "8"
+cache: npm
+script:
+  - echo 'Build starts!!'
+  - echo 'Moving to client and tries to build'
+  - cd client && npm
+  - npm start
+  - echo 'Testing client!'
+  - npm run test
+  - echo 'Moving to server and tries to build'
+  - cd server && npm
+  - npm dev
+  - echo 'Testing server!'
+  - npm run test
