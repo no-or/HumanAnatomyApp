@@ -5,12 +5,12 @@ cache: npm
 script:
   - echo 'Build starts!!'
   - echo 'Moving to client and tries to build'
-  - cd client && npm
+  - cd client && npm install
   - npm start
   - echo 'Testing client!'
   - npm run test
   - echo 'Moving to server and tries to build'
-  - cd server && npm
+  - cd server && npm intall
   - npm dev
   - echo 'Testing server!'
   - npm run test
