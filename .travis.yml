@@ -1,16 +1,14 @@
 language: node_js
 node_js:
+  - "10"
+  - "9"
   - "8"
+  - node
 cache: npm
 script:
   - echo 'Build starts!!'
-  - echo 'Moving to client and tries to build'
-  - cd client && npm install
-  - npm start
-  - echo 'Testing client!'
-  - npm run test
-  - echo 'Moving to server and tries to build'
-  - cd server && npm intall
-  - npm dev
-  - echo 'Testing server!'
-  - npm run test
+  - echo 'Build Client'
+  - npm build client
+  - echo 'Building Server'
+  - npm build server
+  - echo 'Build Succesful!'
