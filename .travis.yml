@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - "10"
+  - "9"
+  - "8"
+  - node
+cache: npm
+script:
+  - echo 'Build starts!!'
+  - echo 'Build Client'
+  - npm build client
+  - echo 'Building Server'
+  - npm build server
+  - echo 'Build Succesful!'
