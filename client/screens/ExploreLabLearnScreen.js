@@ -6,14 +6,16 @@ import {
   StyleSheet,
   SafeAreaView,
   View,
+  SectionList,
+  Text
 } from 'react-native';
 import colors from '../assets/colors';
 import Card from "../components/Card";
 
-export default class ExploreLabScreen extends Component {
+export default class ExploreLabLearnScreen extends Component {
   
   static navigationOptions = {
-    title: 'Explore Lab',
+    title: 'Learn',
     headerStyle: {
       backgroundColor: colors.primary
     },
@@ -32,16 +34,22 @@ export default class ExploreLabScreen extends Component {
               style={styles.container}
               contentContainerStyle={styles.contentContainer}
             >
-              <Card
+            <Card
                 uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
-                cardTitle="Learn"
-                callback={() => this.props.navigation.navigate("ExploreLabLearn")}
-              />
-              <Card
-                uri="https://www.simtics.com/media/28745/mlla.jpg"
-                cardTitle="Videos"
-                callback={() => this.props.navigation.navigate("ExploreLabVideos")}
-              />
+                cardTitle="Head & Back"
+            />
+            <Card
+                uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
+                cardTitle="Upper Limb"
+            />
+            <Card
+                uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
+                cardTitle="Lower Limb"
+            />
+            <Card
+                uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
+                cardTitle="Trunk"
+            />
             </ScrollView>
           </View>
         </SafeAreaView>
