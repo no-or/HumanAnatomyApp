@@ -15,6 +15,8 @@ import QuizzesScreen from "../screens/QuizzesScreen";
 import FlashcardsScreen from "../screens/FlashcardsScreen";
 import ExploreLabScreen from "../screens/ExploreLabScreen";
 import colors from "../assets/colors";
+import ExploreLabVideoScreen from "../screens/ExploreLabVideosScreen";
+import ExploreLabLearnScreen from "../screens/ExploreLabLearnScreen";
 
 const HomeStack = createStackNavigator(
   {
@@ -37,7 +39,9 @@ HomeStack.path = "";
 
 const ExploreLabStack = createStackNavigator(
   {
-    ExploreLab: ExploreLabScreen
+    ExploreLab: ExploreLabScreen,
+    ExploreLabVideos: ExploreLabVideoScreen,
+    ExploreLabLearn: ExploreLabLearnScreen
   },
   { initialRouteName: "ExploreLab", transitionConfig: () => fromRight() }
 );
