@@ -16,7 +16,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // initialize the routes
-initializeQuestionRoutes(app);
 initializeFlashcardRoutes(app);
 initializeQuizRoutes(app);
 initializeImageRoutes(app);
