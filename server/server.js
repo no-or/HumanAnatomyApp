@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 
 // Import routes
 const bodyParser = require("body-parser");
-const initializeQuestionRoutes = require("./src/routes/questionRoutes");
 const initializeFlashcardRoutes = require("./src/routes/flashcardRoutes");
 const initializeQuizRoutes = require("./src/routes/QuizRoutes");
 const initializeImageRoutes = require("./src/routes/ImageRoutes");
