@@ -1,3 +1,62 @@
-p {
-	background-color: blue;
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+:root {
+	--main-blue: #092042;
+}
+
+.main-container {
+	display: flex;
+}
+
+.sidebar {
+	width: 175px;
+	background-color: var(--main-blue);
+	height: 100vh
+}
+
+.content {
+	width: 100%;
+	border: solid black;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.topbar {
+	height: 100px;
+	border-bottom: thin gray solid;
+}
+
+.category-area {
+	border: solid blueviolet;
+	display: flex;
+	height: 75%;
+}
+
+.area-selection {
+	width: 300px;
+	border: solid brown
+}
+
+.anatomy-section {
+	display: flex;
+	flex-direction: column;
+}
+
+.questions-scroll {
+	width: 100%;
+}
+
+.questions-scroll .question {
+	width: 100px;
+	height: 50px;
 }
