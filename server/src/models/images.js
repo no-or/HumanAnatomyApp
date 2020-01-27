@@ -1,20 +1,17 @@
 const mongoose = require('mongoose');
 
 const ImageSchema = new mongoose.Schema({
-    source:{
-        type: Array
-    },
-    label:{
+    url:{
         type: String
     },
-    system:{
-        type: Array
-    },
     region:{
-        type: Array
+        type: String
     },
     subRegion:{
         type: String
+    },
+    highlighted: {
+        type: Boolean
     }
 });
 

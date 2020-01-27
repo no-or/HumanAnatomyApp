@@ -2,15 +2,15 @@ const mongoose = require('mongoose');
 
 const FlashcardSchema = new mongoose.Schema({
     region:{
-        type: Array
-    },
-    system:{
         type: String
     },
-    subRegion:{
-        type: Array
+    image:{
+        type: String
     },
-    questionId:{
+    question:{
+        type: String
+    },
+    answer:{
         type: String
     }
 });
