@@ -24,9 +24,13 @@ export default class ExploreLabLearnScreen extends Component {
           title: 'Head & Neck',
           image: 'https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg',
           data: [
-            {key: 'Chicken', value:'false'},
-            {key: 'Mutton', value:'false'},
-            {key: 'Prawns', value:'false'}
+            {key: 'Skull & Meninges'},
+            {key: 'Cavenous Sinus'},
+            {key: 'Orbit'},
+            {key: 'Neck'},
+            // {key: 'Orbit'},
+            // {key: 'Orbit'},
+            // {key: 'Orbit'},
           ]
         },
         {
@@ -34,9 +38,10 @@ export default class ExploreLabLearnScreen extends Component {
           title: 'Upper Limb',
           image: 'https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg',
           data: [
-            {key: 'Chicken', value:'false'},
-            {key: 'Mutton', value:'false'},
-            {key: 'Prawns', value:'false'}
+            {key: 'Scapular Region'},
+            {key: 'Axilia'},
+            {key: 'Arm'},
+            {key: 'Forearm'},
           ]
         },
         {
@@ -44,9 +49,10 @@ export default class ExploreLabLearnScreen extends Component {
           title: 'Lower Limb',
           image: 'http://www.aljanh.net/data/archive/img/3085128125.jpeg',
           data: [
-            {key: 'Chicken', value:'false'},
-            {key: 'Mutton', value:'false'},
-            {key: 'Prawns', value:'false'}
+            {key: 'Gluteal Region'},
+            {key: 'Thigh'},
+            {key: 'Foot'},
+            {key: 'Lower Limb Bones'},
           ]
         },
         {
@@ -54,9 +60,9 @@ export default class ExploreLabLearnScreen extends Component {
           title: 'Trunk',
           image: 'https://st.depositphotos.com/2363887/2564/i/950/depositphotos_25640047-stock-photo-man-anatomy-thorax-cutaway-with.jpg',
           data: [
-            {key: 'Chicken', value:'false'},
-            {key: 'Mutton', value:'false'},
-            {key: 'Prawns', value:'false'}
+            {key: 'Thorax'},
+            {key: 'Abdomen'},
+            {key: 'Pelvis'},
           ]
         },
       ]
@@ -72,6 +78,7 @@ export default class ExploreLabLearnScreen extends Component {
                 data = {item.data}
                 key = {item.key}
                 image = {item.image}
+                navigation = {this.props.navigation}
             />
         );
     }
@@ -89,7 +96,6 @@ export default class ExploreLabLearnScreen extends Component {
         fontWeight: 'bold',
     },
   };
-
 
   render() {
     return (

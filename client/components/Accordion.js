@@ -31,8 +31,12 @@ export default class Accordion extends Component{
                     scrollEnabled={false}
                     renderItem={({item, index}) => 
                         <View>
-                            <TouchableOpacity style={[styles.childRow, styles.button, item.value ? styles.btnInActive : styles.btnActive]} onPress={()=>this.onClick(index)}>
-                                <Text style={[styles.font, styles.itemInActive]} >{item.key}</Text>
+                            <TouchableOpacity style={[styles.childRow, styles.button, item.value ? styles.btnInActive : styles.btnActive]} onPress={()=>this.onClick(item, index, this.props.navigation)}>
+                                <Text 
+                                    style={[styles.font, styles.itemInActive]} 
+                                >
+                                    {item.key}
+                                </Text>
                                 {/* <Icon name={'check-circle'} size={24} color={ item.value ? 'lightgray' : 'green'} /> */}
                             </TouchableOpacity>
                             <View style={styles.childHr}/>
@@ -44,10 +48,14 @@ export default class Accordion extends Component{
     )
   }
 
-  onClick=(index)=>{
+  onClick=(item, index, navigation)=>{
     const temp = this.state.data.slice()
     temp[index].value = !temp[index].value
     this.setState({data: temp})
+    navigation.push("ExploreLabLearnDropdownOption", {
+        title: item.key,
+        navigation: navigation
+    })
   }
 
   toggleExpand=()=>{
