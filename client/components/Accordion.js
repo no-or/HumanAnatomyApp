@@ -15,7 +15,7 @@ export default class Accordion extends Component{
   render() {
 
     return (
-       <View key={this.props.key}>
+       <View key={this.props.id}>
             <TouchableOpacity style={styles.row} onPress={()=>this.toggleExpand()}>
                 <Image style={styles.cardImage} source={{ uri: this.props.image }} />
                 <Text style={[styles.title]}>{this.props.title}</Text>

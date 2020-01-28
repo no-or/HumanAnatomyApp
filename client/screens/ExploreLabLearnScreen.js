@@ -76,7 +76,8 @@ export default class ExploreLabLearnScreen extends Component {
             <Accordion 
                 title = {item.title}
                 data = {item.data}
-                key = {item.key}
+                key = {item.id}
+                id = {item.id}
                 image = {item.image}
                 navigation = {this.props.navigation}
             />
