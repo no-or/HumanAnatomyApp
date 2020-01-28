@@ -12,7 +12,7 @@ import {
 import colors from '../assets/colors';
 import VideoCard from "../components/VideoCard";
 
-export default class ExploreLabLearnScreen extends Component {
+export default class ExploreLabVideosScreen extends Component {
   
   static navigationOptions = {
     title: 'Videos',
