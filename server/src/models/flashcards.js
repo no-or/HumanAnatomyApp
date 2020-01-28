@@ -2,16 +2,20 @@ const mongoose = require('mongoose');
 
 const FlashcardSchema = new mongoose.Schema({
     region:{
-        type: String
+        type: String,
+        required: true
     },
     image:{
-        type: String
+        type: String,
+        required: true
     },
     question:{
-        type: String
+        type: String,
+        required: true
     },
     answer:{
-        type: String
+        type: String,
+        required: true
     }
 });
 
