@@ -7,6 +7,8 @@ const initializeFlashcardRoutes = require("./src/routes/flashcardRoutes");
 const initializeQuizRoutes = require("./src/routes/quizRoutes");
 const initializeImageRoutes = require("./src/routes/ImageRoutes");
 const initializeStatRoutes = require("./src/routes/statRoutes");
+const initializeAdminRoutes = require("./src/routes/adminRoutes");
+const initializeCodeRoutes = require("./src/routes/codeRoutes");
 
 const PORT = process.env.PORT || 8090;
 const DB_CONNECTION_STRING = process.env.DB_CONNECTION || 'mongodb://localhost:27017/test';
@@ -21,6 +23,8 @@ initializeFlashcardRoutes(app);
 initializeQuizRoutes(app);
 initializeImageRoutes(app);
 initializeStatRoutes(app);
+initializeAdminRoutes(app);
+initializeCodeRoutes(app);
 
 // Connect to DB
 mongoose
