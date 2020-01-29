@@ -11,7 +11,8 @@ const AdminSchema = new mongoose.Schema({
         type: String,
         required: true,
         max: 255,
-        min: 6
+        min: 6,
+        unique: true
     },
     password:{
         type: String,

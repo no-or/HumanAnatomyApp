@@ -1,13 +1,13 @@
 const express = require("express");
 const FlashcardModel = require("../models/flashcards");
+const verifyAdmin = require("../util/verifyToken");
 
 const initializeFlashcardRoutes = (app) => {
     const flashcardRouter = express.Router();
     app.use('/flashcard', flashcardRouter);
 
     /* create a flashcard */
-    //TODO add auth
-    flashcardRouter.post('/', async (req, res, next) => {
+    flashcardRouter.post('/', verifyAdmin, async (req, res, next) => {
         const flashcard = new FlashcardModel(req.body);
         try {
             await flashcard.save().then((item) => res.send(item));
@@ -50,15 +50,14 @@ const initializeFlashcardRoutes = (app) => {
     });
 
     /* remove a flashcard with the id */
-    //TODO add auth
-    flashcardRouter.delete('/:id', async (req, res, next) => {
+    flashcardRouter.delete('/:id', verifyAdmin,  async (req, res, next) => {
         const id = req.params.id.trim();
         try {
             const flashcard = await FlashcardModel.findByIdAndDelete(id);
             if (flashcard === null) {
                 throw new Error(`No flashcard found with the id ${id}`);
             } else {
-                res.status(200);
+                res.status(200).send(`removed the flashcard with id ${id}`);
             }
         } catch (e) {
             console.error(e);

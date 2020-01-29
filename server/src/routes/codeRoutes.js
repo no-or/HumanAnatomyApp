@@ -1,5 +1,6 @@
 const express = require("express");
 const CodeModel = require("../models/code");
+const verifyAdmin = require("../util/verifyToken");
 
 const initializeCodeRoutes = (app) => {
     const codeRouter = express.Router();
@@ -21,7 +22,7 @@ const initializeCodeRoutes = (app) => {
     });
 
     /* modify the code */
-    codeRouter.put('/', async (req, res) => {
+    codeRouter.put('/', verifyAdmin, async (req, res) => {
         try {
             const code = await CodeModel.findOneAndUpdate(req.body);
             if (code === null) {
