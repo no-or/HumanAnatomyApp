@@ -20,15 +20,15 @@ export default class Quizzes extends Component {
       <ScrollView style={styles.container}>
         <SafeAreaView style={styles.wrapper}>
           <View style={styles.content}>
-            <ScrollView
+            {/* <ScrollView
               style={styles.container}
               contentContainerStyle={styles.contentContainer}
-            >
+            > */}
               <Card
                 style={styles.card}
                 uri="http://www.aljanh.net/data/archive/img/3085128125.jpeg"
                 cardTitle="Heart"
-                callback={() => this.props.navigation.navigate("HeartQuiz")}
+                callback={() => this.props.navigation.navigate("Quiz")}
               />
               <Card
                 style={styles.card}
@@ -47,7 +47,7 @@ export default class Quizzes extends Component {
                 uri="https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg"
                 cardTitle="The Metacarpals"
               />
-            </ScrollView>
+            {/* </ScrollView> */}
           </View>
         </SafeAreaView>
       </ScrollView>
@@ -58,7 +58,7 @@ export default class Quizzes extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
+    paddingTop: 10,
     backgroundColor: "#fff"
   }
 });
