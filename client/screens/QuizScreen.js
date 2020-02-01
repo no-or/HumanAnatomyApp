@@ -21,33 +21,82 @@ export default class Quizzes extends Component {
       {
         question: "What is highlighted in the image above?",
         answers: ["Right Atrium", "Left Atrium", "Right Ventricle", "Left Ventricle"],
+        answerColors: {
+          "Right Atrium": "green",
+          "Left Atrium": colors.primary,
+          "Right Ventricle": colors.primary,
+          "Left Ventricle": colors.primary,
+        },
         correctAnswer: "Right Atrium",
-        image: "http://www.aljanh.net/data/archive/img/3085128125.jpeg"
+        image: "http://www.aljanh.net/data/archive/img/3085128125.jpeg",
+        chosenAnswer: ""
       },
       {
         question: "Name the highlighted region?",
         answers: ["Superior Vena Cava", "Pulmonary Trunk", "Moderator Band", "Trabeculae Carneae"],
+        answerColors: {
+          "Superior Vena Cava": colors.primary,
+          "Pulmonary Trunk": colors.primary,
+          "Moderator Band": "green",
+          "Trabeculae Carneae": colors.primary,
+        },
         correctAnswer: "Moderator Band",
-        image: "http://www.aljanh.net/data/archive/img/3085128125.jpeg"
+        image: "https://www.kiwikidsnews.co.nz/wp-content/uploads/2014/08/mana-hone.jpeg",
+        chosenAnswer: ""
       },
       {
         question: "What part of the heart is highlighted?",
         answers: ["Aortic Valve", "Pulmonary Valve", "Epicardium", "Myocardium"],
+        answerColors: {
+          "Aortic Valve": "green",
+          "Pulmonary Valve": colors.primary,
+          "Epicardium": colors.primary,
+          "Myocardium": colors.primary,
+        },
         correctAnswer: "Aortic Valve",
-        image: "http://www.aljanh.net/data/archive/img/3085128125.jpeg"
+        image: "http://www.aljanh.net/data/archive/img/3085128125.jpeg",
+        chosenAnswer: ""
       },
     ],
-    questionIndex: 0,
-    question: "What is highlighted in the image above?",
-    answers: ["Answer 1", "Answer 2", "Answer 3", "Answer 5"],
-    correctAnswer: "Answer 1"
+    questionIndex: 0
   }
 
+  /**
+   * Function to increment index to move to next question.
+   */
   _incrementIndex = () => {
     if(this.state.questionIndex < (this.state.questions.length - 1)) {
       this.setState(prevState => ({
         questionIndex: prevState.questionIndex+1
       }));
+    }
+  }
+
+  /**
+   * Function to decrement index to move to previous question.
+   */
+  _decrementIndex = () => {
+    if(this.state.questionIndex > 0) {
+      this.setState(prevState => ({
+        questionIndex: prevState.questionIndex-1
+      }));
+    }
+  }
+
+  _answerQuestion = (answer) => {
+    if(this.state.questions[this.state.questionIndex].chosenAnswer === "") {
+
+      let questionsArr = this.state.questions;
+      questionsArr[this.state.questionIndex].chosenAnswer = answer;
+
+      if(answer !== this.state.questions[this.state.questionIndex].correctAnswer) {
+        questionsArr[this.state.questionIndex].answerColors[answer] = "red";
+      }
+
+      this.setState(prevState => ({
+        questions: questionsArr
+      }))
+
     }
   }
 
@@ -81,8 +130,12 @@ export default class Quizzes extends Component {
               {this.state.questions[this.state.questionIndex].answers.map(answer => 
                 <View style={styles.buttonContainer} key={answer}>
                   <TouchableOpacity 
-                    style={styles.buttonStyle}
-                    onPress={() => null}
+                    style={{
+                      backgroundColor: this.state.questions[this.state.questionIndex].chosenAnswer === "" ? colors.primary : this.state.questions[this.state.questionIndex].answerColors[answer],
+                      ...styles.buttonStyle
+                    }}
+                    // key={answer}
+                    onPress={() => this._answerQuestion(answer)}
                     >
                     <Text style={styles.buttonTextStyle}>{answer}</Text>
                   </TouchableOpacity>
@@ -91,12 +144,22 @@ export default class Quizzes extends Component {
             </View>
 
             <View style={styles.nextQuestionContainer}>
-              <TouchableOpacity 
-                style={styles.nextButton}
-                onPress={this._incrementIndex}
-                >
-                <Text style={styles.buttonTextStyle}>Next Question</Text>
-              </TouchableOpacity>
+              <View style={styles.prevContainer}>
+                <TouchableOpacity 
+                  style={styles.nextButton}
+                  onPress={this._decrementIndex}
+                  >
+                  <Text style={styles.buttonTextStyle}>Prev Question</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.nextContainer}>
+                <TouchableOpacity 
+                  style={styles.nextButton}
+                  onPress={this._incrementIndex}
+                  >
+                  <Text style={styles.buttonTextStyle}>Next Question</Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
           </View>
@@ -134,13 +197,24 @@ const styles = StyleSheet.create({
   },
   questionContainer: {
     alignContent: "center",
-    padding: 10
+    paddingTop: 20,
+    paddingRight: 20,
+    paddingLeft: 20,
+    paddingBottom: 10
   },
   nextQuestionContainer: {
+    flexDirection: "row",
+    margin: 20
+  },
+  prevContainer: {
+    flex: 1,
     alignContent: "center",
-    alignItems: "flex-end",
-    // padding: 10,
-    // margin: 10
+    alignItems: "flex-start"
+  },
+  nextContainer: {
+    flex: 1,
+    alignContent: "center",
+    alignItems: "flex-end"
   },
   nextButton: {
     height: 45,
@@ -153,9 +227,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
-    marginTop: 20,
-    marginBottom: 20,
-    marginRight: 20,
     backgroundColor: colors.primary
   },
   question: {
@@ -181,7 +252,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 20,
     marginBottom: 20,
-    backgroundColor: colors.primary
+    // backgroundColor: colors.primary
   },
   buttonTextStyle: {
     color: colors.primaryText
