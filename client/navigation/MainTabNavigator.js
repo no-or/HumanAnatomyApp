@@ -12,6 +12,7 @@ import TabBarIcon from "../components/TabBarIcon";
 import WelcomeScreen from "../screens/WelcomeScreen";
 import HomeScreen from "../screens/HomeScreen";
 import QuizzesScreen from "../screens/QuizzesScreen";
+import QuizScreen from "../screens/QuizScreen";
 import FlashcardsScreen from "../screens/FlashcardsScreen";
 import ExploreLabScreen from "../screens/ExploreLabScreen";
 import colors from "../assets/colors";
@@ -62,9 +63,13 @@ ExploreLabStack.path = "";
 
 const QuizzesStack = createStackNavigator(
   {
-    Quizzes: QuizzesScreen
+    Quizzes: QuizzesScreen,
+    Quiz: { screen: QuizScreen}
   },
-  { initialRouteName: "Quizzes", transitionConfig: () => fromRight() }
+  { 
+    initialRouteName: "Quizzes", 
+    transitionConfig: () => fromRight() 
+  }
 );
 
 QuizzesStack.navigationOptions = {
