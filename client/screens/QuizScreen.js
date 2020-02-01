@@ -17,7 +17,38 @@ export default class Quizzes extends Component {
   };
 
   state = {
+    questions: [
+      {
+        question: "What is highlighted in the image above?",
+        answers: ["Right Atrium", "Left Atrium", "Right Ventricle", "Left Ventricle"],
+        correctAnswer: "Right Atrium",
+        image: "http://www.aljanh.net/data/archive/img/3085128125.jpeg"
+      },
+      {
+        question: "Name the highlighted region?",
+        answers: ["Superior Vena Cava", "Pulmonary Trunk", "Moderator Band", "Trabeculae Carneae"],
+        correctAnswer: "Moderator Band",
+        image: "http://www.aljanh.net/data/archive/img/3085128125.jpeg"
+      },
+      {
+        question: "What part of the heart is highlighted?",
+        answers: ["Aortic Valve", "Pulmonary Valve", "Epicardium", "Myocardium"],
+        correctAnswer: "Aortic Valve",
+        image: "http://www.aljanh.net/data/archive/img/3085128125.jpeg"
+      },
+    ],
+    questionIndex: 0,
+    question: "What is highlighted in the image above?",
+    answers: ["Answer 1", "Answer 2", "Answer 3", "Answer 5"],
+    correctAnswer: "Answer 1"
+  }
 
+  _incrementIndex = () => {
+    if(this.state.questionIndex < (this.state.questions.length - 1)) {
+      this.setState(prevState => ({
+        questionIndex: prevState.questionIndex+1
+      }));
+    }
   }
 
   render() {
@@ -32,7 +63,7 @@ export default class Quizzes extends Component {
               bindToBorders={true}
               style={styles.zoomableView}
             >
-              <Image style={styles.image} source={{ uri: "http://www.aljanh.net/data/archive/img/3085128125.jpeg" }} />
+              <Image style={styles.image} source={{ uri: this.state.questions[this.state.questionIndex].image }} />
             </ReactNativeZoomableView>
           </View>
 
@@ -42,47 +73,28 @@ export default class Quizzes extends Component {
             
             <View style={styles.questionContainer}>
               <Text style={styles.question}>
-                What is highlighted in the image above?
+                {this.state.questions[this.state.questionIndex].question}
               </Text>
             </View>
             
             <View style={styles.answers}>
-              {["Answer 1", "Answer 2", "Answer 3", "Answer 4"].map(question => 
-                <View style={styles.buttonContainer} key={question}>
-                  <TouchableOpacity style={styles.buttonStyle}>
-                    <Text style={styles.buttonTextStyle}>{question}</Text>
+              {this.state.questions[this.state.questionIndex].answers.map(answer => 
+                <View style={styles.buttonContainer} key={answer}>
+                  <TouchableOpacity 
+                    style={styles.buttonStyle}
+                    onPress={() => null}
+                    >
+                    <Text style={styles.buttonTextStyle}>{answer}</Text>
                   </TouchableOpacity>
                 </View>
               )}
-              {/* <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.buttonStyle}>
-                  <Text style={styles.buttonTextStyle}>Hello</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.buttonStyle}>
-                  <Text>Hello</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.buttonStyle}>
-                  <Text>Hello</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.buttonStyle}>
-                  <Text>Hello</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.buttonStyle}>
-                  <Text>Hello</Text>
-                </TouchableOpacity>
-              </View> */}
             </View>
 
             <View style={styles.nextQuestionContainer}>
-              <TouchableOpacity style={styles.nextButton}>
+              <TouchableOpacity 
+                style={styles.nextButton}
+                onPress={this._incrementIndex}
+                >
                 <Text style={styles.buttonTextStyle}>Next Question</Text>
               </TouchableOpacity>
             </View>
