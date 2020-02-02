@@ -1,5 +1,6 @@
 const express = require("express");
 const StatModel = require("../models/stats");
+const verifyAdmin = require("../util/verifyToken");
 
 const initializeStatRoutes = (app) => {
     const statRouter = express.Router();
@@ -17,8 +18,7 @@ const initializeStatRoutes = (app) => {
     });
 
     /* get all the stats or by query */
-    //TODO add auth
-    statRouter.get('/', async (req, res, next) => {
+    statRouter.get('/', verifyAdmin, async (req, res, next) => {
         try {
             const stats = await StatModel.find(req.query);
             if (stats === null) {
