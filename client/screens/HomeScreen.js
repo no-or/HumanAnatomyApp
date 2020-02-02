@@ -12,10 +12,9 @@ export default class HomeScreen extends React.Component {
         <View style={styles.content}>
           <ScrollView
             style={styles.container}
-            contentContainerStyle={styles.contentContainer}
+            // contentContainerStyle={styles.contentContainer}
           >
             <Card
-              style={styles.card}
               uri="http://www.aljanh.net/data/archive/img/3085128125.jpeg"
               cardTitle="New Quiz"
               callback={() => this.props.navigation.navigate("Quiz")}
@@ -55,39 +54,11 @@ HomeScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 10,
+    flex: 1,
     backgroundColor: "#fff"
   },
-  homeButtons: {
-    marginBottom: 10,
-    marginTop: 10
-  },
-  card: {
-    backgroundColor: "#fff",
-    marginBottom: 10,
-    marginLeft: "2%",
-    width: "96%",
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    shadowOffset: {
-      width: 3,
-      height: 3
-    },
-    elevation: 1
-  },
-  cardImage: {
-    width: "100%",
-    height: 200,
-    resizeMode: "cover"
-  },
-  cardText: {
-    padding: 10,
-    fontSize: 16
-  },
   wrapper: {
-    flex: 1,
-    backgroundColor: "#002145"
+    flex: 1
   },
   content: {
     height: "100%",

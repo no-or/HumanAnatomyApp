@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     height: "100%"
   },
   imageContainer: {
-    flex: 1,
+    flex: 3,
     backgroundColor: "#f0f0f0",
     overflow: "hidden"
   },
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#0004"
   },
   textContainer: {
-    flex: 2
+    flex: 4
   },
   image: {
     width: "90%",

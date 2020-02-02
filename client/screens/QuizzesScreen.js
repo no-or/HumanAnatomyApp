@@ -17,13 +17,9 @@ export default class Quizzes extends Component {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
         <SafeAreaView style={styles.wrapper}>
           <View style={styles.content}>
-            {/* <ScrollView
-              style={styles.container}
-              contentContainerStyle={styles.contentContainer}
-            > */}
+            <ScrollView style={styles.container}>
               <Card
                 style={styles.card}
                 uri="http://www.aljanh.net/data/archive/img/3085128125.jpeg"
@@ -47,10 +43,9 @@ export default class Quizzes extends Component {
                 uri="https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg"
                 cardTitle="The Metacarpals"
               />
-            {/* </ScrollView> */}
+            </ScrollView>
           </View>
         </SafeAreaView>
-      </ScrollView>
     );
   }
 }
@@ -58,7 +53,13 @@ export default class Quizzes extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 10,
     backgroundColor: "#fff"
+  },
+  wrapper: {
+    flex: 1
+  },
+  content: {
+    height: "100%",
+    width: "100%"
   }
 });
