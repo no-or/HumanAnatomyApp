@@ -58,7 +58,8 @@ export default class Quizzes extends Component {
         chosenAnswer: ""
       },
     ],
-    questionIndex: 0
+    questionIndex: 0,
+    score: 0
   }
 
   /**
@@ -86,15 +87,19 @@ export default class Quizzes extends Component {
   _answerQuestion = (answer) => {
     if(this.state.questions[this.state.questionIndex].chosenAnswer === "") {
 
+      let scoreIncrement = 1;
+
       let questionsArr = this.state.questions;
       questionsArr[this.state.questionIndex].chosenAnswer = answer;
 
       if(answer !== this.state.questions[this.state.questionIndex].correctAnswer) {
         questionsArr[this.state.questionIndex].answerColors[answer] = "red";
+        scoreIncrement = 0;
       }
 
       this.setState(prevState => ({
-        questions: questionsArr
+        questions: questionsArr,
+        score: prevState.score + scoreIncrement
       }))
 
     }
@@ -134,7 +139,7 @@ export default class Quizzes extends Component {
                       backgroundColor: this.state.questions[this.state.questionIndex].chosenAnswer === "" ? colors.primary : this.state.questions[this.state.questionIndex].answerColors[answer],
                       ...styles.buttonStyle
                     }}
-                    // key={answer}
+                    disabled={this.state.questions[this.state.questionIndex].chosenAnswer !== ""}
                     onPress={() => this._answerQuestion(answer)}
                     >
                     <Text style={styles.buttonTextStyle}>{answer}</Text>
@@ -146,22 +151,36 @@ export default class Quizzes extends Component {
             <View style={styles.nextQuestionContainer}>
               <View style={styles.prevContainer}>
                 <TouchableOpacity 
-                  style={styles.nextButton}
+                  style={{
+                    backgroundColor: (this.state.questionIndex == 0) ? "#cccccc" : colors.primary,
+                    borderColor: (this.state.questionIndex == 0) ? "#999999" : colors.primary,
+                    ...styles.nextButton
+                  }}
                   onPress={this._decrementIndex}
+                  disabled={this.state.questionIndex == 0}
                   >
                   <Text style={styles.buttonTextStyle}>Prev Question</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.nextContainer}>
                 <TouchableOpacity 
-                  style={styles.nextButton}
+                  style={{
+                    backgroundColor: (this.state.questionIndex == (this.state.questions.length - 1)) ? "#cccccc" : colors.primary,
+                    borderColor: (this.state.questionIndex == (this.state.questions.length - 1)) ? "#999999" : colors.primary,
+                    ...styles.nextButton
+                  }}
                   onPress={this._incrementIndex}
+                  disabled={this.state.questionIndex == (this.state.questions.length - 1)}
                   >
                   <Text style={styles.buttonTextStyle}>Next Question</Text>
                 </TouchableOpacity>
               </View>
             </View>
 
+          </View>
+
+          <View style={styles.progressIndicator}>
+            <Text style={styles.progressText}>{(this.state.questionIndex + 1) + "/" + (this.state.questions.length)}</Text>
           </View>
       </View>
     );
@@ -227,7 +246,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
-    backgroundColor: colors.primary
+    // backgroundColor: colors.primary
   },
   question: {
     fontWeight: "bold",
@@ -260,5 +279,33 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
     flexDirection: "row"
+  },
+  progressIndicator: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    paddingTop: 5,
+    justifyContent: "flex-start",
+    alignItems: "flex-end",
+    alignContent: "flex-start",
+    flex: 1,
+    width: "100%",
+    height: "100%"
+  },
+  progressText: {
+    backgroundColor: "#fff",
+    opacity: 0.7,
+    fontWeight: "bold",
+    fontSize: 14,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingBottom: 5,
+    paddingTop: 5,
+    borderLeftWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    elevation: 1
   }
 });
