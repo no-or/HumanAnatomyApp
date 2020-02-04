@@ -52,7 +52,7 @@ li {
 	padding: 10px 0;
 }
 
-.sidebar-options li.selected {
+.sidebar-options li.regionSelected {
 	font-weight: bold;
 }
 
@@ -102,7 +102,7 @@ li {
 
 .area-selection li {
 	background-color: var(--main-background-gray);
-	margin: 30px 0;
+	margin: 9px 0;
 	padding: 10px;
 	width: 85%;
 }
@@ -112,7 +112,17 @@ li {
 	cursor: pointer;
 }
 
-.area-selection li.selected {
+.area-selection li.regionSelected {
+	background-color: var(--main-blue);
+	width: 95%;
+}
+
+.area-selection li.subRegionSelected {
+	background-color: var(--main-blue);
+	width: 95%;
+}
+
+.area-selection li.subSubRegionSelected {
 	background-color: var(--main-blue);
 	width: 95%;
 }
@@ -224,4 +234,8 @@ li {
 
 .options-panel {
 	width: 10%
+}
+
+.subregion {
+
 }
