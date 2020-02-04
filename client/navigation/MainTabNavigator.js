@@ -12,12 +12,15 @@ import TabBarIcon from "../components/TabBarIcon";
 import WelcomeScreen from "../screens/WelcomeScreen";
 import HomeScreen from "../screens/HomeScreen";
 import QuizzesScreen from "../screens/QuizzesScreen";
+import QuizScreen from "../screens/QuizScreen";
 import FlashcardsScreen from "../screens/FlashcardsScreen";
 import ExploreLabScreen from "../screens/ExploreLabScreen";
 import colors from "../assets/colors";
-import ExploreLabVideoScreen from "../screens/ExploreLabVideosScreen";
+import ExploreLabVideosScreen from "../screens/ExploreLabVideosScreen";
 import ExploreLabLearnScreen from "../screens/ExploreLabLearnScreen";
 import FlashStack from "../screens/FlashStack";
+import ExploreLabLearnDropdownOptionScreen from "../screens/ExploreLabLearnDropdownOptionScreen";
+
 
 const HomeStack = createStackNavigator(
   {
@@ -41,8 +44,9 @@ HomeStack.path = "";
 const ExploreLabStack = createStackNavigator(
   {
     ExploreLab: ExploreLabScreen,
-    ExploreLabVideos: ExploreLabVideoScreen,
-    ExploreLabLearn: ExploreLabLearnScreen
+    ExploreLabVideos: ExploreLabVideosScreen,
+    ExploreLabLearn: ExploreLabLearnScreen,
+    ExploreLabLearnDropdownOption: ExploreLabLearnDropdownOptionScreen
   },
   { initialRouteName: "ExploreLab", transitionConfig: () => fromRight() }
 );
@@ -61,9 +65,13 @@ ExploreLabStack.path = "";
 
 const QuizzesStack = createStackNavigator(
   {
-    Quizzes: QuizzesScreen
+    Quizzes: QuizzesScreen,
+    Quiz: { screen: QuizScreen}
   },
-  { initialRouteName: "Quizzes", transitionConfig: () => fromRight() }
+  { 
+    initialRouteName: "Quizzes", 
+    transitionConfig: () => fromRight() 
+  }
 );
 
 QuizzesStack.navigationOptions = {

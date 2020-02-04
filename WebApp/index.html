@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="./js/app.js"></script>
+	<link rel="stylesheet" type="text/css" href="./css/StyleSheet.css">
+</head>
+
+<body>
+	<div class="main-container">
+		<div class="sidebar">
+			<h2 class="sidebar-title">Anatomy Portal</h2>
+			<ul class="sidebar-options">
+				<li>Quizzes</li>
+				<li>Flashcards</li>
+				<li>Explore Lab</li>
+				<li>User Analytics</li> 
+			</ul>
+		</div>
+		<div class="content">
+			<div class="topbar">
+				<h2 class="topbar-title">Quizzes</h2>
+				<h2 class="topbar-title">Make A Quiz</h2>
+			</div>
+			<div class="category-area">
+				<div class="area-selection">
+					<ul class="selection-container">
+						<li class="selected">
+							<h3 class="category-title">Head & Neck</h3>
+							<h4 class="category-question-number"> 20 Questions | Default</h4>
+						</li>
+						<li>
+							<h3 class="category-title">Upper Limb</h3>
+							<h4 class="category-question-number"> 20 Questions | Default</h4>
+						</li>
+						<li>
+							<h3 class="category-title">Lower Limb</h3>
+							<h4 class="category-question-number"> 20 Questions | Default</h4>
+						</li>
+						<li>
+							<h3 class="category-title">Trunk</h3>
+							<h4 class="category-question-number"> 20 Questions | Default</h4>
+						</li>
+					</ul>
+				</div>
+				<div class="anatomy-section">
+					<div class="management-area">
+						<div class="question-content">
+							<div class="question-display">
+							</div>
+							<!-- <div class="question-region">b</div>
+							<div class="question-subregion">C</div>
+							<div class="question-options">D</div>
+							<div class="question-correct-answer">E</div>
+							<div class="question-answer-explanation">F</div> -->
+						</div>
+						<div class="image-gallery">
+							<div class="column">
+								<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80" >
+								<img src="https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2592&q=80" >
+								<img src="https://images.unsplash.com/photo-1502134249126-9f3755a50d78?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" >
+								<img src="https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2592&q=80" >
+								<img src="https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2592&q=80" >
+								<img src="https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2592&q=80" >
+								<img src="https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2592&q=80" >
+							</div>
+							<div class="column">
+								<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80" >
+								<img src="https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2592&q=80" >
+								<img src="https://images.unsplash.com/photo-1457364887197-9150188c107b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80" >
+								<img src="https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2592&q=80" >
+								<img src="https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2592&q=80" >
+								<img src="https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2592&q=80" >
+								<img src="https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2592&q=80" >
+							</div>
+						</div>
+						<div class="options-panel"></div>
+					</div>
+					<div class="questions-scroll">
+						<div class="question selected">Q1</div>
+						<div class="question">Q2</div>
+						<div class="question">Q3</div>
+						<div class="question">Q4</div>
+						<div class="question">Q5</div>
+						<div class="question">Q6</div>
+						<div class="question">Q7</div>
+						<div class="question">Q8</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

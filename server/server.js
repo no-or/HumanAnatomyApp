@@ -3,10 +3,12 @@ const mongoose = require("mongoose");
 
 // Import routes
 const bodyParser = require("body-parser");
-const initializeQuestionRoutes = require("./src/routes/questionRoutes");
 const initializeFlashcardRoutes = require("./src/routes/flashcardRoutes");
-const initializeQuizRoutes = require("./src/routes/QuizRoutes");
+const initializeQuizRoutes = require("./src/routes/quizRoutes");
 const initializeImageRoutes = require("./src/routes/ImageRoutes");
+const initializeStatRoutes = require("./src/routes/statRoutes");
+const initializeAdminRoutes = require("./src/routes/adminRoutes");
+const initializeCodeRoutes = require("./src/routes/codeRoutes");
 
 const PORT = process.env.PORT || 8090;
 const DB_CONNECTION_STRING = process.env.DB_CONNECTION || 'mongodb://localhost:27017/test';
@@ -17,14 +19,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // initialize the routes
-initializeQuestionRoutes(app);
 initializeFlashcardRoutes(app);
 initializeQuizRoutes(app);
 initializeImageRoutes(app);
+initializeStatRoutes(app);
+initializeAdminRoutes(app);
+initializeCodeRoutes(app);
 
 // Connect to DB
 mongoose
-    .connect(DB_CONNECTION_STRING, { useUnifiedTopology: true, useNewUrlParser: true })
+    .connect(DB_CONNECTION_STRING, { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false })
     .then(() => console.log('Connected to MongoDB!'));
 
 try {
