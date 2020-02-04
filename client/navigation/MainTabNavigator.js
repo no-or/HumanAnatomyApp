@@ -127,7 +127,6 @@ const RootNavigator = createSwitchNavigator(
   {
     Welcome: {
       screen: WelcomeScreen
-      //screen: FlashStack
     },
     Root: TabNavigator
   },

@@ -27,7 +27,7 @@ export default class FlashcardsScreen extends Component {
               <Card
                 uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
                 cardTitle="Respiratory System"
-                callback={() => this.props.navigation.navigate("FlashStack")}
+                callback={() => this.props.navigation.navigate("FlashStack", {region: "thorax"})}
               />
               <Card
                 uri="https://www.simtics.com/media/28745/mlla.jpg"
