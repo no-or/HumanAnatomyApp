@@ -18,7 +18,9 @@ import ExploreLabScreen from "../screens/ExploreLabScreen";
 import colors from "../assets/colors";
 import ExploreLabVideosScreen from "../screens/ExploreLabVideosScreen";
 import ExploreLabLearnScreen from "../screens/ExploreLabLearnScreen";
+import FlashStack from "../screens/FlashStack";
 import ExploreLabLearnDropdownOptionScreen from "../screens/ExploreLabLearnDropdownOptionScreen";
+
 
 const HomeStack = createStackNavigator(
   {
@@ -86,7 +88,8 @@ QuizzesStack.path = "";
 
 const FlashcardsStack = createStackNavigator(
   {
-    Flashcards: FlashcardsScreen
+    Flashcards: FlashcardsScreen,
+    FlashStack: FlashStack
   },
   { initialRouteName: "Flashcards", transitionConfig: () => fromRight() }
 );
