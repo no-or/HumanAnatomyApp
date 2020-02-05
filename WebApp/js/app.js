@@ -1,3 +1,6 @@
+var website = "http://localhost:8080"
+
+
 $(document).ready(function(){
   $("#head").click(function(){
   	menuChange(head, "head")
@@ -12,6 +15,7 @@ $(document).ready(function(){
   	menuChange(trunk, "trunk")
   })
 });
+
 
 function menuChange(region, regionName) {
   $(".subRegion").remove();
@@ -46,20 +50,30 @@ function addMenuItems(region, regionName, regionLevel, onClick){
   $("#" + regionName).addClass(regionLevel + "Selected");
   for(item in region){
     if(regionLevel == "region"){
-      $("#" + regionName).after('<li id="' + region[item].replace(/\s/g, '') + '" class="subRegion"> ')
+      $("#" + regionName).after('<li id="' + region[item].replace(/\s/g, '') + '" class="subRegion"' +  ' title="' + region[item] + '"> ' )
       $('#' + region[item].replace(/\s/g, '')).prepend('<h5 class="category-title">' + region[item] + '</h5>')
     } else{
-      $("#" + regionName).after('<li id="' + region[item].replace(/\s/g, '') + '" class="subSubRegion"> ')
+      $("#" + regionName).after('<li id="' + region[item].replace(/\s/g, '') +  '" title="' + region[item] + '" class="subSubRegion"> ')
       $('#' + region[item].replace(/\s/g, '')).prepend('<h6 class="category-title">' + region[item] + '</h6>')
     }
+    //$('#' + region[item].replace(/\s/g, '')).attr('name', region[item]);
     if(regionName != "trunk"){
       $('#' + region[item].replace(/\s/g, '')).click(function(){
+      	ajaxGet(website + "/flashcard?region=" + this.title, function(response) {
+      		quizLayout(response)
+    	}, function(error){
+    		alert(error)
+    	})
         onClick(this);
       })
     }else {
       trunkSetup();
     }
   }
+}
+
+function quizLayout(quizzes){
+	console.log(quizzes)
 }
 
 function trunkSetup() {
@@ -76,6 +90,60 @@ function trunkSetup() {
     subMenuChange(Pelvis, "Pelvis");
 
   })
+}
+
+
+var ajaxPost = function (url, data, onSucess, onError){
+    this.url = url;
+    this.onSuccess = onSucess;
+    this.onError = onError;
+
+    var xhttp = new XMLHttpRequest();
+    //xhttp.timeout = 5000;
+
+    xhttp.onreadystatechange = function() {
+        if(xhttp.readyState == 4 && xhttp.status == 200) {
+            onSuccess(xhttp.responseText);            
+        }
+        else onError(xhttp.responseText);
+    }
+    xhttp.open('POST', this.url, true);
+    xhttp.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
+    xhttp.send(JSON.stringify(data));
+
+}
+
+var ajaxGet = function (url, onSuccess, onError) {
+    this.url = url;
+    this.onSuccess = onSuccess;
+    this.onError = onError;
+    var i = 0
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.timeout = 5000;
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+
+            console.log("response: ");
+            console.log(typeof(JSON.parse(xhttp.responseText)));
+            onSuccess(JSON.parse(xhttp.responseText));
+        }
+        else {
+            if (i > 2) {
+                console.log("error: ");
+                console.log(xhttp.responseText);
+                onError(xhttp.responseText);
+                i = 0;
+            }
+        }
+    }
+    xhttp.ontimeout = function (e) {
+        console.log("error: ");
+        console.log("timeout");
+        onError(xhttp.responseText);
+    }
+    xhttp.open("GET", url, true);
+    xhttp.send();
 }
 
 
