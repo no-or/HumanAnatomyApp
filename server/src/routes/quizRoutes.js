@@ -37,8 +37,8 @@ const initializeQuizRoutes = (app) => {
     quizRouter.get('/', async (req, res, next) => {
         try {
             const quizzes = await QuizModel.find(req.query);
-            if (quizzes === null) {
-                throw new Error(`No quizzes found`);
+            if (quizzes === null || quizzes.length === 0) {
+                res.status(404).send(`No such quizzes found`);
             } else {
                 res.status(200);
                 await res.json(quizzes);

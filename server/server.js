@@ -9,6 +9,7 @@ const initializeImageRoutes = require("./src/routes/ImageRoutes");
 const initializeStatRoutes = require("./src/routes/statRoutes");
 const initializeAdminRoutes = require("./src/routes/adminRoutes");
 const initializeCodeRoutes = require("./src/routes/codeRoutes");
+const initializeExploreRoutes = require("./src/routes/exploreRoutes");
 
 const PORT = process.env.PORT || 8090;
 const DB_CONNECTION_STRING = process.env.DB_CONNECTION || 'mongodb://localhost:27017/test';
@@ -25,6 +26,7 @@ initializeImageRoutes(app);
 initializeStatRoutes(app);
 initializeAdminRoutes(app);
 initializeCodeRoutes(app);
+initializeExploreRoutes(app);
 
 // Connect to DB
 mongoose
@@ -38,3 +40,4 @@ try {
     console.error(e);
     throw e;
 }
+
