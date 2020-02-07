@@ -19,13 +19,15 @@ const QuizSchema = new mongoose.Schema({
         required: true
     },
     options:{
-        type: Array,
-        required: true
+        type: Array
     },
-    answer:{
+    correctAnswer:{
         type: String,
         required: true
-    }
+    },
+    explanation:{
+        type: Array
+    },
 });
 
 module.exports = mongoose.model('Quizzes', QuizSchema);
