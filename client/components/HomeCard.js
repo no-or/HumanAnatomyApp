@@ -8,7 +8,7 @@ import {
   View
 } from "react-native";
 
-export default class Card extends Component {
+export default class HomeCard extends Component {
   render() {
     return (
       <TouchableOpacity style={styles.card} onPress={this.props.callback}>
@@ -17,7 +17,6 @@ export default class Card extends Component {
         <TouchableOpacity style={styles.textContainer} onPress={this.props.callback}>
           <Text style={styles.textStyle}>{this.props.cardTitle}</Text>
         </TouchableOpacity>
-        {/* <Text style={styles.cardText}>{this.props.cardTitle}</Text> */}
       </TouchableOpacity>
     );
   }
@@ -68,9 +67,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    alignContent: "center",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+    alignContent: "flex-end",
     padding: 20,
     flex: 1,
     width: "100%",

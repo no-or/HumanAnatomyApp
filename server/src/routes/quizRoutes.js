@@ -1,13 +1,13 @@
 const express = require("express");
 const QuizModel = require("../models/quizzes");
+const verifyAdmin = require("../util/verifyToken");
 
 const initializeQuizRoutes = (app) => {
     const quizRouter = express.Router();
     app.use('/quiz', quizRouter);
 
     /* create a quiz */
-    //TODO add auth
-    quizRouter.post('/', async (req, res, next) => {
+    quizRouter.post('/', verifyAdmin,  async (req, res, next) => {
         const quiz = new QuizModel(req.body);
         try {
             await quiz.save().then((item) => res.send(item));
@@ -50,15 +50,14 @@ const initializeQuizRoutes = (app) => {
     });
 
     /* remove a quiz with the id */
-    //TODO add auth
-    quizRouter.delete('/:id', async (req, res, next) => {
+    quizRouter.delete('/:id', verifyAdmin,  async (req, res, next) => {
         const id = req.params.id.trim();
         try {
-            const quiz = await QuizModel.findByIdAndDelete(id);
+            const quiz = await QuizModel.findOneAndRemove({_id: id});
             if (quiz === null) {
                 throw new Error(`No quiz found with the id ${id}`);
             } else {
-                res.status(200);
+                res.status(200).send(`removed the quiz with id ${id}`);
             }
         } catch (e) {
             console.error(e);
