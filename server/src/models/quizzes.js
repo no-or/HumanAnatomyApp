@@ -18,8 +18,12 @@ const QuizSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    answer:{
+    options:{
         type: Array,
+        required: true
+    },
+    answer:{
+        type: String,
         required: true
     }
 });
