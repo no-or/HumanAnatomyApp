@@ -1,6 +1,5 @@
 var website = "http://localhost:8080"
 
-
 $(document).ready(function(){
   $("#head").click(function(){
   	menuChange(head, "head")
@@ -29,6 +28,8 @@ function menuChange(region, regionName) {
     });
   } else {
     $(".regionSelected").removeClass("regionSelected");
+    $(".management-area").empty();
+    $(".management-area").append('<img src="https://www.wcpss.net/cms/lib/NC01911451/Centricity/Domain/6218/anatbanner.jpg" id="banner">')
   }
 }
 
@@ -47,6 +48,9 @@ function subMenuChange(region, regionName) {
 
 function addMenuItems(region, regionName, regionLevel, onClick){
   $(".subSubRegion").remove();
+  $(".management-area").empty();
+  $(".management-area").append('<img src="https://www.wcpss.net/cms/lib/NC01911451/Centricity/Domain/6218/anatbanner.jpg" id="banner">')
+  $(".question").remove();
   $("#" + regionName).addClass(regionLevel + "Selected");
   for(item in region){
     if(regionLevel == "region"){
@@ -56,10 +60,9 @@ function addMenuItems(region, regionName, regionLevel, onClick){
       $("#" + regionName).after('<li id="' + region[item].replace(/\s/g, '') +  '" title="' + region[item] + '" class="subSubRegion"> ')
       $('#' + region[item].replace(/\s/g, '')).prepend('<h6 class="category-title">' + region[item] + '</h6>')
     }
-    //$('#' + region[item].replace(/\s/g, '')).attr('name', region[item]);
     if(regionName != "trunk"){
       $('#' + region[item].replace(/\s/g, '')).click(function(){
-      	ajaxGet(website + "/flashcard?region=" + this.title, function(response) {
+      	ajaxGet(website + "/quiz?region=" + this.title, function(response) {
       		quizLayout(response)
     	}, function(error){
     		alert(error)
@@ -72,8 +75,67 @@ function addMenuItems(region, regionName, regionLevel, onClick){
   }
 }
 
+function optionSelected(number){
+  $(".optionSelected").removeClass("optionSelected")
+  switch(number) {
+    case 1: 
+      $("#opt-1").addClass("optionSelected");
+      break;
+    case 2: 
+      $("#opt-2").addClass("optionSelected");
+      break;
+    case 3: 
+      $("#opt-3").addClass("optionSelected");
+      break;
+    case 4: 
+      $("#opt-4").addClass("optionSelected");
+      break;
+    default : alert("none selected")
+  }
+}
+
 function quizLayout(quizzes){
 	console.log(quizzes)
+  loadQuizManager();
+  $(".question").remove()
+  
+  for(item in quizzes){
+    $(".questions-scroll").append('<div id="' + quizzes[item]._id + '" title="' + item +'" class="question">Q' + item + '</div>')
+    $('#' + quizzes[item]._id ).click( function(){
+      quizOnclick(this, quizzes);
+    })
+    if(item == 0){
+      var first = document.getElementById(quizzes[item]._id)
+      quizOnclick(first, quizzes)
+    }
+  }
+}
+
+function quizOnclick(thisElement, quizzes){
+  $(".qselected").removeClass("qselected");
+  $(thisElement).addClass("qselected")
+  $("#opt-1").val(quizzes[thisElement.title].options[0])
+  $("#opt-2").val(quizzes[thisElement.title].options[1])
+  $("#opt-3").val(quizzes[thisElement.title].options[2])
+  $("#opt-4").val(quizzes[thisElement.title].options[3])
+  $("#question").val(quizzes[thisElement.title].question)
+  $("#explanation").val(quizzes[thisElement.title].explanation)
+  $(".optionSelected").removeClass("optionSelected")
+  switch(quizzes[thisElement.title].correctAnswer){
+    case quizzes[thisElement.title].options[0]: 
+      $("#opt-1").addClass("optionSelected");
+      break;
+    case quizzes[thisElement.title].options[1]: 
+      $("#opt-2").addClass("optionSelected");
+      break;
+    case quizzes[thisElement.title].options[2]: 
+      $("#opt-3").addClass("optionSelected");
+      break;
+    case quizzes[thisElement.title].options[3]: 
+      $("#opt-4").addClass("optionSelected");
+      break;
+    default: alert("no selected answer");
+  }
 }
 
 function trunkSetup() {
@@ -92,10 +154,89 @@ function trunkSetup() {
   })
 }
 
+function loadQuizManager() {
+ $(".management-area").empty();
+ $(".management-area").append('<div class="question-content"</div>')
+ $(".question-content").prepend('<form class="question-display"></form>')
+ $(".question-display").append('<label for="question">Question</label><textarea id="question" name="question" placeholder="Enter your question" rows="1"></textarea>')           
+ var letter = "A"
+ for(var i = 1; i < 5; i++){
+  $(".question-display").append('<div id="question-option' + i + '" class="question-option"></div>');
+  $("#question-option" + i).append('<button type="button" for="opt-' + i + '" onclick="optionSelected(' + i + ')"> ' + letter + ' </button>')
+  $("#question-option" + i).append('<textarea id="opt-' + i + '" name="opt-' + i + '" rows="1"></textarea>')
+  letter = String.fromCharCode(letter.charCodeAt(0) +  1 )
+ }
+ $(".question-display").append('<label for="explanation">Explanation</label><textarea id="explanation" name="explanation" placeholder="Enter your explanation" rows="3"></textarea>')
+ $(".management-area").append('<div class="image-gallery"></div>')
+ $(".image-gallery").append('<div id="column1" class="column"></div>')
+ for(var i = 0; i < 7; i++){
+ $("#column1").append('<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80">')
+ }
+ $(".image-gallery").append('<div id="column2" class="column"></div>')
+ for(var i = 0; i < 7; i++){
+ $("#column2").append('<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80">')
+ }
+ $(".management-area").append('<div class="options-panel"></div>')
+ $(".options-panel").append('<button>Delete Question</button><button onclick="makeNewQuiz()">Make New Quiz</button>')         
+}
 
-var ajaxPost = function (url, data, onSucess, onError){
+function makeNewQuiz() {
+  $(".options-panel").empty();
+  $("#opt-1").val("")
+  $("#opt-2").val("")
+  $("#opt-3").val("")
+  $("#opt-4").val("")
+  $("#question").val("")
+  $("#explanation").val("")
+  $(".optionSelected").removeClass("optionSelected")
+  $(".options-panel").append('<button onclick="submitQuiz()">Submit</button>');
+}
+
+function submitQuiz() {
+  var data = {};
+  data.image = "image.com";
+  if($("#question").val() == ""){
+    alert("Please fill in question field");
+    return;
+  }
+  if($("#opt-1").val() == "" || $("#opt-2").val() == "" || $("#opt-3").val() == "" || $("#opt-4").val() == "" ){
+    alert("Please fill out all options");
+  }
+  if($("#explanation").val() == ""){
+    alert("Please fill out explanation");
+  }
+  if($(".optionSelected").length < 1){
+    alert("Please select a correct answer by pressing the letter");
+  }
+  data.questionType = "multiple choice";
+  if($(".regionSelected").attr('title') == "trunk"){
+    data.region = $(".subSubRegionSelected").attr('title');
+  } else{
+    data.region = $(".subRegionSelected").attr('title');
+  }
+  data.options = [$("#opt-1").val(), $("#opt-2").val(), $("#opt-3").val(), $("#opt-4").val()]
+  switch($(".optionSelected").attr('id')){
+    case "opt-1": data.correctAnswer = data.options[0]; break;
+    case "opt-2": data.correctAnswer = data.options[1]; break;
+    case "opt-3": data.correctAnswer = data.options[2]; break;
+    case "opt-4": data.correctAnswer = data.options[3]; break;
+    default:  alert("no option selected");
+  }
+  data.explanation = [$("#explanation").val()];
+  data.question = $("#question").val()
+  console.log(JSON.stringify(data))
+  ajaxPost(website + "/quiz", data, function(){
+    alert("item added correctly");
+  },
+  function(){
+    //alert("item failed to be added")
+  });
+
+}
+
+var ajaxPost = function (url, data, onSuccess, onError){
     this.url = url;
-    this.onSuccess = onSucess;
+    this.onSuccess = onSuccess;
     this.onError = onError;
 
     var xhttp = new XMLHttpRequest();
@@ -108,7 +249,8 @@ var ajaxPost = function (url, data, onSucess, onError){
         else onError(xhttp.responseText);
     }
     xhttp.open('POST', this.url, true);
-    xhttp.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
+    xhttp.setRequestHeader('Auth-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTMxMGMyZjUzZmZjMjFhMGEzYjNlZmYiLCJpYXQiOjE1ODAyNzc2OTl9.XZnj5CtA_rYOxDo48d_kK3l4_EkEvf91ZoeG4-0naXA');
+    xhttp.setRequestHeader('Content-Type', "application/json")
     xhttp.send(JSON.stringify(data));
 
 }

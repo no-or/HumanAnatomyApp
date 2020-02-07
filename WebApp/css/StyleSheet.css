@@ -161,7 +161,7 @@ li {
 }
 
 
-.questions-scroll .question.selected {
+.questions-scroll .question.qselected {
 	color: var(--main-white);
 	background-color: var(--main-blue);
 }
@@ -217,6 +217,9 @@ li {
 	border: 1px solid var(--main-blue-border);
 }
 
+.question-content .question-display textarea.optionSelected{
+	background-color: green;
+}
 .question-content .question-option {
 	display: flex;
 	justify-content: space-evenly;
@@ -231,6 +234,17 @@ li {
 	width: 15%;
 	background-color: var(--main-background-gray);
 	cursor: pointer;
+}
+
+button {
+	color: var(--main-white);
+	background-color: var(--main-background-gray);
+	cursor: pointer;
+	padding: 10px;
+}
+
+#banner{
+	width: 100%;
 }
 
 .question-content .question-option button.selected {
