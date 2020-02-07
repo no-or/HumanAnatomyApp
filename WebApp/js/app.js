@@ -14,6 +14,24 @@ $(document).ready(function(){
   $("#trunk").click(function(){
   	menuChange(trunk, "trunk")
   })
+  $(".login-form").submit(function( event ) {
+    var values = $(this).serializeArray();
+    var data = {
+      email: values[0].value,
+      password: values[1].value
+    }
+
+    console.log(data)
+    var url = 'http://localhost:8080/admin/login'
+    var success = function() {
+      window.location.href = 'index.html';
+    }
+    var failure = function() {
+      // alert(":(")
+    }
+    ajaxPost(url, data, success, failure);
+    event.preventDefault();
+  });
 });
 
 
@@ -39,7 +57,7 @@ function subMenuChange(region, regionName) {
     addMenuItems(region, regionName, "subRegion" , function(thisElement){
       $(".subSubRegionSelected").removeClass("subSubRegionSelected")
       $(thisElement).addClass("subSubRegionSelected")
-    })   
+    })
   }else {
     $(".subSubRegionSelected").removeClass("subSubRegionSelected")
   }
@@ -103,7 +121,7 @@ var ajaxPost = function (url, data, onSucess, onError){
 
     xhttp.onreadystatechange = function() {
         if(xhttp.readyState == 4 && xhttp.status == 200) {
-            onSuccess(xhttp.responseText);            
+            onSuccess(xhttp.responseText);
         }
         else onError(xhttp.responseText);
     }
@@ -145,6 +163,8 @@ var ajaxGet = function (url, onSuccess, onError) {
     xhttp.open("GET", url, true);
     xhttp.send();
 }
+
+
 
 
 var Back = ["Trunk bones", "Trunk joints"];
