@@ -18,6 +18,10 @@ const QuizSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    options:{
+        type: Array,
+        required: true
+    },
     answer:{
         type: String,
         required: true
