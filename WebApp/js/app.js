@@ -99,14 +99,18 @@ function quizLayout(quizzes){
   loadQuizManager();
   $(".question").remove()
   
-  for(item in quizzes){
-    $(".questions-scroll").append('<div id="' + quizzes[item]._id + '" title="' + item +'" class="question">Q' + item + '</div>')
-    $('#' + quizzes[item]._id ).click( function(){
-      quizOnclick(this, quizzes);
-    })
-    if(item == 0){
-      var first = document.getElementById(quizzes[item]._id)
-      quizOnclick(first, quizzes)
+  if(quizzes.length == 0){
+    disableQuizFields();
+  }else{
+    for(item in quizzes){
+      $(".questions-scroll").append('<div id="' + quizzes[item]._id + '" title="' + item +'" class="question">Q' + item + '</div>')
+      $('#' + quizzes[item]._id ).click( function(){
+        quizOnclick(this, quizzes);
+      })
+      if(item == 0){
+        var first = document.getElementById(quizzes[item]._id)
+        quizOnclick(first, quizzes)
+      }
     }
   }
 }
@@ -120,6 +124,7 @@ function quizOnclick(thisElement, quizzes){
   $("#opt-4").val(quizzes[thisElement.title].options[3])
   $("#question").val(quizzes[thisElement.title].question)
   $("#explanation").val(quizzes[thisElement.title].explanation)
+  disableQuizFields();
   $(".optionSelected").removeClass("optionSelected")
   switch(quizzes[thisElement.title].correctAnswer){
     case quizzes[thisElement.title].options[0]: 
@@ -136,6 +141,8 @@ function quizOnclick(thisElement, quizzes){
       break;
     default: alert("no selected answer");
   }
+  $(".options-panel").children().remove();
+  $(".options-panel").append('<button onclick="deleteQuiz()">Delete Question</button><button onclick="makeNewQuiz()">Make New Quiz</button>') 
 }
 
 function trunkSetup() {
@@ -162,7 +169,7 @@ function loadQuizManager() {
  var letter = "A"
  for(var i = 1; i < 5; i++){
   $(".question-display").append('<div id="question-option' + i + '" class="question-option"></div>');
-  $("#question-option" + i).append('<button type="button" for="opt-' + i + '" onclick="optionSelected(' + i + ')"> ' + letter + ' </button>')
+  $("#question-option" + i).append('<button type="button" id="opt-' + i + '-button" for="opt-' + i + '" onclick="optionSelected(' + i + ')"> ' + letter + ' </button>')
   $("#question-option" + i).append('<textarea id="opt-' + i + '" name="opt-' + i + '" rows="1"></textarea>')
   letter = String.fromCharCode(letter.charCodeAt(0) +  1 )
  }
@@ -177,17 +184,12 @@ function loadQuizManager() {
  $("#column2").append('<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80">')
  }
  $(".management-area").append('<div class="options-panel"></div>')
- $(".options-panel").append('<button>Delete Question</button><button onclick="makeNewQuiz()">Make New Quiz</button>')         
+ $(".options-panel").append('<button onclick="deleteQuiz()">Delete Question</button><button onclick="makeNewQuiz()">Make New Quiz</button>')         
 }
 
 function makeNewQuiz() {
   $(".options-panel").empty();
-  $("#opt-1").val("")
-  $("#opt-2").val("")
-  $("#opt-3").val("")
-  $("#opt-4").val("")
-  $("#question").val("")
-  $("#explanation").val("")
+  enableQuizFields();
   $(".optionSelected").removeClass("optionSelected")
   $(".options-panel").append('<button onclick="submitQuiz()">Submit</button>');
 }
@@ -201,12 +203,15 @@ function submitQuiz() {
   }
   if($("#opt-1").val() == "" || $("#opt-2").val() == "" || $("#opt-3").val() == "" || $("#opt-4").val() == "" ){
     alert("Please fill out all options");
+    return;
   }
   if($("#explanation").val() == ""){
     alert("Please fill out explanation");
+    return;
   }
   if($(".optionSelected").length < 1){
     alert("Please select a correct answer by pressing the letter");
+    return;
   }
   data.questionType = "multiple choice";
   if($(".regionSelected").attr('title') == "trunk"){
@@ -227,11 +232,80 @@ function submitQuiz() {
   console.log(JSON.stringify(data))
   ajaxPost(website + "/quiz", data, function(){
     alert("item added correctly");
+    if($(".regionSelected").title == "trunk"){
+    $(".subSubRegionSelected").trigger("click");
+  } else{
+    $(".subRegionSelected").trigger("click");
+  }
   },
   function(){
     //alert("item failed to be added")
   });
 
+}
+
+function disableQuizFields(){
+  $("#opt-1").prop("readonly", true);
+    $("#opt-2").prop("readonly", true);
+    $("#opt-3").prop("readonly", true);
+    $("#opt-4").prop("readonly", true);
+    $("#question").prop("readonly", true);
+    $("#explanation").prop("readonly", true);
+    $("#opt-1-button").prop("disabled", true);
+    $("#opt-2-button").prop("disabled", true);
+    $("#opt-3-button").prop("disabled", true);
+    $("#opt-4-button").prop("disabled", true);
+}
+
+function enableQuizFields(){
+  $("#opt-1").val("").prop("readonly", false)
+  $("#opt-2").val("").prop("readonly", false)
+  $("#opt-3").val("").prop("readonly", false)
+  $("#opt-4").val("").prop("readonly", false)
+  $("#question").val("").prop("readonly", false)
+  $("#explanation").val("").prop("readonly", false)
+  $("#opt-1-button").prop("disabled", false);
+  $("#opt-2-button").prop("disabled", false);
+  $("#opt-3-button").prop("disabled", false);
+  $("#opt-4-button").prop("disabled", false);
+}
+
+function deleteQuiz(){
+  var id = $(".qselected").attr("id")
+  if(id == undefined){
+    alert("Please select a question to delete.")
+    return;
+  }
+  var x = confirm("Are you sure you want to delete question id=" + id);
+  if(x){
+    ajaxDelete(website+ "/quiz/" + id, function(){
+      alert("question deleted");
+      if($(".regionSelected").title == "trunk"){
+        $(".subSubRegionSelected").trigger("click");
+      } else{
+        $(".subRegionSelected").trigger("click");
+      }
+    }, function(){
+      alert("question was not deleted");
+    })
+  }
+}
+
+var ajaxDelete = function (url, onSuccess, onError){
+  this.url = url;
+  this.onSuccess = onSuccess;
+  this.onError = onError;
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+        if(xhttp.readyState == 4 && xhttp.status == 200) {
+            onSuccess(xhttp.responseText);            
+        }
+        //else onError(xhttp.responseText);
+    }
+    xhttp.open('DELETE', this.url, true);
+    xhttp.setRequestHeader('Auth-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTMxMGMyZjUzZmZjMjFhMGEzYjNlZmYiLCJpYXQiOjE1ODAyNzc2OTl9.XZnj5CtA_rYOxDo48d_kK3l4_EkEvf91ZoeG4-0naXA');
+    xhttp.setRequestHeader('Content-Type', "application/json")
+    xhttp.send();
 }
 
 var ajaxPost = function (url, data, onSuccess, onError){
@@ -241,6 +315,7 @@ var ajaxPost = function (url, data, onSuccess, onError){
 
     var xhttp = new XMLHttpRequest();
     //xhttp.timeout = 5000;
+
 
     xhttp.onreadystatechange = function() {
         if(xhttp.readyState == 4 && xhttp.status == 200) {
