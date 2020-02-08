@@ -31,11 +31,6 @@ input {
 --main-blue-border: #BCE0FD
 }
 
-/* body {
-  background: linear-gradient(to bottom right, #33ccff 0%, #ff99cc 100%);
-  height: 100vh;
-} */
-
 body {
   height: 100vh;
   overflow-y: hidden;
@@ -59,7 +54,7 @@ body {
   /* font-family: Raleway-Black; */
 }
 
-.login-form {
+.form {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -69,7 +64,7 @@ body {
   margin-top: 50px;
 }
 
-.login-form input {
+.form input {
   width: 100%;
   font-size: 18px;
   line-height: 1.2;
@@ -93,7 +88,7 @@ button, a {
   cursor: pointer;
 }
 
-.login-form .login-button, .login-form .continue-button {
+.form .login-button, .form .continue-button {
   margin-top: 25px;
 }
 
