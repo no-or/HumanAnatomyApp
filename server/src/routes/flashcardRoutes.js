@@ -45,7 +45,7 @@ const initializeFlashcardRoutes = (app) => {
             }
         } catch (e) {
             console.error(e);
-            res
+            return next(e);
         }
     });
 
