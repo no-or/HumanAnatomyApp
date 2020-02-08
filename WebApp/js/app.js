@@ -150,7 +150,6 @@ function quizLayout(quizzes){
 	console.log(quizzes)
   loadQuizManager();
   $(".question").remove()
-  
   if(quizzes.length == 0){
     disableQuizFields();
   }else{
@@ -266,7 +265,7 @@ function submitQuiz() {
     return;
   }
   data.questionType = "multiple choice";
-  if($(".regionSelected").attr('title') == "trunk"){
+  if($(".regionSelected").attr('id') == "trunk"){
     data.region = $(".subSubRegionSelected").attr('title');
   } else{
     data.region = $(".subRegionSelected").attr('title');
@@ -284,7 +283,7 @@ function submitQuiz() {
   console.log(JSON.stringify(data))
   ajaxPost(website + "/quiz", data, function(){
     alert("item added correctly");
-    if($(".regionSelected").title == "trunk"){
+    if($(".regionSelected").attr('id') == "trunk"){
     $(".subSubRegionSelected").trigger("click");
   } else{
     $(".subRegionSelected").trigger("click");
@@ -332,7 +331,7 @@ function deleteQuiz(){
   if(x){
     ajaxDelete(website+ "/quiz/" + id, function(){
       alert("question deleted");
-      if($(".regionSelected").title == "trunk"){
+      if($(".regionSelected").attr('id') == "trunk"){
         $(".subSubRegionSelected").trigger("click");
       } else{
         $(".subRegionSelected").trigger("click");
@@ -404,12 +403,20 @@ var ajaxGet = function (url, onSuccess, onError) {
             if (i > 2) {
                 console.log("error: ");
                 console.log(xhttp.responseText);
-                onError(xhttp.responseText);
+                if(this.status == 404){
+                  var obj = [];
+                  onSuccess(obj);
+                }else{
+                  onError(xhttp.responseText);
+                }
                 i = 0;
+            }else{
+              i++;
             }
         }
     }
     xhttp.ontimeout = function (e) {
+      alert("fail")
         console.log("error: ");
         console.log("timeout");
         onError(xhttp.responseText);
