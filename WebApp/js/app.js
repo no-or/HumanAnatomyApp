@@ -234,9 +234,9 @@ function submitQuiz() {
   ajaxPost(website + "/quiz", data, function(){
     alert("item added correctly");
     if($(".regionSelected").attr('id') == "trunk"){
-    //$(".subSubRegionSelected").trigger("click");
+    $(".subSubRegionSelected").trigger("click");
   } else{
-    //$(".subRegionSelected").trigger("click");
+    $(".subRegionSelected").trigger("click");
   }
   },
   function(){
@@ -282,9 +282,9 @@ function deleteQuiz(){
     ajaxDelete(website+ "/quiz/" + id, function(){
       alert("question deleted");
       if($(".regionSelected").attr('id') == "trunk"){
-        //$(".subSubRegionSelected").trigger("click");
+        $(".subSubRegionSelected").trigger("click");
       } else{
-        //$(".subRegionSelected").trigger("click");
+        $(".subRegionSelected").trigger("click");
       }
     }, function(){
       alert("question was not deleted");
