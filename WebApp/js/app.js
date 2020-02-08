@@ -29,6 +29,7 @@ function menuChange(region, regionName) {
     $(".regionSelected").removeClass("regionSelected");
     $(".management-area").empty();
     $(".management-area").append('<img src="https://www.wcpss.net/cms/lib/NC01911451/Centricity/Domain/6218/anatbanner.jpg" id="banner">')
+    $(".questions-scroll").children().remove();
   }
 }
 
@@ -37,13 +38,14 @@ function subMenuChange(region, regionName) {
   if(!(curSelected.length == 1 && curSelected[0].id == regionName)){
     $(".subRegionSelected").removeClass("subRegionSelected")
     addMenuItems(region, regionName, "subRegion" , function(thisElement){
-      $(".subSubRegionSelected").removeClass("subSubRegionSelected")
+      $("#B").removeClass("subSubRegionSelected")
       $(thisElement).addClass("subSubRegionSelected")
     })
+    $(".subRegionSelected").prop("disabled", true)
   }else {
-    $(".subSubRegionSelected").removeClass("subSubRegionSelected")
     $(".subSubRegion").remove();
     $(".subRegionSelected").removeClass("subRegionSelected")
+
   }
 }
 
@@ -146,18 +148,17 @@ function quizOnclick(thisElement, quizzes){
 }
 
 function trunkSetup() {
-  $("#Back").click(function() {
+  $("#Back").unbind("click").click(function() {
     subMenuChange(Back, "Back");
   })
-  $("#Thorax").click(function() {
+  $("#Thorax").unbind("click").click(function() {
     subMenuChange(Thorax, "Thorax");
   })
-  $("#Abdomen").click(function() {
+  $("#Abdomen").unbind("click").click(function() {
     subMenuChange(Abdomen, "Abdomen");
   })
-  $("#Pelvis").click(function() {
+  $("#Pelvis").unbind("click").click(function() {
     subMenuChange(Pelvis, "Pelvis");
-
   })
 }
 
@@ -233,9 +234,9 @@ function submitQuiz() {
   ajaxPost(website + "/quiz", data, function(){
     alert("item added correctly");
     if($(".regionSelected").attr('id') == "trunk"){
-    $(".subSubRegionSelected").trigger("click");
+    //$(".subSubRegionSelected").trigger("click");
   } else{
-    $(".subRegionSelected").trigger("click");
+    //$(".subRegionSelected").trigger("click");
   }
   },
   function(){
@@ -281,9 +282,9 @@ function deleteQuiz(){
     ajaxDelete(website+ "/quiz/" + id, function(){
       alert("question deleted");
       if($(".regionSelected").attr('id') == "trunk"){
-        $(".subSubRegionSelected").trigger("click");
+        //$(".subSubRegionSelected").trigger("click");
       } else{
-        $(".subRegionSelected").trigger("click");
+        //$(".subRegionSelected").trigger("click");
       }
     }, function(){
       alert("question was not deleted");
@@ -297,6 +298,7 @@ var Back = ["Trunk bones", "Trunk joints"];
 var Thorax = ["Pectoral region", "Lungs and pleura", "Heart", "Superior and posterior mediastinum"]
 var Abdomen = ["Anterior abdominal wall", "Foregut organs", "Midgut and hindgut organs", "Posterior abdominal wall"]
 var Pelvis = ["Pelvic bones and muscles", "Pelvic joints and ligaments", "Male pelvis", "Female pelvis", "Perineum"]
+
 
 var trunk = ["Back", "Thorax", "Abdomen", "Pelvis"];
 var lower = ["Gluteal region", "Thigh", "Leg", "Foot", "Lower limb bones", "Lower limb joints"]
