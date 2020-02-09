@@ -7,8 +7,8 @@ export default class Accordion extends Component{
     constructor(props) {
         super(props);
         this.state = {
-          data: props.data,
-          expanded : false,
+            data: props.data,
+            expanded : false,
         }
     }
 
@@ -36,9 +36,13 @@ export default class Accordion extends Component{
                                 <Text
                                     style={[styles.font, styles.itemInActive]}
                                 >
-                                    {item}
+
+                                    {item == 'Back' || item == 'Abdomen' || item == 'Thorax' || item == "Pelvis" ? (
+                                        <Text>"Hello"</Text>
+                                    ) : (
+                                        <Text>{item}</Text>
+                                    )}
                                 </Text>
-                                {/* <Icon name={'check-circle'} size={24} color={ item.value ? 'lightgray' : 'green'} /> */}
                             </TouchableOpacity>
                             <View style={styles.childHr}/>
                         </View>
