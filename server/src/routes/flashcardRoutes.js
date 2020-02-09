@@ -37,8 +37,8 @@ const initializeFlashcardRoutes = (app) => {
     flashcardRouter.get('/', async (req, res, next) => {
         try {
             const flashcards = await FlashcardModel.find(req.query);
-            if (flashcards === null) {
-                throw new Error(`No flashcards found`);
+            if (flashcards === null || flashcards.length === 0) {
+                res.status(404).send(`No such flashcards found`);
             } else {
                 res.status(200);
                 await res.json(flashcards);
