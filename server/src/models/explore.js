@@ -15,6 +15,9 @@ const ExplorelabSchema = new mongoose.Schema({
     },
     image:{
         type: String
+    },
+    parent:{
+        type: String
     }
 });
 
