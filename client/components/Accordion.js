@@ -36,12 +36,7 @@ export default class Accordion extends Component{
                                 <Text
                                     style={[styles.font, styles.itemInActive]}
                                 >
-
-                                    {item == 'Back' || item == 'Abdomen' || item == 'Thorax' || item == "Pelvis" ? (
-                                        <Text>"Hello"</Text>
-                                    ) : (
-                                        <Text>{item}</Text>
-                                    )}
+                                 {item}
                                 </Text>
                             </TouchableOpacity>
                             <View style={styles.childHr}/>
