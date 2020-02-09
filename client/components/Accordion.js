@@ -29,13 +29,14 @@ export default class Accordion extends Component{
                     data={this.state.data}
                     numColumns={1}
                     scrollEnabled={false}
-                    renderItem={({item, index}) => 
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item, index}) =>
                         <View>
                             <TouchableOpacity style={[styles.childRow, styles.button, item.value ? styles.btnInActive : styles.btnActive]} onPress={()=>this.onClick(item, index, this.props.navigation)}>
-                                <Text 
-                                    style={[styles.font, styles.itemInActive]} 
+                                <Text
+                                    style={[styles.font, styles.itemInActive]}
                                 >
-                                    {item.key}
+                                    {item}
                                 </Text>
                                 {/* <Icon name={'check-circle'} size={24} color={ item.value ? 'lightgray' : 'green'} /> */}
                             </TouchableOpacity>
@@ -53,7 +54,7 @@ export default class Accordion extends Component{
     temp[index].value = !temp[index].value
     this.setState({data: temp})
     navigation.push("ExploreLabLearnDropdownOption", {
-        title: item.key,
+        title: item,
         navigation: navigation
     })
   }
