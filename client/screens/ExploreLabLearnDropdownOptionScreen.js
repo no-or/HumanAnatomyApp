@@ -6,67 +6,127 @@ import {
   View,
   Text, 
   FlatList,
+  SectionList,
   ScrollView
 } from 'react-native';
 import colors from '../assets/colors';
 
-const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'Lungs',
-      url: 'https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Hand',
-      url: 'https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Heart',
-      url: 'http://www.aljanh.net/data/archive/img/3085128125.jpeg',
-    },
-];
+function Item({ content }) {
+    // if (content.children.length) {
+    //   let requestString = ''
+    //   for (child of children) {
+    //     requestString += "title"
+    //   }
+    // }
 
-function Item({ title, url, hide }) {
     return (
         <View style={styles.optionContainer}>
             <ScrollView minimumZoomScale={1} maximumZoomScale={5}>
                 <Image
                     style={styles.image}
-                    source={{uri: url}}
+                    source={{uri: content.image}}
                 />
             </ScrollView>
-            <Text>{title}</Text>
+            <Text>{content.title}</Text>
         </View>
     );
 }
 
 export default class ExploreLabLearnDropdownOptionScreen extends Component {
+    
+    constructor(props) {
+      super(props);
+      this.state = {
+        menu: [
+            // {
+            //   title: "Section",
+            //   data: [
+            //   {
+            //     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+            //     title: 'Lungs',
+            //     image: 'https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg',},
+            //   {
+            //     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+            //     title: 'Hand',
+            //     image: 'https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg',
+            //   }
+            //   ],
+            // },
+            // {
+            //   title: "Section2",
+            //   data: [
+            //   {
+            //     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+            //     title: 'Lungs',
+            //     image: 'https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg',},
+            //   {
+            //     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+            //     title: 'Hand',
+            //     image: 'https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg',}
+            //   ]
+            // },
+        ]
+      }
+    }
 
-  static navigationOptions = ({navigation, screenProps}) => ({
-    title: navigation.state.params.title,
-    headerStyle: {
-      backgroundColor: colors.primary
-    },
-    headerTintColor: colors.primaryText,
-    headerTitleStyle: {
-        fontWeight: 'bold',
-    },
-  });
+    componentDidMount() {
+      this.apiFetch();
+    }
 
-  render() {
-    return (
-        <SafeAreaView style={styles.container}>
-            <FlatList
-                data={DATA}
-                renderItem={({ item }) => <Item url={item.url} title={item.title}/>}
-                keyExtractor={item => item.id}
-            >
-            </FlatList>
-        </SafeAreaView>
-    );
-  }
+    apiFetch() {
+      const {navigation} = this.props; 
+      var host = '192.168.0.102'
+      return fetch('http://'+host+':8080/explore?parent=' + navigation.state.params.title)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({menu: responseJson});
+        // alert(JSON.stringify(responseJson))
+        return responseJson;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    }
+
+    static navigationOptions = ({navigation, screenProps}) => ({
+      title: navigation.state.params.title,
+      headerStyle: {
+        backgroundColor: colors.primary
+      },
+      headerTintColor: colors.primaryText,
+      headerTitleStyle: {
+          fontWeight: 'bold',
+      },
+    });
+
+    render() {
+      return (
+          <SafeAreaView style={styles.container}>
+              <FlatList
+                  data={this.state.menu}
+                  renderItem={({ item }) => <Item content={item}/>}
+                  keyExtractor={item => item._id}
+              >
+              </FlatList>
+          </SafeAreaView>
+          // <SafeAreaView style={styles.container}>
+          //      {/* <FlatList
+          //         data={this.state.data}
+          //         renderItem={({ item }) => <Item url={item.image} title={item.title}/>}
+          //         keyExtractor={item => item._id}
+          //     >
+          //     </FlatList> */}
+          //     <SectionList
+          //       sections={this.state.menu}
+          //       keyExtractor={(item, index) => item + index}
+          //       renderItem={({ item }) => <Item url={item.image} title={item.title}/>}
+          //       renderSectionHeader={({ section: { title } }) => (
+          //         <Text style={styles.header}>{title}</Text>
+          //       )}
+          //     />
+          // </SafeAreaView>
+      );
+    }
 }
 
 const styles = StyleSheet.create({
