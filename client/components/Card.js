@@ -15,9 +15,10 @@ export default class Card extends Component {
         <Image style={styles.cardImage} source={{ uri: this.props.uri }} />
         <View style={styles.overlayTint}></View>
         <TouchableOpacity style={styles.textContainer} onPress={this.props.callback}>
-          <Text style={styles.textStyle}>{this.props.cardTitle}</Text>
+          <View style={styles.textView}>
+            <Text style={styles.textStyle}>{this.props.cardTitle}</Text>
+          </View> 
         </TouchableOpacity>
-        {/* <Text style={styles.cardText}>{this.props.cardTitle}</Text> */}
       </TouchableOpacity>
     );
   }
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     // width: "96%",
     shadowColor: "#000",
     shadowOpacity: 0.2,
-    shadowRadius: 1,
+    shadowRadius: 10,
     shadowOffset: {
       width: 3,
       height: 3
@@ -52,7 +53,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10
+    borderBottomRightRadius: 10,
+    borderRadius: 10,
+    borderWidth: 0
   },
   overlayTint: {
     position: "absolute",
@@ -77,8 +80,8 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   textStyle: {
-    backgroundColor: "#FFF",
-    opacity: 0.8,
+    // backgroundColor: "#FFF",
+    // opacity: 0.8,
     color: "#000",
     fontWeight: "bold",
     fontSize: 16,
@@ -86,6 +89,13 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     paddingBottom: 10,
     paddingTop: 10,
+    borderWidth: 0,
+    borderRadius: 10,
+    // elevation: 1
+  },
+  textView: {
+    backgroundColor: "#FFF",
+    opacity: 0.8,
     borderWidth: 1,
     borderRadius: 10,
     elevation: 1
