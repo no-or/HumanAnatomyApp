@@ -4,7 +4,12 @@
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
 	<script src="./js/app.js"></script>
-	<script src="./js/ajax.js"></script>
+	<script src="./js/util/ajax.js"></script>
+	<script src="./js/util/regionMenu.js"></script>
+	<script src="./js/sections/quiz.js"></script>
+	<script src="./js/sections/flashcards.js"></script>
+	<script src="./js/sections/explore.js"></script>
+	<script src="./js/sections/stats.js"></script>
 	<link rel="stylesheet" type="text/css" href="./css/StyleSheet.css">
 </head>
 
@@ -13,48 +18,15 @@
 		<div class="sidebar">
 			<h2 class="sidebar-title">Anatomy Portal</h2>
 			<ul class="sidebar-options">
-				<li>Quizzes</li>
-				<li>Flashcards</li>
-				<li>Explore Lab</li>
-				<li>User Analytics</li> 
+				<li id="quizzes">Quizzes</li>
+				<li id="flashcards">Flashcards</li>
+				<li id="explore">Explore Lab</li>
+				<li id="stats">User Analytics</li> 
 			</ul>
 		</div>
+		
 		<div class="content">
-			<div class="topbar">
-				<h2 class="topbar-title">Quizzes</h2>
-				<h2 class="topbar-title">Make A Quiz</h2>
-			</div>
-			<div class="category-area">
-				<div class="area-selection">
-					<ul class="selection-container">
-						<li id="head">
-							<h3 class="category-title">Head & Neck</h3>
-							<h4 class="category-question-number"> 20 Questions | Default</h4>
-						</li>
-						<li id="upper">
-							<h3 class="category-title">Upper Limb</h3>
-							<h4 class="category-question-number"> 20 Questions | Default</h4>
-						</li>
-						<li id = "lower">
-							<h3 class="category-title">Lower Limb</h3>
-							<h4 class="category-question-number"> 20 Questions | Default</h4>
-						</li>
-						<li id = "trunk">
-							<h3 class="category-title">Trunk</h3>
-							<h4 class="category-question-number"> 20 Questions | Default</h4>
-						</li>
-					</ul>
-				</div>
-				<div class="anatomy-section">
-					<div class="management-area">
-						<img src="https://www.wcpss.net/cms/lib/NC01911451/Centricity/Domain/6218/anatbanner.jpg" id="banner">
-					</div> 
-					<div class="questions-scroll">
-						
-					</div>
-				</div>
-			</div>
-		</div>
+		</div> 
 	</div>
 </body>
 
