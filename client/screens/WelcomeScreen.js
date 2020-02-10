@@ -5,7 +5,8 @@ import {
   StyleSheet,
   SafeAreaView,
   View,
-  Platform
+  Platform,
+  TouchableOpacity
 } from "react-native";
 import colors from "../assets/colors";
 import { InputStyled } from "../components/InputStyled";
@@ -37,10 +38,13 @@ export default class WelcomeScreen extends Component {
             text="Continue"
             onPress={() => this.props.navigation.navigate("Root")}
           />
-          <Button
+          <TouchableOpacity>
+            <Text style={styles.text}>Not A Student?</Text>
+          </TouchableOpacity>
+          {/* <Button
             title={"Not a Student?"}
             // onPress={() => this.props.navigation.navigate("Root")}
-          />
+          /> */}
         </View>
       </SafeAreaView>
     );
@@ -67,8 +71,14 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 32
   },
+  // text: {
+  //   alignSelf: "center",
+  //   textAlign: "center"
+  // },
   text: {
-    alignSelf: "center",
-    textAlign: "center"
+    color: "#FFF",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 16,
   }
 });

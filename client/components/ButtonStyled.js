@@ -15,7 +15,10 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     height: 55,
     width: "90%",
-    margin: 25
+    marginTop: 25,
+    marginBottom: 10,
+    marginLeft: 25,
+    marginRight: 25
   },
   text: {
     color: "#002145",
