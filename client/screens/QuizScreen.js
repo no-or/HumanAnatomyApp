@@ -233,17 +233,21 @@ const styles = StyleSheet.create({
   prevContainer: {
     flex: 1,
     alignContent: "center",
-    alignItems: "flex-start"
+    alignItems: "flex-start",
+    marginTop: 5,
+    marginBottom: 5
   },
   nextContainer: {
     flex: 1,
     alignContent: "center",
-    alignItems: "flex-end"
+    alignItems: "flex-end",
+    marginTop: 5,
+    marginBottom: 5
   },
   nextButton: {
-    height: 40,
-    paddingTop: 10,
-    paddingBottom: 10,
+    height: "100%",
+    // paddingTop: 10,
+    // paddingBottom: 10,
     paddingLeft: 20,
     paddingRight: 20,
     borderWidth: 1,
@@ -268,7 +272,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: Dimensions.get('window').width - 40,
     height: "100%",
-    padding: 10,
+    // padding: 10,
     borderWidth: 1,
     borderRadius: 40,
     alignItems: "center",
