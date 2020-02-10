@@ -25,27 +25,25 @@ export default class ExploreLabScreen extends Component {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
-        <SafeAreaView style={styles.wrapper}>
-          <View style={styles.content}>
-            <ScrollView
-              style={styles.container}
-              contentContainerStyle={styles.contentContainer}
-            >
-              <Card
-                uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
-                cardTitle="Learn"
-                callback={() => this.props.navigation.navigate("ExploreLabLearn")}
-              />
-              <Card
-                uri="https://www.simtics.com/media/28745/mlla.jpg"
-                cardTitle="Videos"
-                callback={() => this.props.navigation.navigate("ExploreLabVideos")}
-              />
-            </ScrollView>
-          </View>
-        </SafeAreaView>
-      </ScrollView>
+      <SafeAreaView style={styles.wrapper}>
+        <View style={styles.content}>
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.contentContainer}
+          >
+            <Card
+              uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
+              cardTitle="Learn"
+              callback={() => this.props.navigation.navigate("ExploreLabLearn")}
+            />
+            <Card
+              uri="https://www.simtics.com/media/28745/mlla.jpg"
+              cardTitle="Videos"
+              callback={() => this.props.navigation.navigate("ExploreLabVideos")}
+            />
+          </ScrollView>
+        </View>
+      </SafeAreaView>
     );
   }
 }
@@ -53,7 +51,13 @@ export default class ExploreLabScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
     backgroundColor: "#fff"
+  },
+  wrapper: {
+    flex: 1
+  },
+  content: {
+    height: "100%",
+    width: "100%"
   }
 });
