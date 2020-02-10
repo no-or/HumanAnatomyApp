@@ -12,42 +12,40 @@ const initializeExploreRoutes = (app) => {
         try {
             await explore.save().then((item) => res.send(item));
         } catch (e) {
-            res.status(400).send(e.message);
+            res.status(400).send(`Could not create the explorelab component for ${e.message}`);
         }
     });
 
     /* get explore sections by query */
-    exploreRouter.get('/', async (req, res, next) => {
+    exploreRouter.get('/', async (req, res) => {
         try {
             const data = await ExploreModel.find(req.query);
             if (data === null || data.length === 0) {
-                res.status(404).send(`No such data found`);
+                res.status(404).send(`No such exploreLab component found with query ${req.query}`);
             } else {
                 res.status(200);
                 await res.json(data);
             }
         } catch (e) {
-            console.error(e);
-            return next(e);
+            res.status(500).send(`Could not get the exploreLab component with query ${req.query} for ${e.message}`);
         }
     });
 
     /* remove a section by the title */
-    exploreRouter.delete('/', verifyAdmin,  async (req, res, next) => {
+    exploreRouter.delete('/', verifyAdmin,  async (req, res) => {
         const title = req.query.title;
         if(!title) {
-            res.status(400).send('Please pass title as a query parameter');
+            res.status(400).send('Please pass title of the exlporeLab component that you want to remove as a query param');
         }
         try {
             const explore = await ExploreModel.findOneAndRemove({title: title});
             if (explore === null) {
-                throw new Error(`No data found with the title ${title}`);
+                res.status(404).send(`No exploreLab component found with the title ${title}`);
             } else {
-                res.status(200).send(`removed the data with title ${title}`);
+                res.status(200).send(`removed the exploreLab component with title ${title}`);
             }
         } catch (e) {
-            console.error(e);
-            return next(e);
+            res.status(500).send(`Could not delete the exploreLab component for ${e.message}`);
         }
     });
 };

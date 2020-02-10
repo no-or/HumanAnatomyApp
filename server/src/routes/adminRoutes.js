@@ -28,11 +28,11 @@ const initializeAdminRoutes = (app) => {
         try {
             await admin.save().then((item) => res.send(item));
         } catch (e) {
-            res.status(400).send(e.errmsg);
+            res.status(400).send(e.message);
         }
     });
 
-    /* delete an admin */
+    /* delete an admin by id */
     adminRouter.delete('/:id', verifyAdmin,  async (req, res, next) => {
         const id = req.params.id.trim();
         try {
@@ -45,6 +45,24 @@ const initializeAdminRoutes = (app) => {
         } catch (e) {
             console.error(e);
             return next(e);
+        }
+    });
+
+    /* delete an admin by email (query) */
+    adminRouter.delete('/', verifyAdmin,  async (req, res) => {
+        const email = req.query.email;
+        if(!email) {
+            res.status(400).send('Please pass email of the admin that you want to remove as a query param');
+        }
+        try {
+            const admin = await AdminModel.findOneAndRemove({email: email});
+            if (admin === null) {
+                res.status(404).send(`No such admin found with the email address ${email}`);
+            } else {
+                res.status(200).send(`removed the admin with email address ${email}`);
+            }
+        } catch (e) {
+            res.status(500).send(`Could not delete admin for ${e.message}`);
         }
     });
 
