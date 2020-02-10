@@ -7,29 +7,27 @@ const initializeStatRoutes = (app) => {
     app.use('/stat', statRouter);
 
     /* create a stat */
-    statRouter.post('/', async (req, res, next) => {
+    statRouter.post('/', async (req, res) => {
         const stat = new StatModel(req.body);
         try {
             await stat.save().then((item) => res.send(item));
         } catch (e) {
-            console.error(e);
-            return next(e);
+            res.status(500).send(`Could not create the stat for ${e.message}`);
         }
     });
 
     /* get all the stats or by query */
-    statRouter.get('/', verifyAdmin, async (req, res, next) => {
+    statRouter.get('/', verifyAdmin, async (req, res) => {
         try {
             const stats = await StatModel.find(req.query);
-            if (stats === null) {
-                throw new Error(`No stats found`);
+            if (stats === null || stats.length === 0) {
+                res.status(404).send(`There are currently no stats in the DB`);
             } else {
                 res.status(200);
                 await res.json(stats);
             }
         } catch (e) {
-            console.error(e);
-            return next(e);
+            res.status(500).send(`Could not get the stat for ${e.message}`);
         }
     });
 };

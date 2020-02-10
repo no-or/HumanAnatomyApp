@@ -7,34 +7,32 @@ const initializeQuizRoutes = (app) => {
     app.use('/quiz', quizRouter);
 
     /* create a quiz */
-    quizRouter.post('/', verifyAdmin,  async (req, res, next) => {
+    quizRouter.post('/', verifyAdmin,  async (req, res) => {
         const quiz = new QuizModel(req.body);
         try {
             await quiz.save().then((item) => res.send(item));
         } catch (e) {
-            console.error(e);
-            return next(e);
+            res.status(400).send(`Could not create the quiz for ${e.message}`);
         }
     });
 
     /* get a quiz with id */
-    quizRouter.get('/:id', async (req, res, next) => {
+    quizRouter.get('/:id', async (req, res) => {
         try {
             const quiz = await QuizModel.findById(req.params.id);
             if (quiz === null) {
-                throw new Error(`No quiz found with id ${req.params.id}`);
+                res.status(404).send(`No quiz found with id ${req.params.id}`);
             } else {
                 res.status(200);
                 await res.json(quiz);
             }
         } catch (e) {
-            console.error(e);
-            return next(e);
+            res.status(500).send(`Could not get the quiz with id ${req.params.id} for ${e.message}`);
         }
     });
 
-    /* get all the quizzes or by query*/
-    quizRouter.get('/', async (req, res, next) => {
+    /* get all the quizzes or by query */
+    quizRouter.get('/', async (req, res) => {
         try {
             const quizzes = await QuizModel.find(req.query);
             if (quizzes === null || quizzes.length === 0) {
@@ -44,24 +42,22 @@ const initializeQuizRoutes = (app) => {
                 await res.json(quizzes);
             }
         } catch (e) {
-            console.error(e);
-            return next(e);
+            res.status(500).send(`Could not get the quizzes with query ${req.query} for ${e.message}`);
         }
     });
 
     /* remove a quiz with the id */
-    quizRouter.delete('/:id', verifyAdmin,  async (req, res, next) => {
+    quizRouter.delete('/:id', verifyAdmin,  async (req, res) => {
         const id = req.params.id.trim();
         try {
             const quiz = await QuizModel.findOneAndRemove({_id: id});
             if (quiz === null) {
-                throw new Error(`No quiz found with the id ${id}`);
+                res.status(404).send(`No quiz found with id ${req.params.id}`);
             } else {
                 res.status(200).send(`removed the quiz with id ${id}`);
             }
         } catch (e) {
-            console.error(e);
-            return next(e);
+            res.status(500).send(`Could not remove the quiz with id ${req.params.id} for ${e.message}`);
         }
     });
 };
