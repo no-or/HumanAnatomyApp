@@ -1,6 +1,7 @@
 
+var selectedRegion;
 
-function buildRegionMenu(section){
+function buildRegionMenu(section, onClick){
 $(".content").children().remove()
 $(".content").append('<div class="topbar"><h2 class="topbar-title">' + section + '</h2></div>')  
 $(".content").append('<div class="category-area"></div>');
@@ -24,6 +25,7 @@ $(".category-area").append('<div class="anatomy-section"><div class="management-
   $("#trunk").click(function(){
   	menuChange(trunk, "trunk")
   })
+  selectedRegion = onClick;
 };
 
 function menuChange(region, regionName) {
@@ -49,7 +51,7 @@ function subMenuChange(region, regionName) {
   if(!(curSelected.length == 1 && curSelected[0].id == regionName)){
     $(".subRegionSelected").removeClass("subRegionSelected")
     addMenuItems(region, regionName, "subRegion" , function(thisElement){
-      $("#B").removeClass("subSubRegionSelected")
+      $(".subSubRegionSelected").removeClass("subSubRegionSelected")
       $(thisElement).addClass("subSubRegionSelected")
     })
     $(".subRegionSelected").prop("disabled", true)
@@ -76,12 +78,7 @@ function addMenuItems(region, regionName, regionLevel, onClick){
     }
     if(regionName != "trunk"){
       $('#' + region[item].replace(/\s/g, '')).click(function(){
-      	ajaxGet(website + "/quiz?region=" + this.title, function(response) {
-      		quizLayout(response)
-    	}, function(error){
-    		alert(error)
-    	})
-        onClick(this);
+      	selectedRegion(onClick, this);
       })
     }else {
       trunkSetup();
