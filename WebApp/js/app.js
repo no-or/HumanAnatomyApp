@@ -12,7 +12,14 @@ $(document).ready(function(){
     })
   })
   $("#flashcards").click(function(){
-    buildRegionMenu("flashcards");
+    buildRegionMenu("Flashcards", function(onClick, thisElement){
+      ajaxGet(website + "/flashcard?region=" + thisElement.title, function(response) {
+      flashcardLayout(response)
+      }, function(error){
+        alert(error)
+      })
+      onClick(thisElement);
+    })
   })
   $("#explore").click(function(){
     buildRegionMenu("explore lab");
