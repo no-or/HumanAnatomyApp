@@ -1,24 +1,27 @@
 const mongoose = require('mongoose');
 
+const subSubRegionSchema = new mongoose.Schema({
+    subSubRegion:{type:String, required:true},
+    title:{type:String, required:true},
+    image:{type:String}
+});
+
+const subRegionSchema = new mongoose.Schema({
+    subRegion:{type:String, required:true},
+    title:{type:String, required:true},
+    image:{type:String},
+    subSubRegions:[subSubRegionSchema],
+});
+
 const ExplorelabSchema = new mongoose.Schema({
-    section:{
+    region:{
         type: String,
         required: true
-    },
-    title:{
-        type: String,
-        required: true,
-        unique: true
-    },
-    children:{
-        type: Array
     },
     image:{
         type: String
     },
-    parent:{
-        type: String
-    }
+    subRegions: [subRegionSchema]
 });
 
 module.exports = mongoose.model('Explorelab', ExplorelabSchema);
