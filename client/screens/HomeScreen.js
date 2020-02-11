@@ -16,23 +16,23 @@ export default class HomeScreen extends React.Component {
           >
             <HomeCard
               uri="http://www.aljanh.net/data/archive/img/3085128125.jpeg"
-              cardTitle="New Quiz"
+              cardTitle="New Heart Quiz"
               callback={() => this.props.navigation.navigate("Quiz")}
             />
             <HomeCard
               uri="https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg"
-              cardTitle="Recommended Quiz"
-              callback={() => this.props.navigation.navigate("Quiz")}
+              cardTitle="New Upper Limb Content"
+              callback={() => this.props.navigation.navigate("Explore")}
             />
             <HomeCard
               uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
-              cardTitle="New Flashcards"
+              cardTitle="New Neck Flashcards"
               callback={() => this.props.navigation.navigate("Flash")}
             />
             <HomeCard
               uri="https://st.depositphotos.com/2363887/2564/i/950/depositphotos_25640047-stock-photo-man-anatomy-thorax-cutaway-with.jpg"
-              cardTitle="Recommended Flashcards"
-              callback={() => this.props.navigation.navigate("Flash")}
+              cardTitle="New Heart Content"
+              callback={() => this.props.navigation.navigate("Explore")}
             />
           </ScrollView>
         </View>
