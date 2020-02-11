@@ -4,14 +4,14 @@ const subSubRegionSchema = new mongoose.Schema({
     subSubRegion:{type:String, required:true},
     title:{type:String, required:true},
     image:{type:String}
-});
+},{_id: false});
 
 const subRegionSchema = new mongoose.Schema({
     subRegion:{type:String, required:true},
     title:{type:String, required:true},
     image:{type:String},
     subSubRegions:[subSubRegionSchema],
-});
+},{_id: false});
 
 const ExplorelabSchema = new mongoose.Schema({
     region:{
