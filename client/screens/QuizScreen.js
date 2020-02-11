@@ -19,7 +19,7 @@ export default class Quizzes extends Component {
   state = {
     questions: [
       {
-        question: "What is highlighted in the image above?",
+        question: "This is a placeholder",
         answers: ["Right Atrium", "Left Atrium", "Right Ventricle", "Left Ventricle"],
         answerColors: {
           "Right Atrium": "green",
@@ -30,33 +30,7 @@ export default class Quizzes extends Component {
         correctAnswer: "Right Atrium",
         image: "http://www.aljanh.net/data/archive/img/3085128125.jpeg",
         chosenAnswer: ""
-      },
-      {
-        question: "Name the highlighted region?",
-        answers: ["Superior Vena Cava", "Pulmonary Trunk", "Moderator Band", "Trabeculae Carneae"],
-        answerColors: {
-          "Superior Vena Cava": colors.primary,
-          "Pulmonary Trunk": colors.primary,
-          "Moderator Band": "green",
-          "Trabeculae Carneae": colors.primary,
-        },
-        correctAnswer: "Moderator Band",
-        image: "https://www.kiwikidsnews.co.nz/wp-content/uploads/2014/08/mana-hone.jpeg",
-        chosenAnswer: ""
-      },
-      {
-        question: "What part of the heart is highlighted?",
-        answers: ["Aortic Valve", "Pulmonary Valve", "Epicardium", "Myocardium"],
-        answerColors: {
-          "Aortic Valve": "green",
-          "Pulmonary Valve": colors.primary,
-          "Epicardium": colors.primary,
-          "Myocardium": colors.primary,
-        },
-        correctAnswer: "Aortic Valve",
-        image: "http://www.aljanh.net/data/archive/img/3085128125.jpeg",
-        chosenAnswer: ""
-      },
+      }
     ],
     questionIndex: 0,
     score: 0
@@ -66,11 +40,11 @@ export default class Quizzes extends Component {
    * Function to increment index to move to next question.
    */
   _incrementIndex = () => {
-    if(this.state.questionIndex < (this.state.questions.length - 1)) {
+    // if(this.state.questionIndex < (this.state.questions.length - 1)) {
       this.setState(prevState => ({
         questionIndex: prevState.questionIndex+1
       }));
-    }
+    // }
   }
 
   /**
@@ -105,84 +79,109 @@ export default class Quizzes extends Component {
     }
   }
 
+  componentDidMount() {
+    let questions = this.props.navigation.getParam("questions");
+    this.setState({
+      questions
+    })
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-          <View style={styles.imageContainer}>
-            <ReactNativeZoomableView 
-              maxZoom={2.5}
-              minZoom={1.0}
-              zoomStep={0.1}
-              initialZoom={1.0}
-              bindToBorders={true}
-              style={styles.zoomableView}
-            >
-              <Image style={styles.image} source={{ uri: this.state.questions[this.state.questionIndex].image }} />
-            </ReactNativeZoomableView>
-          </View>
-
-          <View style={styles.divider}></View>
-
-          <View style={styles.textContainer}>
-            
-            <View style={styles.questionContainer}>
-              <Text style={styles.question}>
-                {this.state.questions[this.state.questionIndex].question}
-              </Text>
-            </View>
-            
-            <View style={styles.answers}>
-              {this.state.questions[this.state.questionIndex].answers.map(answer => 
-                <View style={styles.buttonContainer} key={answer}>
-                  <TouchableOpacity 
-                    style={{
-                      backgroundColor: this.state.questions[this.state.questionIndex].chosenAnswer === "" ? colors.primary : this.state.questions[this.state.questionIndex].answerColors[answer],
-                      ...styles.buttonStyle
-                    }}
-                    disabled={this.state.questions[this.state.questionIndex].chosenAnswer !== ""}
-                    onPress={() => this._answerQuestion(answer)}
-                    >
-                    <Text style={styles.buttonTextStyle}>{answer}</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-
-              <View style={styles.nextQuestionContainer}>
-                <View style={styles.prevContainer}>
-                  <TouchableOpacity 
-                    style={{
-                      backgroundColor: (this.state.questionIndex == 0) ? "#cccccc" : colors.primary,
-                      borderColor: (this.state.questionIndex == 0) ? "#999999" : colors.primary,
-                      ...styles.nextButton
-                    }}
-                    onPress={this._decrementIndex}
-                    disabled={this.state.questionIndex == 0}
-                    >
-                    <Text style={styles.buttonTextStyle}>Prev Question</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.nextContainer}>
-                  <TouchableOpacity 
-                    style={{
-                      backgroundColor: (this.state.questionIndex == (this.state.questions.length - 1)) ? "#cccccc" : colors.primary,
-                      borderColor: (this.state.questionIndex == (this.state.questions.length - 1)) ? "#999999" : colors.primary,
-                      ...styles.nextButton
-                    }}
-                    onPress={this._incrementIndex}
-                    disabled={this.state.questionIndex == (this.state.questions.length - 1)}
-                    >
-                    <Text style={styles.buttonTextStyle}>Next Question</Text>
-                  </TouchableOpacity>
-                </View>
+      <View>
+        {this.state.questionIndex < (this.state.questions.length) ? 
+          <View style={styles.container}>
+              <View style={styles.imageContainer}>
+                <ReactNativeZoomableView 
+                  maxZoom={2.5}
+                  minZoom={1.0}
+                  zoomStep={0.1}
+                  initialZoom={1.0}
+                  bindToBorders={true}
+                  style={styles.zoomableView}
+                >
+                  <Image style={styles.image} source={{ uri: this.state.questions[this.state.questionIndex].image }} />
+                </ReactNativeZoomableView>
               </View>
 
+              <View style={styles.divider}></View>
+
+              <View style={styles.textContainer}>
+                
+                <View style={styles.questionContainer}>
+                  <Text style={styles.question}>
+                    {this.state.questions[this.state.questionIndex].question}
+                  </Text>
+                </View>
+                
+                <View style={styles.answers}>
+                  {this.state.questions[this.state.questionIndex].answers.map(answer => 
+                    <View style={styles.buttonContainer} key={answer}>
+                      <TouchableOpacity 
+                        style={{
+                          backgroundColor: this.state.questions[this.state.questionIndex].chosenAnswer === "" ? colors.primary : this.state.questions[this.state.questionIndex].answerColors[answer],
+                          ...styles.buttonStyle
+                        }}
+                        disabled={this.state.questions[this.state.questionIndex].chosenAnswer !== ""}
+                        onPress={() => this._answerQuestion(answer)}
+                        >
+                        <Text style={styles.buttonTextStyle}>{answer}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+
+                  <View style={styles.nextQuestionContainer}>
+                    <View style={styles.prevContainer}>
+                      <TouchableOpacity 
+                        style={{
+                          backgroundColor: (this.state.questionIndex == 0) ? "#cccccc" : colors.primary,
+                          borderColor: (this.state.questionIndex == 0) ? "#999999" : colors.primary,
+                          ...styles.nextButton
+                        }}
+                        onPress={this._decrementIndex}
+                        disabled={this.state.questionIndex == 0}
+                        >
+                        <Text style={styles.buttonTextStyle}>Prev Question</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={styles.nextContainer}>
+                      <TouchableOpacity 
+                        style={{
+                          // backgroundColor: (this.state.questionIndex == (this.state.questions.length - 1)) ? "#cccccc" : colors.primary,
+                          backgroundColor: (this.state.questionIndex == (this.state.questions.length - 1)) ? colors.secondary : colors.primary,
+                          borderColor: (this.state.questionIndex == (this.state.questions.length - 1)) ? "#999999" : colors.primary,
+                          ...styles.nextButton
+                        }}
+                        onPress={this._incrementIndex}
+                        // disabled={this.state.questionIndex == (this.state.questions.length - 1)}
+                        >
+                        <Text style={styles.buttonTextStyle}>
+                          {this.state.questionIndex < (this.state.questions.length-1) ? "Next Question" : "F I N I S H" }
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+
+                </View>
+
+              </View>
+
+              <View style={styles.progressIndicator} pointerEvents="none">
+                <Text style={styles.progressText}>{(this.state.questionIndex + 1) + "/" + (this.state.questions.length)}</Text>
+              </View>
+          </View>
+          : 
+          <View style={styles.scoreStyle}>
+            <View style={styles.scoreHeaderContainer}>
+              <Text style={styles.finalScoreHeader}>FINAL SCORE</Text>
             </View>
-
+            <View style={styles.scoreNumberContainer}>
+              <Text style={styles.scoreNumber}>{"Correct: " + this.state.score}</Text>
+              <Text style={styles.scoreNumber}>{"Incorrect: " + (this.state.questions.length - this.state.score)}</Text>
+              <Text style={styles.scoreNumber}>{"Percentage: " + (this.state.score/this.state.questions.length*100) + "%"}</Text>
+            </View>
           </View>
-
-          <View style={styles.progressIndicator} pointerEvents="none">
-            <Text style={styles.progressText}>{(this.state.questionIndex + 1) + "/" + (this.state.questions.length)}</Text>
-          </View>
+        }
       </View>
     );
   }
@@ -316,5 +315,36 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     elevation: 1
+  },
+  scoreStyle: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    // flex: 1,
+    // width: "100%",
+    height: "100%",
+    backgroundColor: colors.primary
+  },
+  finalScoreHeader: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "white"
+  },
+  scoreHeaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+  },
+  scoreNumberContainer: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    alignContent: "center",
+  },
+  scoreNumber: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: colors.primaryText
   }
 });
