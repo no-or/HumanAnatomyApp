@@ -35,10 +35,42 @@ export default class ExploreLabVideosScreen extends Component {
               contentContainerStyle={styles.contentContainer}
             >
             <VideoCard
-                uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
-                cardTitle="Sample Video"
-                cardViews="Sample Views"
+                uri="https://img.youtube.com/vi/6Yr-xk2cUg8/maxresdefault.jpg"
+                cardTitle="Axilla, Arm, and Cubital Fossa Dissection Guide"
+                cardViews="519 Views"
+                url="https://www.youtube.com/watch?v=6Yr-xk2cUg8"
             />
+            <VideoCard
+                uri="https://img.youtube.com/vi/crXC7FwoSe4/0.jpg"
+                cardTitle="Dissection Guide of the Forearm"
+                cardViews="318 Views"
+                url="https://www.youtube.com/watch?v=crXC7FwoSe4"
+            />
+            <VideoCard
+                uri="https://img.youtube.com/vi/PeZbuT7CEmw/0.jpg"
+                cardTitle="Dissection Guide of the Palm of the Hand"
+                cardViews="98 Views"
+                url="https://www.youtube.com/watch?v=PeZbuT7CEmw"
+            />
+            <VideoCard
+                uri="https://img.youtube.com/vi/U9YStSt7fvk/maxresdefault.jpg"
+                cardTitle="Dissection Guide of the Gluteal and Thigh..."
+                cardViews="477 Views"
+                url="https://www.youtube.com/watch?v=U9YStSt7fvk"
+            />
+            <VideoCard
+                uri="https://img.youtube.com/vi/whYtpPZA748/maxresdefault.jpg"
+                cardTitle="Lung Dissection Guide"
+                cardViews="1.8K Views"
+                url="https://www.youtube.com/watch?v=whYtpPZA748"
+            />
+            <VideoCard
+                uri="https://img.youtube.com/vi/W43DkWsrTGk/maxresdefault.jpg"
+                cardTitle="Dissection Guide of the Pectoral Region"
+                cardViews="1.8K Views"
+                url="https://www.youtube.com/watch?v=W43DkWsrTGk"
+            />
+
             </ScrollView>
           </View>
         </SafeAreaView>
@@ -50,7 +82,6 @@ export default class ExploreLabVideosScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
     backgroundColor: "#fff"
   }
 });
