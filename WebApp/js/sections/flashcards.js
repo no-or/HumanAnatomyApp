@@ -90,8 +90,8 @@ function submitFlashcard() {
     $(".subRegionSelected").trigger("click");
   }
   },
-  function(){
-    //alert("item failed to be added")
+  function(error){
+    alert("item failed to be added" + error)
   });
 
 }

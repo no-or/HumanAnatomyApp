@@ -22,7 +22,14 @@ $(document).ready(function(){
     })
   })
   $("#explore").click(function(){
-    buildRegionMenu("explore lab");
+    buildRegionMenu("Explore Lab", function(onClick, thisElement){
+      ajaxGet(website + "/explore?region=" + thisElement.title, function(response) {
+      exploreLayout(response)
+      }, function(error){
+        alert(error)
+      })
+      onClick(thisElement);
+    })
   })
   $("#stats").click(function(){
     buildRegionMenu("user analytics");
