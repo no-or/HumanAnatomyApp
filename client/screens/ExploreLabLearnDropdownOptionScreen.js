@@ -12,12 +12,6 @@ import {
 import colors from '../assets/colors';
 
 function Item({ content }) {
-    // if (content.children.length) {
-    //   let requestString = ''
-    //   for (child of children) {
-    //     requestString += "title"
-    //   }
-    // }
 
     return (
         <View style={styles.optionContainer}>
@@ -76,11 +70,22 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
     apiFetch() {
       const {navigation} = this.props; 
       var host = '192.168.0.102'
-      return fetch('http://'+host+':8080/explore?parent=' + navigation.state.params.title)
-      .then((response) => response.json())
+      return fetch('http://'+host+':8080/explore?region=' + navigation.state.params.title)
+      .then((response) => 
+      response.status == 404 ? "" : response.json()
+      // alert(JSON.stringify(response))
+      )
       .then((responseJson) => {
-        this.setState({menu: responseJson});
-        // alert(JSON.stringify(responseJson))
+        if(responseJson != "") {
+          this.setState({menu: responseJson});
+        } else {
+          this.setState({menu: [{
+            "_id": toString(navigation.state.params.title),
+            "image": "https://membershipdrive.com/wp-content/uploads/2014/06/placeholder.png",
+            "region": "N/A",
+            "title": "Content in Progress"
+          }]})
+        }
         return responseJson;
       })
       .catch((error) => {
