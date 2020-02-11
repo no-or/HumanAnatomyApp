@@ -24,9 +24,6 @@ const ExplorelabSchema = new mongoose.Schema({
     subRegionNames: {
         type: Array
     },
-    subSubRegionNames: {
-        type: Array
-    },
     subRegions: [subRegionSchema]
 });
 
