@@ -47,6 +47,9 @@ function quizOnclick(thisElement, quizzes){
   $("#opt-4").val(quizzes[thisElement.title].options[3])
   $("#question").val(quizzes[thisElement.title].question)
   $("#explanation").val(quizzes[thisElement.title].explanation)
+  $("#image").val(quizzes[thisElement.title].image)
+  $(".image-gallery").empty();
+  $(".image-gallery").append('<img src="' + quizzes[thisElement.title].image + '"/>')
   disableQuizFields();
   $(".optionSelected").removeClass("optionSelected")
   switch(quizzes[thisElement.title].correctAnswer){
@@ -80,9 +83,12 @@ function loadQuizManager() {
   $("#question-option" + i).append('<textarea id="opt-' + i + '" name="opt-' + i + '" rows="1"></textarea>')
   letter = String.fromCharCode(letter.charCodeAt(0) +  1 )
  }
+ 
  $(".question-display").append('<label for="explanation">Explanation</label><textarea id="explanation" name="explanation" placeholder="Enter your explanation" rows="3"></textarea>')
  $(".management-area").append('<div class="image-gallery"></div>')
- $(".image-gallery").append('<div id="column1" class="column"></div>')
+ $(".question-display").append('<label for="image">Image</label><textarea id="image" name="image" placeholder="Enter your image url" rows="1"></textarea>')         
+
+ $(".image-gallery").append('<div id="column1" class="column"></div>')/*
  for(var i = 0; i < 7; i++){
  $("#column1").append('<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80">')
  }
@@ -90,6 +96,7 @@ function loadQuizManager() {
  for(var i = 0; i < 7; i++){
  $("#column2").append('<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80">')
  }
+ */
  $(".management-area").append('<div class="options-panel"></div>')
  $(".options-panel").append('<button onclick="deleteQuiz()">Delete Question</button><button onclick="makeNewQuiz()">Make New Quiz</button>')         
 }
@@ -103,9 +110,12 @@ function makeNewQuiz() {
 
 function submitQuiz() {
   var data = {};
-  data.image = "image.com";
   if($("#question").val() == ""){
     alert("Please fill in question field");
+    return;
+  }
+  if($("#image").val() == ""){
+    alert("Please fill in image field");
     return;
   }
   if($("#opt-1").val() == "" || $("#opt-2").val() == "" || $("#opt-3").val() == "" || $("#opt-4").val() == "" ){
@@ -126,6 +136,7 @@ function submitQuiz() {
   } else{
     data.region = $(".subRegionSelected").attr('title');
   }
+  data.image = $("#image").val();
   data.options = [$("#opt-1").val(), $("#opt-2").val(), $("#opt-3").val(), $("#opt-4").val()]
   switch($(".optionSelected").attr('id')){
     case "opt-1": data.correctAnswer = data.options[0]; break;
@@ -162,6 +173,7 @@ function disableQuizFields(){
     $("#opt-2-button").prop("disabled", true);
     $("#opt-3-button").prop("disabled", true);
     $("#opt-4-button").prop("disabled", true);
+    $("#image").prop("disabled", true);
 }
 
 function enableQuizFields(){
@@ -175,6 +187,7 @@ function enableQuizFields(){
   $("#opt-2-button").prop("disabled", false);
   $("#opt-3-button").prop("disabled", false);
   $("#opt-4-button").prop("disabled", false);
+  $("#image").val("").prop("disabled", false);
 }
 
 function deleteQuiz(){

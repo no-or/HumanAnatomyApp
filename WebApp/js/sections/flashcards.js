@@ -26,6 +26,9 @@ function flashcardOnclick(thisElement, flashcards){
   $(thisElement).addClass("qselected")
   $("#question").val(flashcards[thisElement.title].question)
   $("#answer").val(flashcards[thisElement.title].answer)
+  $("#image").val(flashcards[thisElement.title].image)
+  $(".image-gallery").empty();
+  $(".image-gallery").append('<img src="' + flashcards[thisElement.title].image + '"/>')
   //$("#explanation").val(flashcards[thisElement.title].explanation)
   disableFlashcardFields();
   $(".options-panel").children().remove();
@@ -34,12 +37,15 @@ function flashcardOnclick(thisElement, flashcards){
 
 function loadFlashcardManager() {
  $(".management-area").empty();
+ $(".image-gallery").remove()
  $(".management-area").append('<div class="question-content"</div>')
  $(".question-content").prepend('<form class="question-display"></form>')
  $(".question-display").append('<label for="question">Question</label><textarea id="question" name="question" placeholder="Enter your question" rows="1"></textarea>') 
- $(".question-display").append('<label for="answer">Answer</label><textarea id="answer" name="answer" placeholder="Enter your Answer" rows="1"></textarea>')           
+ $(".question-display").append('<label for="answer">Answer</label><textarea id="answer" name="answer" placeholder="Enter your Answer" rows="1"></textarea>')  
+ $(".question-display").append('<label for="image">Image</label><textarea id="image" name="image" placeholder="Enter your image url" rows="1"></textarea>')         
  //$(".question-display").append('<label for="explanation">Explanation</label><textarea id="explanation" name="explanation" placeholder="Enter your explanation" rows="3"></textarea>')
  $(".management-area").append('<div class="image-gallery"></div>')
+ /*
  $(".image-gallery").append('<div id="column1" class="column"></div>')
  for(var i = 0; i < 7; i++){
  $("#column1").append('<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80">')
@@ -47,9 +53,10 @@ function loadFlashcardManager() {
  $(".image-gallery").append('<div id="column2" class="column"></div>')
  for(var i = 0; i < 7; i++){
  $("#column2").append('<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80">')
- }
+ }*/
  $(".management-area").append('<div class="options-panel"></div>')
  $(".options-panel").append('<button onclick="deleteFlashCard()">Delete Flashcard</button><button onclick="makeNewFlashcard()">Make New Flashcard</button>')         
+
 }
 
 function makeNewFlashcard() {
@@ -60,7 +67,7 @@ function makeNewFlashcard() {
 
 function submitFlashcard() {
   var data = {};
-  data.image = "image.com";
+  
   if($("#question").val() == ""){
     alert("Please fill in question field");
     return;
@@ -73,6 +80,10 @@ function submitFlashcard() {
     alert("Please fill in flashcard field");
     return;
   }
+  if($("#image").val() == ""){
+    alert("Please fill in image field");
+    return;
+  }
   if($(".regionSelected").attr('id') == "trunk"){
     data.region = $(".subSubRegionSelected").attr('title');
   } else{
@@ -81,6 +92,7 @@ function submitFlashcard() {
   //data.explanation = [$("#explanation").val()];
   data.question = $("#question").val()
   data.answer = $("#answer").val()
+  data.image = $("#image").val()
   console.log(JSON.stringify(data))
   ajaxPost(website + "/flashcard", data, function(){
     alert("item added correctly");
@@ -101,12 +113,14 @@ function disableFlashcardFields(){
 	$("#question").prop("readonly", true);
 	//$("#explanation").prop("readonly", true);
 	$("#answer").prop("readonly", true);
+  $("#image").prop("readonly", true);
 }
 
 function enableFlashcardFields(){
   	$("#question").val("").prop("readonly", false);
 	//$("#explanation").prop("readonly", true);
 	$("#answer").val("").prop("readonly", false);
+    $("#image").val("").prop("readonly", false);
 }
 
 function deleteFlashcard(){

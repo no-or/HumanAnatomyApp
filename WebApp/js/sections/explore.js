@@ -24,6 +24,9 @@ function exploreOnclick(thisElement, explore){
   $(thisElement).addClass("qselected")
   $("#title").val(explore[thisElement.title].title)
   $("#image").val(explore[thisElement.title].image)
+  $("#image").val(explore[thisElement.title].image)
+  $(".image-gallery").empty();
+  $(".image-gallery").append('<img src="' + explore[thisElement.title].image + '"/>')
   //$("#explanation").val(flashcards[thisElement.title].explanation)
   disableExploreFields();
   $(".options-panel").children().remove();
@@ -32,12 +35,13 @@ function exploreOnclick(thisElement, explore){
 
 function loadExploreManager() {
  $(".management-area").empty();
+ $(".image-gallery").remove()
  $(".management-area").append('<div class="question-content"</div>')
  $(".question-content").prepend('<form class="question-display"></form>')
  $(".question-display").append('<label for="title">Title</label><textarea id="title" name="title" placeholder="Enter the title" rows="1"></textarea>') 
- $(".question-display").append('<label for="image">image</label><textarea id="image" name="image" placeholder="Enter your image url" rows="1"></textarea>')           
+ $(".question-display").append('<label for="image">image</label><textarea id="image" name="image" placeholder="Enter your image url" rows="1"></textarea>')    
+ $(".management-area").append('<div class="image-gallery"></div>')       
  //$(".question-display").append('<label for="explanation">Explanation</label><textarea id="explanation" name="explanation" placeholder="Enter your explanation" rows="3"></textarea>')
- 
  $(".management-area").append('<div class="options-panel"></div>')
  $(".options-panel").append('<button onclick="deleteExplore()">Delete Explore Section</button><button onclick="makeNewExplore()">Make New Explore Section</button>')         
 }
