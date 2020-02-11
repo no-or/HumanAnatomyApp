@@ -1,22 +1,15 @@
 const mongoose = require('mongoose');
 
 const ExplorelabSchema = new mongoose.Schema({
-    section:{
-        type: String,
-        required: true
-    },
     title:{
         type: String,
         required: true,
         unique: true
     },
-    children:{
-        type: Array
-    },
     image:{
         type: String
     },
-    parent:{
+    region:{
         type: String
     }
 });

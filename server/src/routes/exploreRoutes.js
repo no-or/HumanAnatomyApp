@@ -12,6 +12,7 @@ const initializeExploreRoutes = (app) => {
         try {
             await explore.save().then((item) => res.send(item));
         } catch (e) {
+            console.log(e.message)
             res.status(400).send(`Could not create the explorelab component for ${e.message}`);
         }
     });
@@ -32,19 +33,20 @@ const initializeExploreRoutes = (app) => {
     });
 
     /* remove a section by the title */
-    exploreRouter.delete('/', verifyAdmin,  async (req, res) => {
-        const title = req.query.title;
-        if(!title) {
+    exploreRouter.delete('/:id', verifyAdmin,  async (req, res) => {
+        const id = req.params.id.trim();
+        if(!id) {
             res.status(400).send('Please pass title of the exlporeLab component that you want to remove as a query param');
         }
         try {
-            const explore = await ExploreModel.findOneAndRemove({title: title});
+            const explore = await ExploreModel.findByIdAndDelete(id);
             if (explore === null) {
-                res.status(404).send(`No exploreLab component found with the title ${title}`);
+                res.status(404).send(`No exploreLab component found with the title ${id}`);
             } else {
-                res.status(200).send(`removed the exploreLab component with title ${title}`);
+                res.status(200).send(`removed the exploreLab component with title ${id}`);
             }
         } catch (e) {
+            console.log(e.message)
             res.status(500).send(`Could not delete the exploreLab component for ${e.message}`);
         }
     });
