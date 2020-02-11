@@ -21,7 +21,7 @@ function Item({ content }) {
                     source={{uri: content.image}}
                 />
             </ScrollView>
-            <Text>{content.title}</Text>
+            <Text style={styles.text}>{content.title}</Text>
         </View>
     );
 }
@@ -139,16 +139,21 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 350,
         resizeMode: "cover",
-        borderWidth: 2,
+        borderWidth: 1,
+        borderRadius: 10,
         marginBottom: 10
     },
     container: {
         justifyContent: "center",
         alignContent: "center",
-        paddingHorizontal: 10
     },
     optionContainer: {
+        margin: 10,
         marginBottom: 20,
-        paddingTop: 14
+    },
+    text: {
+      textAlign: "center",
+      fontSize: 18,
+      fontWeight: "bold"
     }
   });
