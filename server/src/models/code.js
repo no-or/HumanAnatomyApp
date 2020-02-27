@@ -6,6 +6,15 @@ const CodeSchema = new mongoose.Schema({
         required: true,
         min: 8,
         max: 1024
+    },
+    date:{
+        type: Date,
+        default: Date.now
+    },
+    createdBy:{
+        type: String,
+        required: true,
+        unique: true
     }
 });
 
