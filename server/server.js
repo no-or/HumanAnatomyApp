@@ -10,6 +10,7 @@ const initializeStatRoutes = require("./src/routes/statRoutes");
 const initializeAdminRoutes = require("./src/routes/adminRoutes");
 const initializeCodeRoutes = require("./src/routes/codeRoutes");
 const initializeExploreRoutes = require("./src/routes/exploreRoutes");
+const initializeVideoRoutes = require("./src/routes/videoRoutes");
 
 const PORT = process.env.PORT || 8090;
 const DB_CONNECTION_STRING = process.env.DB_CONNECTION || 'mongodb://localhost:27017/test';
@@ -27,10 +28,11 @@ initializeStatRoutes(app);
 initializeAdminRoutes(app);
 initializeCodeRoutes(app);
 initializeExploreRoutes(app);
+initializeVideoRoutes(app);
 
 // Connect to DB
 mongoose
-    .connect(DB_CONNECTION_STRING, { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false })
+    .connect(DB_CONNECTION_STRING, { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true })
     .then(() => console.log('Connected to MongoDB!'));
 
 try {
