@@ -23,6 +23,12 @@ const AdminSchema = new mongoose.Schema({
     date:{
         type: Date,
         default: Date.now
+    },
+    authorizedBy:{
+        type: String,
+        required: true,
+        min: 6,
+        max: 255
     }
 });
 
