@@ -8,7 +8,8 @@ const verifyAdmin = require("../util/verifyToken");
 const ValidationSchema = Joi.object().keys({
     name: Joi.string().min(6).required(),
     email: Joi.string().required().email(),
-    password: Joi.string().min(6).required()
+    password: Joi.string().min(6).required(),
+    authorizedBy: Joi.string().min(6).required()
 });
 
 const initializeAdminRoutes = (app) => {
@@ -19,6 +20,12 @@ const initializeAdminRoutes = (app) => {
     adminRouter.post('/register', async (req, res) => {
         const {error} = ValidationSchema.validate(req.body);
         if (error) return res.status(400).send(error.details[0].message);
+
+        // UBCMED&UBCECE is the default value for authorization - we need this for the first admin registration
+        if (req.body.authorizedBy !== 'UBCMED&UBCECE'){
+            const authByAdmin = await AdminModel.findOne({name:req.body.authorizedBy});
+            if(!authByAdmin) return res.status(400).send(`We do not recognize ${req.body.authorizedBy}`);
+        }
 
         //Hash the password
         const salt = await bcrypt.genSalt(10);
