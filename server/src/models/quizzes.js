@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const QuizSchema = new mongoose.Schema({
-    image:{
+    imageUrl:{
         type: String,
         required: true
     },

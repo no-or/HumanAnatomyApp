@@ -3,13 +3,13 @@ const mongoose = require('mongoose');
 const subSubRegionSchema = new mongoose.Schema({
     subSubRegion:{type:String, required:true},
     title:{type:String, required:true},
-    image:{type:String}
+    imageUrl:{type:String}
 },{_id: false});
 
 const subRegionSchema = new mongoose.Schema({
     subRegion:{type:String, required:true},
     title:{type:String, required:true},
-    image:{type:String},
+    imageUrl:{type:String},
     subSubRegions:[subSubRegionSchema],
 },{_id: false});
 
@@ -18,7 +18,7 @@ const ExplorelabSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    image:{
+    imageUrl:{
         type: String
     },
     subRegionNames: {
