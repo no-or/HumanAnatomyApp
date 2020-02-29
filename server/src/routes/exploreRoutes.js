@@ -31,18 +31,18 @@ const initializeExploreRoutes = (app) => {
         }
     });
 
-    /* remove a section by the region */
+    /* remove a section by the title */
     exploreRouter.delete('/', verifyAdmin,  async (req, res) => {
-        const region = req.query.region;
-        if(!region) {
-            res.status(400).send('Please pass region of the exlporeLab component that you want to remove as a query param');
+        const title = req.query.title;
+        if(!title) {
+            res.status(400).send('Please pass title of the exlporeLab component that you want to remove as a query param');
         }
         try {
-            const explore = await ExploreModel.findOneAndRemove({region: region});
+            const explore = await ExploreModel.findOneAndRemove({title: title});
             if (explore === null) {
-                res.status(404).send(`No exploreLab component found with the region ${region}`);
+                res.status(404).send(`No exploreLab component found with the title ${title}`);
             } else {
-                res.status(200).send(`removed the exploreLab component with region ${region}`);
+                res.status(200).send(`removed the exploreLab component with title ${title}`);
             }
         } catch (e) {
             res.status(500).send(`Could not delete the exploreLab component for ${e.message}`);
