@@ -20,7 +20,7 @@ const initializeQuizRoutes = (app) => {
     quizRouter.get('/:id', async (req, res) => {
         try {
             const quiz = await QuizModel.findById(req.params.id);
-            if (quiz === null) {
+            if (quiz === null || quiz.length === 0) {
                 res.status(404).send(`No quiz found with id ${req.params.id}`);
             } else {
                 res.status(200);
@@ -51,7 +51,7 @@ const initializeQuizRoutes = (app) => {
         const id = req.params.id.trim();
         try {
             const quiz = await QuizModel.findOneAndRemove({_id: id});
-            if (quiz === null) {
+            if (quiz === null || quiz.length === 0) {
                 res.status(404).send(`No quiz found with id ${req.params.id}`);
             } else {
                 res.status(200).send(`removed the quiz with id ${id}`);

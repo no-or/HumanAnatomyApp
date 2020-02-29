@@ -15,12 +15,16 @@ const subRegionSchema = new mongoose.Schema({
     subSubRegions:[subSubRegionSchema],
 },{_id: false});
 
-const HierarchySchema = new mongoose.Schema({
+const regionSchema = new mongoose.Schema({
     region:{
-        type: String,
-        required: true
+        type:String,
+        required:true
     },
-    subRegions: [subRegionSchema]
+    subRegions:[subRegionSchema],
+},{_id: false});
+
+const HierarchySchema = new mongoose.Schema({
+    regions: [regionSchema]
 });
 
 module.exports = mongoose.model('Hierarchy', HierarchySchema);
