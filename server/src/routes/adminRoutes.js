@@ -21,11 +21,8 @@ const initializeAdminRoutes = (app) => {
         const {error} = ValidationSchema.validate(req.body);
         if (error) return res.status(400).send(error.details[0].message);
 
-        // UBCMED&UBCECE is the default value for authorization - we need this for the first admin registration
-        if (req.body.authorizedBy !== 'UBCMED&UBCECE'){
-            const authByAdmin = await AdminModel.findOne({name:req.body.authorizedBy});
-            if(!authByAdmin) return res.status(400).send(`We do not recognize ${req.body.authorizedBy}`);
-        }
+        const authByAdmin = await AdminModel.findOne({name:req.body.authorizedBy});
+        if(!authByAdmin) return res.status(400).send(`We do not recognize ${req.body.authorizedBy}`);
 
         //Hash the password
         const salt = await bcrypt.genSalt(10);
@@ -43,9 +40,13 @@ const initializeAdminRoutes = (app) => {
     adminRouter.delete('/:id', verifyAdmin,  async (req, res, next) => {
         const id = req.params.id.trim();
         try {
+            const count = await AdminModel.countDocuments();
+            if(count === 1) {
+                return res.status(400).send('Can not remove the last admin. We need at least one admin in the DB');
+            }
             const admin = await AdminModel.findByIdAndDelete(id);
-            if (admin === null) {
-                throw new Error(`No admin found with the id ${id}`);
+            if (admin === null || admin.length === 0) {
+                return res.status(404).send(`No admin found with id ${id}`);
             } else {
                 res.status(200).send(`removed the admin with id ${id}`);
             }
@@ -62,8 +63,13 @@ const initializeAdminRoutes = (app) => {
             res.status(400).send('Please pass email of the admin that you want to remove as a query param');
         }
         try {
+            const count = await AdminModel.countDocuments();
+            if(count === 1) {
+                return res.status(400).send('Can not remove the last admin. We need at least one admin in the DB');
+            }
+
             const admin = await AdminModel.findOneAndRemove({email: email});
-            if (admin === null) {
+            if (admin === null || admin.length === 0) {
                 res.status(404).send(`No such admin found with the email address ${email}`);
             } else {
                 res.status(200).send(`removed the admin with email address ${email}`);
