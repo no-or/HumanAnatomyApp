@@ -18,7 +18,7 @@ function Item({ content }) {
             <ScrollView minimumZoomScale={1} maximumZoomScale={5}>
                 <Image
                     style={styles.image}
-                    source={{uri: content.image}}
+                    source={{uri: content.imageUrl}}
                 />
             </ScrollView>
             <Text style={styles.text}>{content.title}</Text>
@@ -27,38 +27,11 @@ function Item({ content }) {
 }
 
 export default class ExploreLabLearnDropdownOptionScreen extends Component {
-    
+
     constructor(props) {
       super(props);
       this.state = {
         menu: [
-            // {
-            //   title: "Section",
-            //   data: [
-            //   {
-            //     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-            //     title: 'Lungs',
-            //     image: 'https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg',},
-            //   {
-            //     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-            //     title: 'Hand',
-            //     image: 'https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg',
-            //   }
-            //   ],
-            // },
-            // {
-            //   title: "Section2",
-            //   data: [
-            //   {
-            //     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-            //     title: 'Lungs',
-            //     image: 'https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg',},
-            //   {
-            //     id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-            //     title: 'Hand',
-            //     image: 'https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg',}
-            //   ]
-            // },
         ]
       }
     }
@@ -69,7 +42,7 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
 
     apiFetch() {
       const {navigation} = this.props; 
-      var host = '192.168.0.102'
+      var host = '192.168.0.104'
       return fetch('http://'+host+':8080/explore?region=' + navigation.state.params.title)
       .then((response) => 
       response.status == 404 ? "" : response.json()
@@ -81,7 +54,7 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
         } else {
           this.setState({menu: [{
             "_id": toString(navigation.state.params.title),
-            "image": "https://membershipdrive.com/wp-content/uploads/2014/06/placeholder.png",
+            "imageUrl": "https://membershipdrive.com/wp-content/uploads/2014/06/placeholder.png",
             "region": "N/A",
             "title": "Content in Progress"
           }]})
