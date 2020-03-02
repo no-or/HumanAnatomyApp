@@ -1,5 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+const FlashcardModel = require("./src/models/flashcards");
+var axios = require('axios');
 
 // Import routes
 const bodyParser = require("body-parser");
@@ -18,6 +21,7 @@ const app = express();
 // middle wares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 // initialize the routes
 initializeFlashcardRoutes(app);
@@ -36,6 +40,11 @@ mongoose
 try {
     app.listen(PORT);
     console.log(`Server listening on port ${PORT}`);
+    axios.get('http://localhost:8090/quiz').then(response => {
+    	console.log(JSON.stringify(response.data));
+  	}).catch(error => {
+    	console.log(error);
+  	});
 } catch (e) {
     console.error(e);
     throw e;
