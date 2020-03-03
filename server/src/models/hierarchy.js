@@ -20,6 +20,9 @@ const regionSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    imageUrl:{
+        type: String
+    },
     subRegions:[subRegionSchema],
 },{_id: false});
 
