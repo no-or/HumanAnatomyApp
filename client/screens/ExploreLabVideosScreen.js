@@ -48,15 +48,25 @@ export default class ExploreLabVideosScreen extends Component {
         let link = video.link
         let videoId = this.youtube_parser(link)
         let thumbnail = "https://img.youtube.com/vi/"+videoId+"/0.jpg"
-        videoCards.push(
-                <VideoCard
-                    uri={thumbnail}
-                    cardTitle={video.title}
-                    url={link}
-                    key={videoId}
-                    // cardViews="519 Views"
-                />
-            );
+        // videoCards.push(
+        //         <VideoCard
+        //             uri={thumbnail}
+        //             cardTitle={video.title}
+        //             url={link}
+        //             key={videoId}
+        //             // cardViews="519 Views"
+        //         />
+        //     );
+        let object = {
+          'title': video.region,
+          'data' : [{
+            'title': video.title,
+            'uri': thumbnail,
+            'url': link,
+            'key': videoId
+          }]
+        }
+        videoCards.push(object);
       })
     }
     return videoCards;
@@ -88,7 +98,12 @@ export default class ExploreLabVideosScreen extends Component {
               style={styles.container}
               contentContainerStyle={styles.contentContainer}
             >
-            {this.renderVideos()}
+            <SectionList
+              sections={this.renderVideos()}
+              renderItem={({item}) => <VideoCard cardTitle={item.title}/>}
+              renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title}</Text>}
+              keyExtractor={(item, index) => index}
+            />
             </ScrollView>
           </View>
         </SafeAreaView>
