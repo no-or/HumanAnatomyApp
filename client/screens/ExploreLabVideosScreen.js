@@ -100,7 +100,7 @@ export default class ExploreLabVideosScreen extends Component {
             >
             <SectionList
               sections={this.renderVideos()}
-              renderItem={({item}) => <VideoCard cardTitle={item.title}/>}
+              renderItem={({item}) => <VideoCard cardTitle={item.title} cardTitle={item.title} uri={item.uri} url={item.url} key={item.key}/>}
               renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title}</Text>}
               keyExtractor={(item, index) => index}
             />
