@@ -7,6 +7,7 @@ import {
   Platform,
   View
 } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
 
 export default class Card extends Component {
   render() {
@@ -17,6 +18,18 @@ export default class Card extends Component {
         <TouchableOpacity style={styles.textContainer} onPress={this.props.callback}>
           <View style={styles.textView}>
             <Text style={styles.textStyle}>{this.props.cardTitle}</Text>
+          </View> 
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.downloadBtnContainer} onPress={this.props.downloadCallback}>
+          <View>
+            <Ionicons
+              name={Platform.OS === "ios" ? "ios-download" : "md-download"}
+              size={26}
+              style={{
+                color: "white",
+                opacity: 0.8
+              }}
+            />
           </View> 
         </TouchableOpacity>
       </TouchableOpacity>
@@ -78,6 +91,19 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%",
+  },
+  downloadBtnContainer: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    // justifyContent: "flex-end",
+    // alignItems: "flex-end",
+    // alignContent: "flex-end",
+    paddingBottom: 10,
+    paddingRight: 20,
+    flex: 1,
+    // width: "100%",
+    // height: "100%",
   },
   textStyle: {
     // backgroundColor: "#FFF",
