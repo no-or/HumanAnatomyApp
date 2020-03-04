@@ -12,8 +12,6 @@ import {
 import colors from '../assets/colors';
 import VideoCard from "../components/VideoCard";
 
-const YOUTUBE_API_KEY = "AIzaSyDjkRUEnjbgoe26QbJIQ4Wyk7V86wJq-oY"
-
 export default class ExploreLabVideosScreen extends Component {
 
   constructor(props) {
@@ -43,30 +41,33 @@ export default class ExploreLabVideosScreen extends Component {
 
   renderVideos=()=> {
     const videoCards = [];
+    const tempArray = [];
     if (this.state.videos) {
-      this.state.videos.map((video) => {
+      this.state.videos.map((video, index) => {
         let link = video.link
         let videoId = this.youtube_parser(link)
         let thumbnail = "https://img.youtube.com/vi/"+videoId+"/0.jpg"
-        // videoCards.push(
-        //         <VideoCard
-        //             uri={thumbnail}
-        //             cardTitle={video.title}
-        //             url={link}
-        //             key={videoId}
-        //             // cardViews="519 Views"
-        //         />
-        //     );
+
+        let info = {
+          'title': video.title,
+          'uri': thumbnail,
+          'url': link,
+          'key': videoId
+        }
+
         let object = {
           'title': video.region,
-          'data' : [{
-            'title': video.title,
-            'uri': thumbnail,
-            'url': link,
-            'key': videoId
-          }]
+          'data' : [info]
         }
-        videoCards.push(object);
+
+        if (videoCards.length == 0) {
+          videoCards.push(object)
+        } else if (videoCards.find(({ title }) => title == video.region)) {
+          const currentIndex = videoCards.findIndex(element => element.title == video.region)
+          videoCards[currentIndex].data.push(info)
+        } else if (videoCards.find(({ title }) => title != video.region)) {
+          videoCards.push(object)
+        }
       })
     }
     return videoCards;

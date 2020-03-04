@@ -78,7 +78,7 @@ export default class ExploreLabLearnScreen extends Component {
                     data = {item.subRegions}
                     key = {item.region}
                     id = {item.region}
-                    image = {item.image}
+                    image = {item.imageUrl}
                     navigation = {this.props.navigation}
                 />
             );
