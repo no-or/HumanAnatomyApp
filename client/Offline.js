@@ -50,14 +50,25 @@ export default class offline {
 
     //update which flashcard regions should be offline, and either populate or delete cache for said region
     updateButton(toggle, region){
-      //console.log(toggle);
-
-        this.state.flashcard[region] = toggle;
 
         _storeData = async () => {
             try {
-              console.log("updating button to " + toggle + this.state.flashcard[region]);
-              await AsyncStorage.setItem('flashcard', JSON.stringify(this.state.flashcard));
+
+              //retrieve current JSON state
+              let promise = new Promise((resolve, reject) => {
+                // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+                  resolve(this._retrieveData("flashcard"));
+              }) 
+              
+              promise.then((data) => {
+                this.state.flashcard = data;
+                this.state.flashcard[region] = toggle;
+                console.log(this.state.flashcard);
+                AsyncStorage.setItem('flashcard', JSON.stringify(this.state.flashcard));
+              });
+
+              //console.log("updating " + region + " to " + toggle + this.state.flashcard[region]);
+              
             } catch (error) {
               // Error saving data
             }

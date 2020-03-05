@@ -19,7 +19,7 @@ export default class OnlineToggle extends Component {
     
       let promise = new Promise((resolve, reject) => {
         // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-          resolve(this.off.checkButton('Heart', 'flashcard'));
+          resolve(this.off.checkButton(this.props.region, 'flashcard'));
       }) 
       
       promise.then((data) => {
@@ -30,9 +30,6 @@ export default class OnlineToggle extends Component {
   }
 
   render() {
-
-    
-
         return (
             <View style = {{flexDirection: "row", flex: 1, alignItems: "center"}}>
                 <Text style={{fontWeight: "bold", padding: 10}}>Downloaded </Text>
@@ -53,6 +50,7 @@ export default class OnlineToggle extends Component {
     temp = !this.state.switchOn1;
     this.setState({ switchOn1: temp });
 
+    console.log(this.props.region);
     this.off.updateButton(temp, this.props.region);
 
     if(temp)
