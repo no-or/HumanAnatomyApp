@@ -1,9 +1,20 @@
 import React, { Component } from "react";
 import { ScrollView, View, SafeAreaView, StyleSheet } from "react-native";
+import * as FileSystem from 'expo-file-system';
+
 import colors from "../assets/colors";
 import Card from "../components/Card";
+import OnlineToggle from "../components/OnlineToggle";
+import offline from "../Offline.js";
 
 export default class FlashcardsScreen extends Component {
+
+  constructor(props) {
+    super(props);
+
+    };
+
+
   static navigationOptions = {
     title: "Flashcards",
     headerStyle: {
@@ -24,29 +35,24 @@ export default class FlashcardsScreen extends Component {
             contentContainerStyle={styles.contentContainer}
           >
             <Card
-              uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
-              cardTitle="Respiratory System"
+              uri={FileSystem.documentDirectory + 'kittycat.jpg'}
+              cardTitle="Heart"
               callback={() => this.props.navigation.navigate("FlashStack", {region: "Heart"})}
-            />
+            ></Card><OnlineToggle region="Heart"></OnlineToggle>
             <Card
               uri="https://www.simtics.com/media/28745/mlla.jpg"
-              cardTitle="Lower Limb"
-              callback={() => this.props.navigation.navigate("FlashStack", {region: "Thorax"})}
+              cardTitle="Trunk"
+              callback={() => this.props.navigation.navigate("FlashStack", {region: "Trunk"})}
             />
             <Card
               uri="http://www.interactive-biology.com/wp-content/uploads/2012/10/Hand-and-arm-bone-1280x640.jpg"
               cardTitle="Upper Limb"
-              callback={() => this.props.navigation.navigate("FlashStack", {region: "Heart"})}
+              callback={() => this.props.navigation.navigate("FlashStack", {region: "Upper Limb"})}
             />
             <Card
               uri="https://st.depositphotos.com/2363887/2564/i/950/depositphotos_25640047-stock-photo-man-anatomy-thorax-cutaway-with.jpg"
-              cardTitle="Thorax"
-              callback={() => this.props.navigation.navigate("FlashStack", {region: "Thorax"})}
-            />
-            <Card
-              uri="https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg"
-              cardTitle="The Metacarpals"
-              callback={() => this.props.navigation.navigate("FlashStack", {region: "Heart"})}
+              cardTitle="Lower Limb"
+              callback={() => this.props.navigation.navigate("FlashStack", {region: "Lower Limb"})}
             />
           </ScrollView>
         </View>
