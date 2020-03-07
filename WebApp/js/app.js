@@ -1,4 +1,4 @@
-var website = "http://localhost:8080"
+var website = "http://localhost:8090"
 
 $(document).ready(function(){
   $("#quizzes").unbind().click(function(){
@@ -6,7 +6,7 @@ $(document).ready(function(){
       ajaxGet(website + "/quiz?region=" + thisElement.title, function(response) {
       quizLayout(response)
       }, function(error){
-        alert(error)
+        //alert(error)
       })
       onClick(thisElement);
     })
@@ -16,7 +16,7 @@ $(document).ready(function(){
       ajaxGet(website + "/flashcard?region=" + thisElement.title, function(response) {
       flashcardLayout(response)
       }, function(error){
-        alert(error)
+        //alert(error)
       })
       onClick(thisElement);
     })
@@ -26,7 +26,7 @@ $(document).ready(function(){
       ajaxGet(website + "/explore?region=" + thisElement.title, function(response) {
       exploreLayout(response)
       }, function(error){
-        alert(error)
+        //alert(error)
       })
       onClick(thisElement);
     })
