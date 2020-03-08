@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform } from "react-native";
+import { Platform, Button } from "react-native";
 import {
   createStackNavigator,
   createBottomTabNavigator,
@@ -19,12 +19,13 @@ import colors from "../assets/colors";
 import ExploreLabVideosScreen from "../screens/ExploreLabVideosScreen";
 import ExploreLabLearnScreen from "../screens/ExploreLabLearnScreen";
 import FlashStack from "../screens/FlashStack";
+import AboutUsScreen from "../screens/AboutUsScreen";
 import ExploreLabLearnDropdownOptionScreen from "../screens/ExploreLabLearnDropdownOptionScreen";
-
 
 const HomeStack = createStackNavigator(
   {
-    Home: HomeScreen
+    AboutUs: AboutUsScreen,
+    Home: HomeScreen,
   },
   { initialRouteName: "Home", transitionConfig: () => fromRight() }
 );
@@ -33,6 +34,7 @@ HomeStack.navigationOptions = {
   tabBarLabel: "Home",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
+      style={{marginBottom: -3}}
       focused={focused}
       name={Platform.OS === "ios" ? "ios-home" : "md-home"}
     />
@@ -43,6 +45,7 @@ HomeStack.path = "";
 
 const ExploreLabStack = createStackNavigator(
   {
+    AboutUs: AboutUsScreen,
     ExploreLab: ExploreLabScreen,
     ExploreLabVideos: ExploreLabVideosScreen,
     ExploreLabLearn: ExploreLabLearnScreen,
@@ -55,6 +58,7 @@ ExploreLabStack.navigationOptions = {
   tabBarLabel: "Explore Lab",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
+      style={{marginBottom: -3}}
       focused={focused}
       name={Platform.OS === "ios" ? "ios-body" : "md-body"}
     />
@@ -65,6 +69,7 @@ ExploreLabStack.path = "";
 
 const QuizzesStack = createStackNavigator(
   {
+    AboutUs: AboutUsScreen,
     Quizzes: QuizzesScreen,
     Quiz: { screen: QuizScreen}
   },
@@ -78,6 +83,7 @@ QuizzesStack.navigationOptions = {
   tabBarLabel: "Quizzes",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
+      style={{marginBottom: -3}}
       focused={focused}
       name={Platform.OS === "ios" ? "ios-document" : "md-document"}
     />
@@ -88,6 +94,7 @@ QuizzesStack.path = "";
 
 const FlashcardsStack = createStackNavigator(
   {
+    AboutUs: AboutUsScreen,
     Flashcards: FlashcardsScreen,
     FlashStack: FlashStack
   },
@@ -98,6 +105,7 @@ FlashcardsStack.navigationOptions = {
   tabBarLabel: "Flashcards",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
+      style={{marginBottom: -3}}
       focused={focused}
       name={Platform.OS === "ios" ? "ios-filing" : "md-filing"}
     />
@@ -111,7 +119,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
     Home: HomeStack,
     Quiz: QuizzesStack,
     Flash: FlashcardsStack,
-    Explore: ExploreLabStack
+    Explore: ExploreLabStack,
   },
   {
     initialRouteName: "Home",

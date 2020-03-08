@@ -1,6 +1,7 @@
 import * as WebBrowser from "expo-web-browser";
 import React from "react";
-import { ScrollView, StyleSheet, SafeAreaView, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, SafeAreaView, View, Button } from "react-native";
+import TabBarIcon from "../components/TabBarIcon";
 
 import colors from "../assets/colors";
 import HomeCard from "../components/HomeCard";
@@ -41,16 +42,23 @@ export default class HomeScreen extends React.Component {
   }
 }
 
-HomeScreen.navigationOptions = {
+HomeScreen.navigationOptions = ({navigation}) => ({
   title: "Human Anatomy App",
   headerStyle: {
-    backgroundColor: colors.primary
+    backgroundColor: colors.primary,
   },
   headerTintColor: colors.primaryText,
   headerTitleStyle: {
     fontWeight: "bold"
-  }
-};
+  },
+  headerRight: (
+    <TabBarIcon
+      style={{marginRight: 15}}
+      name={Platform.OS === "ios" ? "ios-information-circle" : "ios-information-circle"}
+      onPress={() => navigation.navigate('AboutUs')}
+    />
+  ),
+});
 
 const styles = StyleSheet.create({
   container: {

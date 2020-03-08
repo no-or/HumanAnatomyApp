@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import colors from '../assets/colors';
 import VideoCard from "../components/VideoCard";
+import TabBarIcon from "../components/TabBarIcon";
 
 export default class ExploreLabVideosScreen extends Component {
 
@@ -27,7 +28,7 @@ export default class ExploreLabVideosScreen extends Component {
   }
 
   apiFetch() {
-    var host = '192.168.0.104'
+    var host = '192.168.0.102'
     fetch('http://'+host+':8080/video')
     .then((response) => response.json())
     .then((responseJson) => {
@@ -79,16 +80,23 @@ export default class ExploreLabVideosScreen extends Component {
     return (match&&match[7].length==11)? match[7] : false;
   }
 
-  static navigationOptions = {
+  static navigationOptions = ({navigation}) => ({
     title: 'Videos',
     headerStyle: {
-      backgroundColor: colors.primary
+      backgroundColor: colors.primary,
     },
     headerTintColor: colors.primaryText,
     headerTitleStyle: {
         fontWeight: 'bold',
     },
-  };
+    headerRight: (
+      <TabBarIcon
+        style={{marginRight: 15}}
+        name={Platform.OS === "ios" ? "ios-information-circle" : "ios-information-circle"}
+        onPress={() => navigation.navigate('AboutUs')}
+      />
+    ),
+  });
 
   render() {
     return (
@@ -117,5 +125,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff"
+  },
+  sectionHeader: {
+    fontSize: 18,
+    marginTop: 10,
+    fontWeight: 'bold',
+    color: colors.primary
   }
 });
