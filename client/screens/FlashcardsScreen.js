@@ -1,19 +1,27 @@
 import React, { Component } from "react";
-import { ScrollView, View, SafeAreaView, StyleSheet } from "react-native";
+import { ScrollView, View, SafeAreaView, StyleSheet, Platform } from "react-native";
 import colors from "../assets/colors";
 import Card from "../components/Card";
+import TabBarIcon from "../components/TabBarIcon";
 
 export default class FlashcardsScreen extends Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation}) => ({
     title: "Flashcards",
     headerStyle: {
-      backgroundColor: colors.primary
+      backgroundColor: colors.primary,
     },
     headerTintColor: colors.primaryText,
     headerTitleStyle: {
       fontWeight: "bold"
-    }
-  };
+    },
+    headerRight: (
+      <TabBarIcon
+        style={{marginRight: 15}}
+        name={Platform.OS === "ios" ? "ios-information-circle" : "ios-information-circle"}
+        onPress={() => navigation.navigate('AboutUs')}
+      />
+    ),
+  });
 
   render() {
     return (

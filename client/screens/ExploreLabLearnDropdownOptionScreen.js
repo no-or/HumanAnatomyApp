@@ -7,9 +7,11 @@ import {
   Text, 
   FlatList,
   SectionList,
-  ScrollView
+  ScrollView,
+  Platform
 } from 'react-native';
 import colors from '../assets/colors';
+import TabBarIcon from "../components/TabBarIcon";
 
 function Item({ content }) {
 
@@ -42,7 +44,7 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
 
     apiFetch() {
       const {navigation} = this.props; 
-      var host = '192.168.0.104'
+      var host = '192.168.0.102'
       return fetch('http://'+host+':8080/explore?region=' + navigation.state.params.title)
       .then((response) => 
       response.status == 404 ? "" : response.json()
@@ -66,15 +68,22 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
       });
     }
 
-    static navigationOptions = ({navigation, screenProps}) => ({
+    static navigationOptions = ({navigation}) => ({
       title: navigation.state.params.title,
       headerStyle: {
-        backgroundColor: colors.primary
+        backgroundColor: colors.primary,
       },
       headerTintColor: colors.primaryText,
       headerTitleStyle: {
           fontWeight: 'bold',
       },
+      headerRight: (
+        <TabBarIcon
+          style={{marginRight: 15}}
+          name={Platform.OS === "ios" ? "ios-information-circle" : "ios-information-circle"}
+          onPress={() => navigation.navigate('AboutUs')}
+        />
+      ),
     });
 
     render() {
