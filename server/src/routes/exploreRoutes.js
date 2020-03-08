@@ -31,21 +31,18 @@ const initializeExploreRoutes = (app) => {
         }
     });
 
-    /* remove a section by the title */
-    exploreRouter.delete('/', verifyAdmin,  async (req, res) => {
-        const title = req.query.title;
-        if(!title) {
-            res.status(400).send('Please pass title of the exlporeLab component that you want to remove as a query param');
-        }
+    /* remove a exploreLab component with the id */
+    exploreRouter.delete('/:id', verifyAdmin,  async (req, res) => {
+        const id = req.params.id.trim();
         try {
-            const explore = await ExploreModel.findOneAndRemove({title: title});
-            if (explore === null) {
-                res.status(404).send(`No exploreLab component found with the title ${title}`);
+            const explore = await ExploreModel.findOneAndRemove({_id: id});
+            if (explore === null || explore.length === 0) {
+                res.status(404).send(`No exploreLab component found with id ${id}`);
             } else {
-                res.status(200).send(`removed the exploreLab component with title ${title}`);
+                res.status(200).send(`removed the exploreLab component with id ${id}`);
             }
         } catch (e) {
-            res.status(500).send(`Could not delete the exploreLab component for ${e.message}`);
+            res.status(500).send(`Could not remove the exploreLab component with id ${id} for ${e.message}`);
         }
     });
 };
