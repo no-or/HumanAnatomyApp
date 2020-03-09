@@ -14,6 +14,7 @@ import colors from '../assets/colors';
 import Card from "../components/Card";
 import Accordion from '../components/Accordion'
 import TabBarIcon from "../components/TabBarIcon";
+import {HOST_NAME} from "../constants/Constants"
 
 export default class ExploreLabLearnScreen extends Component {
 
@@ -29,8 +30,9 @@ export default class ExploreLabLearnScreen extends Component {
   }
 
   apiFetch() {
-    var host = '192.168.0.102'
-    fetch('http://'+host+':8080/hierarchy')
+    var host = HOST_NAME
+
+    fetch(host+'/hierarchy')
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({menu: responseJson[0]});
