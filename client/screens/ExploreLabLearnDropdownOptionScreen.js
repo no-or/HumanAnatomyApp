@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import colors from '../assets/colors';
 import TabBarIcon from "../components/TabBarIcon";
+import {HOST_NAME} from "../constants/Constants"
 
 function Item({ content }) {
 
@@ -44,8 +45,8 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
 
     apiFetch() {
       const {navigation} = this.props; 
-      var host = '192.168.0.102'
-      return fetch('http://'+host+':8080/explore?region=' + navigation.state.params.title)
+      var host = HOST_NAME
+      return fetch(host+'/explore?region=' + navigation.state.params.title)
       .then((response) => 
       response.status == 404 ? "" : response.json()
       // alert(JSON.stringify(response))

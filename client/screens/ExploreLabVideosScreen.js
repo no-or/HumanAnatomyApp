@@ -12,6 +12,7 @@ import {
 import colors from '../assets/colors';
 import VideoCard from "../components/VideoCard";
 import TabBarIcon from "../components/TabBarIcon";
+import {HOST_NAME} from "../constants/Constants"
 
 export default class ExploreLabVideosScreen extends Component {
 
@@ -28,8 +29,8 @@ export default class ExploreLabVideosScreen extends Component {
   }
 
   apiFetch() {
-    var host = '192.168.0.102'
-    fetch('http://'+host+':8080/video')
+    var host = HOST_NAME
+    fetch(host+'/video')
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({videos: responseJson});

@@ -1,0 +1,1 @@
+export const HOST_NAME = 'http://137.82.155.92:8090'
