@@ -26,9 +26,10 @@ function flashcardOnclick(thisElement, flashcards){
   $(thisElement).addClass("qselected")
   $("#question").val(flashcards[thisElement.title].question)
   $("#answer").val(flashcards[thisElement.title].answer)
-  $("#image").val(flashcards[thisElement.title].image)
+  $("#image").val(flashcards[thisElement.title].imageUrl)
   $(".image-gallery").empty();
-  $(".image-gallery").append('<img src="' + flashcards[thisElement.title].image + '"/>')
+  var img = '<img src="http://' + flashcards[thisElement.title].imageUrl + '" id="yourImage"/>'
+  $(".image-gallery").append(img)
   //$("#explanation").val(flashcards[thisElement.title].explanation)
   disableFlashcardFields();
   $(".options-panel").children().remove();
@@ -42,7 +43,6 @@ function loadFlashcardManager() {
  $(".question-content").prepend('<form class="question-display"></form>')
  $(".question-display").append('<label for="question">Question</label><textarea id="question" name="question" placeholder="Enter your question" rows="1"></textarea>') 
  $(".question-display").append('<label for="answer">Answer</label><textarea id="answer" name="answer" placeholder="Enter your Answer" rows="1"></textarea>')  
- $(".question-display").append('<label for="image">Image</label><textarea id="image" name="image" placeholder="Enter your image url" rows="1"></textarea>')         
  //$(".question-display").append('<label for="explanation">Explanation</label><textarea id="explanation" name="explanation" placeholder="Enter your explanation" rows="3"></textarea>')
  $(".management-area").append('<div class="image-gallery"></div>')
  /*
@@ -55,14 +55,16 @@ function loadFlashcardManager() {
  $("#column2").append('<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80">')
  }*/
  $(".management-area").append('<div class="options-panel"></div>')
- $(".options-panel").append('<button onclick="deleteFlashCard()">Delete Flashcard</button><button onclick="makeNewFlashcard()">Make New Flashcard</button>')         
+ $(".options-panel").append('<button onclick="deleteFlashcard()">Delete Flashcard</button><button onclick="makeNewFlashcard()">Make New Flashcard</button>')         
 
 }
 
 function makeNewFlashcard() {
   $(".options-panel").empty();
+  $(".image-gallery").empty();
   enableFlashcardFields();
   $(".options-panel").append('<button onclick="submitFlashcard()">Submit</button>');
+  $(".question-display").append('<form id="myform"><input type="file" name="filename"></form>')
 }
 
 function submitFlashcard() {
@@ -72,19 +74,11 @@ function submitFlashcard() {
     alert("Please fill in question field");
     return;
   }
-  // if($("#explanation").val() == ""){
-  //   alert("Please fill out explanation");
-  //   return;
-  // }
   if($("#answer").val() == ""){
     alert("Please fill in flashcard field");
     return;
   }
-  if($("#image").val() == ""){
-    alert("Please fill in image field");
-    return;
-  }
-  if($(".regionSelected").attr('id') == "trunk"){
+  if($(".subSubRegionSelected")[0]){
     data.region = $(".subSubRegionSelected").attr('title');
   } else{
     data.region = $(".subRegionSelected").attr('title');
@@ -92,18 +86,40 @@ function submitFlashcard() {
   //data.explanation = [$("#explanation").val()];
   data.question = $("#question").val()
   data.answer = $("#answer").val()
-  data.image = $("#image").val()
-  console.log(JSON.stringify(data))
-  ajaxPost(website + "/flashcard", data, function(){
-    alert("item added correctly");
-    if($(".regionSelected").attr('id') == "trunk"){
-    $(".subSubRegionSelected").trigger("click");
-  } else{
-    $(".subRegionSelected").trigger("click");
+  var imageFile = document.forms.myform.elements.filename.files[0];
+  if(!(imageFile)){
+    alert("please select an image")
+    return;
   }
+
+  ajaxPostImage("http://localhost:8090/image/s3", imageFile, function(link){
+    alert(link.imageUrl)
+    console.log(link.imageUrl)
+    var data2 = data;
+    data2.imageUrl = link.imageUrl
+    var data3 = {};
+    data3.region = data2.region;
+    data3.imageUrl = link.imageUrl;
+    ajaxPost(website + "/flashcard", data2, function(){
+      alert("item added correctly");
+      if($(".subSubRegionSelected")[0]){
+        $(".subSubRegionSelected").trigger("click");
+      } else{
+        $(".subRegionSelected").trigger("click");
+      }
+    },
+    function(){
+      alert("item failed to be added")
+    });
+    ajaxPost(website + "/image", data3, function(){
+      alert("image added to scroll correctly");
+    },
+    function(){
+      alert("iamge failed to be added to scroll")
+    });
   },
-  function(error){
-    alert("item failed to be added" + error)
+  function(){
+    alert("image failed to be added")
   });
 
 }
@@ -111,16 +127,12 @@ function submitFlashcard() {
 
 function disableFlashcardFields(){
 	$("#question").prop("readonly", true);
-	//$("#explanation").prop("readonly", true);
 	$("#answer").prop("readonly", true);
-  $("#image").prop("readonly", true);
 }
 
 function enableFlashcardFields(){
-  	$("#question").val("").prop("readonly", false);
-	//$("#explanation").prop("readonly", true);
+  $("#question").val("").prop("readonly", false);
 	$("#answer").val("").prop("readonly", false);
-    $("#image").val("").prop("readonly", false);
 }
 
 function deleteFlashcard(){
@@ -133,7 +145,7 @@ function deleteFlashcard(){
   if(x){
     ajaxDelete(website+ "/flashcard/" + id, function(){
       alert("flashcard deleted");
-      if($(".regionSelected").attr('id') == "trunk"){
+      if($(".subSubRegionSelected")[0]){
         $(".subSubRegionSelected").trigger("click");
       } else{
         $(".subRegionSelected").trigger("click");

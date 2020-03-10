@@ -1,7 +1,9 @@
-var website = "http://localhost:8090"
-
+var website = "http://137.82.155.92:8090"
 $(document).ready(function(){
+  getMenuObject();
+
   $("#quizzes").unbind().click(function(){
+    console.log(menu)
     buildRegionMenu("Quizzes", function(onClick, thisElement){
       ajaxGet(website + "/quiz?region=" + thisElement.title, function(response) {
       quizLayout(response)
@@ -32,11 +34,10 @@ $(document).ready(function(){
     })
   })
   $("#stats").click(function(){
-    buildRegionMenu("user analytics");
+    buildRegionMenu("User Analytics");
   })
-  $("#quizzes").trigger("click")
-});
 
+});
 
 
 

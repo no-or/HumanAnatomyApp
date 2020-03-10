@@ -23,10 +23,11 @@ function exploreOnclick(thisElement, explore){
   $(".qselected").removeClass("qselected");
   $(thisElement).addClass("qselected")
   $("#title").val(explore[thisElement.title].title)
-  $("#image").val(explore[thisElement.title].image)
-  $("#image").val(explore[thisElement.title].image)
-  $(".image-gallery").empty();
-  $(".image-gallery").append('<img src="' + explore[thisElement.title].image + '"/>')
+  $("#image").val(explore[thisElement.title].imageUrl)
+  $("#explanation").val(explore[thisElement.title].explanation)
+   $(".image-gallery").empty();
+  var img = '<img src="http://' + explore[thisElement.title].imageUrl + '" id="yourImage"/>'
+  $(".image-gallery").append(img)
   //$("#explanation").val(flashcards[thisElement.title].explanation)
   disableExploreFields();
   $(".options-panel").children().remove();
@@ -39,54 +40,72 @@ function loadExploreManager() {
  $(".management-area").append('<div class="question-content"</div>')
  $(".question-content").prepend('<form class="question-display"></form>')
  $(".question-display").append('<label for="title">Title</label><textarea id="title" name="title" placeholder="Enter the title" rows="1"></textarea>') 
- $(".question-display").append('<label for="image">image</label><textarea id="image" name="image" placeholder="Enter your image url" rows="1"></textarea>')    
+ $(".question-display").append('<label for="explanation">Explanation</label><textarea id="explanation" name="explanation" placeholder="Enter your Explanation" rows="1"></textarea>')   
  $(".management-area").append('<div class="image-gallery"></div>')       
- //$(".question-display").append('<label for="explanation">Explanation</label><textarea id="explanation" name="explanation" placeholder="Enter your explanation" rows="3"></textarea>')
  $(".management-area").append('<div class="options-panel"></div>')
  $(".options-panel").append('<button onclick="deleteExplore()">Delete Explore Section</button><button onclick="makeNewExplore()">Make New Explore Section</button>')         
 }
 
 function makeNewExplore() {
   $(".options-panel").empty();
+  $(".image-gallery").empty();
   enableExploreFields();
   $(".options-panel").append('<button onclick="submitExplore()">Submit</button>');
+  $(".question-display").append('<form id="myform"><input type="file" name="filename"></form>')
 }
 
 function submitExplore() {
   var data = {};
-  data.image = "image.com";
   if($("#title").val() == ""){
     alert("Please fill in title field");
     return;
   }
-  // if($("#explanation").val() == ""){
-  //   alert("Please fill out explanation");
-  //   return;
-  // }
-  if($("#image").val() == ""){
-    alert("Please fill in iamge url field");
+  if($("#explanation").val() == ""){
+    alert("Please fill out explanation");
     return;
   }
-  if($(".regionSelected").attr('id') == "trunk"){
+  if($(".subSubRegionSelected")[0]){
     data.region = $(".subSubRegionSelected").attr('title');
   } else{
     data.region = $(".subRegionSelected").attr('title');
   }
-  //data.explanation = [$("#explanation").val()];
+  data.explanation = $("#explanation").val();
   data.title = $("#title").val()
-  data.image = $("#image").val()
 
-  console.log(JSON.stringify(data))
-  ajaxPost(website + "/explore", data, function(){
-    alert("item added correctly");
-    if($(".regionSelected").attr('id') == "trunk"){
-    $(".subSubRegionSelected").trigger("click");
-  } else{
-    $(".subRegionSelected").trigger("click");
+
+  var imageFile = document.forms.myform.elements.filename.files[0];
+  if(!(imageFile)){
+    alert("please select an image")
+    return;
   }
+  ajaxPostImage("http://localhost:8090/image/s3", imageFile, function(link){
+    alert(link.imageUrl)
+    console.log(link.imageUrl)
+    var data2 = data;
+    data2.imageUrl = link.imageUrl
+    var data3 = {};
+    data3.region = data2.region;
+    data3.imageUrl = link.imageUrl;
+    ajaxPost(website + "/explore", data2, function(){
+      alert("item added correctly");
+      if($(".subSubRegionSelected")[0]){
+        $(".subSubRegionSelected").trigger("click");
+      } else{
+        $(".subRegionSelected").trigger("click");
+      }
+    },
+    function(){
+      alert("item failed to be added")
+    });
+    ajaxPost(website + "/image", data3, function(){
+      alert("image added to scroll correctly");
+    },
+    function(){
+      alert("iamge failed to be added to scroll")
+    });
   },
   function(){
-    //alert("item failed to be added")
+    alert("image failed to be added")
   });
 
 }
@@ -94,13 +113,13 @@ function submitExplore() {
 
 function disableExploreFields(){
 	$("#title").prop("readonly", true);
-	//$("#explanation").prop("readonly", true);
+	$("#explanation").prop("readonly", true);
 	$("#image").prop("readonly", true);
 }
 
 function enableExploreFields(){
-  	$("#title").val("").prop("readonly", false);
-	//$("#explanation").prop("readonly", true);
+  $("#title").val("").prop("readonly", false);
+	$("#explanation").prop("readonly", false);
 	$("#image").val("").prop("readonly", false);
 }
 

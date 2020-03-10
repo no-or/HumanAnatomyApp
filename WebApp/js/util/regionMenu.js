@@ -1,5 +1,6 @@
 
 var selectedRegion;
+var menu; 
 
 function buildRegionMenu(section, onClick){
 $(".content").children().remove()
@@ -7,24 +8,15 @@ $(".content").append('<div class="topbar"><h2 class="topbar-title">' + section +
 $(".content").append('<div class="category-area"></div>');
 $(".category-area").append('<div class="area-selection"></div>');
 $(".area-selection").append('<ul class="selection-container"></ul>');
-$(".selection-container").append('<li id="head"><h3 class="category-title">Head & Neck</h3><h4 class="category-question-number"> 20 Questions | Default</h4></li>')
-$(".selection-container").append('<li id="upper"><h3 class="category-title">Upper Limb</h3><h4 class="category-question-number"> 20 Questions | Default</h4></li>')
-$(".selection-container").append('<li id = "lower"><h3 class="category-title">Lower Limb</h3><h4 class="category-question-number"> 20 Questions | Default</h4></li>')
-$(".selection-container").append('<li id = "trunk"><h3 class="category-title">Trunk</h3><h4 class="category-question-number"> 20 Questions | Default</h4></li>')
-$(".category-area").append('<div class="anatomy-section"><div class="management-area"><img src="https://www.wcpss.net/cms/lib/NC01911451/Centricity/Domain/6218/anatbanner.jpg" id="banner"></div> <div class="questions-scroll"></div>')    
+for(item in menu[0].regions){
+  $(".selection-container").append('<li id="' + menu[0].regions[item].region.replace(/\s/g, '') + '"name="' + item + '"><h3 class="category-title">' + menu[0].regions[item].region + '</h3><h4 class="category-question-number"> 20 Questions | Default</h4></li>')
+  $("#" + menu[0].regions[item].region.replace(/\s/g, '')).click(function(){
+    console.log(this.getAttribute("name"));
+    menuChange(menu[0].regions[this.getAttribute("name")], menu[0].regions[this.getAttribute("name")].region.replace(/\s/g, ''))
+  })
+}
+$(".category-area").append('<div class="anatomy-section"><div class="management-area"><img src="https://www.medicalexamprep.co.uk/wp-content/uploads/2017/10/Anatomy-Prep-Banner.jpg" id="banner"></div> <div class="questions-scroll"></div>')    
   
-  $("#head").click(function(){
-  	menuChange(head, "head")
-  })
-  $("#lower").click(function(){
-  	menuChange(lower, "lower")
-  })
-  $("#upper").click(function(){
-  	menuChange(upper, "upper")
-  })
-  $("#trunk").click(function(){
-  	menuChange(trunk, "trunk")
-  })
   selectedRegion = onClick;
 };
 
@@ -41,7 +33,7 @@ function menuChange(region, regionName) {
   } else {
     $(".regionSelected").removeClass("regionSelected");
     $(".management-area").empty();
-    $(".management-area").append('<img src="https://www.wcpss.net/cms/lib/NC01911451/Centricity/Domain/6218/anatbanner.jpg" id="banner">')
+    $(".management-area").append('<img src="https://www.medicalexamprep.co.uk/wp-content/uploads/2017/10/Anatomy-Prep-Banner.jpg" id="banner">')
     $(".questions-scroll").children().remove();
   }
 }
@@ -58,59 +50,51 @@ function subMenuChange(region, regionName) {
   }else {
     $(".subSubRegion").remove();
     $(".subRegionSelected").removeClass("subRegionSelected")
-
+    $(".management-area").empty();
+    $(".management-area").append('<img src="https://www.medicalexamprep.co.uk/wp-content/uploads/2017/10/Anatomy-Prep-Banner.jpg" id="banner">')
+    $(".questions-scroll").children().remove();
   }
 }
 
 function addMenuItems(region, regionName, regionLevel, onClick){
+  console.log(region)
   $(".subSubRegion").remove();
   $(".management-area").empty();
-  $(".management-area").append('<img src="https://www.wcpss.net/cms/lib/NC01911451/Centricity/Domain/6218/anatbanner.jpg" id="banner">')
+  $(".management-area").append('<img src="https://www.medicalexamprep.co.uk/wp-content/uploads/2017/10/Anatomy-Prep-Banner.jpg" id="banner">')
   $(".question").remove();
   $("#" + regionName).addClass(regionLevel + "Selected");
-  for(item in region){
-    if(regionLevel == "region"){
-      $("#" + regionName).after('<li id="' + region[item].replace(/\s/g, '') + '" class="subRegion"' +  ' title="' + region[item] + '"> ' )
-      $('#' + region[item].replace(/\s/g, '')).prepend('<h5 class="category-title">' + region[item] + '</h5>')
-    } else{
-      $("#" + regionName).after('<li id="' + region[item].replace(/\s/g, '') +  '" title="' + region[item] + '" class="subSubRegion"> ')
-      $('#' + region[item].replace(/\s/g, '')).prepend('<h6 class="category-title">' + region[item] + '</h6>')
+  if(regionLevel == "region"){ 
+    for(item in region.subRegions){
+      $("#" + regionName).after('<li id="' + region.subRegions[item].subRegion.replace(/\s/g, '') + '"name="' + item +  '" class="subRegion"' +  ' title="' + region.subRegions[item].subRegion + '"> ' )
+      $('#' + region.subRegions[item].subRegion.replace(/\s/g, '')).prepend('<h5 class="category-title">' + region.subRegions[item].subRegion + '</h5>')
+      if(region.subRegions[item].subSubRegions[0] == undefined){
+        $('#' + region.subRegions[item].subRegion.replace(/\s/g, '')).unbind().click(function(){
+          selectedRegion(onClick, this);
+        })
+      }else{
+        $('#' + region.subRegions[item].subRegion.replace(/\s/g, '')).unbind().click(function(){
+          subMenuChange(region.subRegions[this.getAttribute("name")], region.subRegions[this.getAttribute("name")].subRegion.replace(/\s/g, ''));
+        })
+      }
     }
-    if(regionName != "trunk"){
-      $('#' + region[item].replace(/\s/g, '')).click(function(){
-      	selectedRegion(onClick, this);
+  }else{
+    for(item in region.subSubRegions){
+      $("#" + regionName).after('<li id="' + region.subSubRegions[item].subSubRegion.replace(/\s/g, '') +  '" title="' + region.subSubRegions[item].subSubRegion + '" class="subSubRegion"> ')
+      $('#' + region.subSubRegions[item].subSubRegion.replace(/\s/g, '')).prepend('<h6 class="category-title">' + region.subSubRegions[item].subSubRegion + '</h6>')
+      $('#' + region.subSubRegions[item].subSubRegion.replace(/\s/g, '')).unbind().click(function() {
+        selectedRegion(onClick, this);
       })
-    }else {
-      trunkSetup();
     }
   }
 }
 
 
-function trunkSetup() {
-  $("#Back").unbind("click").click(function() {
-    subMenuChange(Back, "Back");
-  })
-  $("#Thorax").unbind("click").click(function() {
-    subMenuChange(Thorax, "Thorax");
-  })
-  $("#Abdomen").unbind("click").click(function() {
-    subMenuChange(Abdomen, "Abdomen");
-  })
-  $("#Pelvis").unbind("click").click(function() {
-    subMenuChange(Pelvis, "Pelvis");
-  })
+function getMenuObject() {
+   ajaxGet(website + "/hierarchy" , function(response) {
+        menu = JSON.parse(JSON.stringify(response));
+      }, function(error){
+        alert(error)
+      })
 }
 
-
-var Back = ["Trunk bones", "Trunk joints"];
-var Thorax = ["Pectoral region", "Lungs and pleura", "Heart", "Superior and posterior mediastinum"]
-var Abdomen = ["Anterior abdominal wall", "Foregut organs", "Midgut and hindgut organs", "Posterior abdominal wall"]
-var Pelvis = ["Pelvic bones and muscles", "Pelvic joints and ligaments", "Male pelvis", "Female pelvis", "Perineum"]
-
-
-var trunk = ["Back", "Thorax", "Abdomen", "Pelvis"];
-var lower = ["Gluteal region", "Thigh", "Leg", "Foot", "Lower limb bones", "Lower limb joints"]
-var upper = ["Scapular region", "Axilla", "Arm", "Forearm", "Hand", "Upper limb bones", "Upper limb Joints"];
-var head = ["Skull and meninges", "Cavernous Sinus", "Orbit", "Neck", "Face", "Infratemporal fossa", "Oral Cavity", "Pharynx", "Larynx"]
 

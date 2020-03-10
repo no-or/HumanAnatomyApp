@@ -25,6 +25,13 @@ li {
 	font-size: 14px;
 }
 
+#yourImage {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+
 :root {
 	--main-blue: #092042;
 	--main-white: white;

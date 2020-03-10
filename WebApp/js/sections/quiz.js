@@ -47,9 +47,10 @@ function quizOnclick(thisElement, quizzes){
   $("#opt-4").val(quizzes[thisElement.title].options[3])
   $("#question").val(quizzes[thisElement.title].question)
   $("#explanation").val(quizzes[thisElement.title].explanation)
-  $("#image").val(quizzes[thisElement.title].image)
+  //$("#image").val(quizzes[thisElement.title].imageUrl)
   $(".image-gallery").empty();
-  $(".image-gallery").append('<img src="' + quizzes[thisElement.title].image + '"/>')
+  var img = '<img src="http://' + quizzes[thisElement.title].imageUrl + '" id="yourImage"/>'
+  $(".image-gallery").append(img)
   disableQuizFields();
   $(".optionSelected").removeClass("optionSelected")
   switch(quizzes[thisElement.title].correctAnswer){
@@ -86,26 +87,19 @@ function loadQuizManager() {
  
  $(".question-display").append('<label for="explanation">Explanation</label><textarea id="explanation" name="explanation" placeholder="Enter your explanation" rows="3"></textarea>')
  $(".management-area").append('<div class="image-gallery"></div>')
- $(".question-display").append('<label for="image">Image</label><textarea id="image" name="image" placeholder="Enter your image url" rows="1"></textarea>')         
-
- $(".image-gallery").append('<div id="column1" class="column"></div>')/*
- for(var i = 0; i < 7; i++){
- $("#column1").append('<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80">')
- }
- $(".image-gallery").append('<div id="column2" class="column"></div>')
- for(var i = 0; i < 7; i++){
- $("#column2").append('<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80">')
- }
- */
  $(".management-area").append('<div class="options-panel"></div>')
- $(".options-panel").append('<button onclick="deleteQuiz()">Delete Question</button><button onclick="makeNewQuiz()">Make New Quiz</button>')         
+ $(".options-panel").append('<button onclick="deleteQuiz()">Delete Question</button><button onclick="makeNewQuiz()">Make New Quiz</button>')   
+
 }
 
 function makeNewQuiz() {
   $(".options-panel").empty();
+  $(".image-gallery").empty();
   enableQuizFields();
   $(".optionSelected").removeClass("optionSelected")
   $(".options-panel").append('<button onclick="submitQuiz()">Submit</button>');
+  $(".question-display").append('<form id="myform"><input type="file" name="filename"></form>')
+
 }
 
 function submitQuiz() {
@@ -114,8 +108,8 @@ function submitQuiz() {
     alert("Please fill in question field");
     return;
   }
-  if($("#image").val() == ""){
-    alert("Please fill in image field");
+  if($("#yourImage").attr("src") == ""){
+    alert("Please select an in image field");
     return;
   }
   if($("#opt-1").val() == "" || $("#opt-2").val() == "" || $("#opt-3").val() == "" || $("#opt-4").val() == "" ){
@@ -131,12 +125,12 @@ function submitQuiz() {
     return;
   }
   data.questionType = "multiple choice";
-  if($(".regionSelected").attr('id') == "trunk"){
+  if($(".subSubRegionSelected")[0]){
     data.region = $(".subSubRegionSelected").attr('title');
   } else{
     data.region = $(".subRegionSelected").attr('title');
   }
-  data.image = $("#image").val();
+  data.imageUrl = $("#image").val();
   data.options = [$("#opt-1").val(), $("#opt-2").val(), $("#opt-3").val(), $("#opt-4").val()]
   switch($(".optionSelected").attr('id')){
     case "opt-1": data.correctAnswer = data.options[0]; break;
@@ -148,17 +142,42 @@ function submitQuiz() {
   data.explanation = [$("#explanation").val()];
   data.question = $("#question").val()
   console.log(JSON.stringify(data))
-  ajaxPost(website + "/quiz", data, function(){
-    alert("item added correctly");
-    if($(".regionSelected").attr('id') == "trunk"){
-    $(".subSubRegionSelected").trigger("click");
-  } else{
-    $(".subRegionSelected").trigger("click");
+
+  var imageFile = document.forms.myform.elements.filename.files[0];
+  if(!(imageFile)){
+    alert("please select an image")
+    return;
   }
+  ajaxPostImage("http://localhost:8090/image/s3", imageFile, function(link){
+    alert(link.imageUrl)
+    console.log(link.imageUrl)
+    var data2 = data;
+    data2.imageUrl = link.imageUrl
+    var data3 = {};
+    data3.region = data2.region;
+    data3.imageUrl = link.imageUrl;
+    ajaxPost(website + "/quiz", data2, function(){
+      alert("item added correctly");
+      if($(".subSubRegionSelected")[0]){
+        $(".subSubRegionSelected").trigger("click");
+      } else{
+        $(".subRegionSelected").trigger("click");
+      }
+    },
+    function(){
+      alert("item failed to be added")
+    });
+    ajaxPost(website + "/image", data3, function(){
+      alert("image added to scroll correctly");
+    },
+    function(){
+      alert("iamge failed to be added to scroll")
+    });
   },
   function(){
-    //alert("item failed to be added")
+    alert("image failed to be added")
   });
+  
 
 }
 
@@ -200,7 +219,7 @@ function deleteQuiz(){
   if(x){
     ajaxDelete(website+ "/quiz/" + id, function(){
       alert("question deleted");
-      if($(".regionSelected").attr('id') == "trunk"){
+      if($(".subSubRegionSelected")[0]){
         $(".subSubRegionSelected").trigger("click");
       } else{
         $(".subRegionSelected").trigger("click");

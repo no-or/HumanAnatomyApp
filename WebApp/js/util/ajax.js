@@ -42,6 +42,34 @@ var ajaxPost = function (url, data, onSuccess, onError){
 
 }
 
+var ajaxPostImage = function (url, file, onSuccess, onError){
+    this.url = url;
+    this.onSuccess = onSuccess;
+    this.onError = onError;
+    this.file = file;
+
+    var formdata = new FormData();
+    formdata.append('image', this.file);
+    var xhttp = new XMLHttpRequest();
+    //xhttp.timeout = 5000;
+    var i = 0;
+
+    xhttp.onreadystatechange = function() {
+        if(xhttp.readyState == 4 && xhttp.status == 200) {
+            onSuccess(JSON.parse(xhttp.responseText));
+        }
+        else {
+          if (xhttp.readyState == 4) {
+            onError(xhttp.responseText);
+          }
+        }
+    }
+    xhttp.open('POST', this.url, true);
+    xhttp.setRequestHeader('Auth-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTMxMGMyZjUzZmZjMjFhMGEzYjNlZmYiLCJpYXQiOjE1ODAyNzc2OTl9.XZnj5CtA_rYOxDo48d_kK3l4_EkEvf91ZoeG4-0naXA');
+    xhttp.send(formdata);
+
+}
+
 var ajaxGet = function (url, onSuccess, onError) {
     this.url = url;
     this.onSuccess = onSuccess;
