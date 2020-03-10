@@ -26,7 +26,7 @@ function exploreOnclick(thisElement, explore){
   $("#image").val(explore[thisElement.title].imageUrl)
   $("#explanation").val(explore[thisElement.title].explanation)
    $(".image-gallery").empty();
-  var img = '<img src="http://' + explore[thisElement.title].imageUrl + '" id="yourImage"/>'
+  var img = '<img src="' + explore[thisElement.title].imageUrl + '" id="yourImage"/>'
   $(".image-gallery").append(img)
   //$("#explanation").val(flashcards[thisElement.title].explanation)
   disableExploreFields();
@@ -82,10 +82,10 @@ function submitExplore() {
     alert(link.imageUrl)
     console.log(link.imageUrl)
     var data2 = data;
-    data2.imageUrl = link.imageUrl
+    data2.imageUrl = 'http://' + link.imageUrl
     var data3 = {};
     data3.region = data2.region;
-    data3.imageUrl = link.imageUrl;
+    data3.imageUrl = 'http://' + link.imageUrl;
     ajaxPost(website + "/explore", data2, function(){
       alert("item added correctly");
       if($(".subSubRegionSelected")[0]){

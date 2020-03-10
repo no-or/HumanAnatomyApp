@@ -28,7 +28,7 @@ function flashcardOnclick(thisElement, flashcards){
   $("#answer").val(flashcards[thisElement.title].answer)
   $("#image").val(flashcards[thisElement.title].imageUrl)
   $(".image-gallery").empty();
-  var img = '<img src="http://' + flashcards[thisElement.title].imageUrl + '" id="yourImage"/>'
+  var img = '<img src="' + flashcards[thisElement.title].imageUrl + '" id="yourImage"/>'
   $(".image-gallery").append(img)
   //$("#explanation").val(flashcards[thisElement.title].explanation)
   disableFlashcardFields();
@@ -96,10 +96,10 @@ function submitFlashcard() {
     alert(link.imageUrl)
     console.log(link.imageUrl)
     var data2 = data;
-    data2.imageUrl = link.imageUrl
+    data2.imageUrl = 'http://' + link.imageUrl
     var data3 = {};
     data3.region = data2.region;
-    data3.imageUrl = link.imageUrl;
+    data3.imageUrl = 'http://' + link.imageUrl;
     ajaxPost(website + "/flashcard", data2, function(){
       alert("item added correctly");
       if($(".subSubRegionSelected")[0]){

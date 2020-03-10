@@ -49,7 +49,7 @@ function quizOnclick(thisElement, quizzes){
   $("#explanation").val(quizzes[thisElement.title].explanation)
   //$("#image").val(quizzes[thisElement.title].imageUrl)
   $(".image-gallery").empty();
-  var img = '<img src="http://' + quizzes[thisElement.title].imageUrl + '" id="yourImage"/>'
+  var img = '<img src="' + quizzes[thisElement.title].imageUrl + '" id="yourImage"/>'
   $(".image-gallery").append(img)
   disableQuizFields();
   $(".optionSelected").removeClass("optionSelected")
@@ -152,10 +152,10 @@ function submitQuiz() {
     alert(link.imageUrl)
     console.log(link.imageUrl)
     var data2 = data;
-    data2.imageUrl = link.imageUrl
+    data2.imageUrl = 'http://' + link.imageUrl
     var data3 = {};
     data3.region = data2.region;
-    data3.imageUrl = link.imageUrl;
+    data3.imageUrl = 'http://' + link.imageUrl;
     ajaxPost(website + "/quiz", data2, function(){
       alert("item added correctly");
       if($(".subSubRegionSelected")[0]){
