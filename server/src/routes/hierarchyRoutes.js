@@ -36,7 +36,7 @@ const initializeHierarchyRoutes = (app) => {
     });
 
     /* modify the hierarchy */
-    hierarchyRouter.put('/', async (req, res) => {
+    hierarchyRouter.put('/', verifyAdmin, async (req, res) => {
         try {
             const hierarchy = await HierarchyModel.findOneAndUpdate(req.body);
             if (hierarchy === null || hierarchy.length === 0) {

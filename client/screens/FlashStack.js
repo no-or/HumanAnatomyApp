@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import { ScrollView, View, SafeAreaView, StyleSheet, Alert, Text, Dimensions } from "react-native";
+import { ScrollView, View, SafeAreaView, StyleSheet, TouchableOpacity, Text, Dimensions, Platform, Alert } from "react-native";
 import colors from "../assets/colors";
 import Flashcard from "../components/Flashcard";
 import normalize from 'react-native-normalize';
+import TabBarIcon from "../components/TabBarIcon";
 
 import offline from "../Offline";
 
@@ -83,16 +84,23 @@ export default class FlashStack extends Component {
     });
   }
 
-  static navigationOptions = {
+  static navigationOptions = ({navigation}) => ({
     title: "FlashStack",
     headerStyle: {
-      backgroundColor: colors.primary
+      backgroundColor: colors.primary,
     },
     headerTintColor: colors.primaryText,
     headerTitleStyle: {
       fontWeight: "bold"
-    }
-  };
+    },
+    headerRight: (
+      <TabBarIcon
+        style={{marginRight: 15}}
+        name={Platform.OS === "ios" ? "ios-information-circle" : "ios-information-circle"}
+        onPress={() => navigation.navigate('AboutUs')}
+      />
+    ),
+  });
 
   handleSwipe(val) {
     this.setState({ right: this.state.right + val });

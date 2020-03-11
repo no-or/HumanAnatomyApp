@@ -1,72 +1,80 @@
 import React, { Component } from "react";
-import { ScrollView, StyleSheet, SafeAreaView, View } from "react-native";
+import { ScrollView, StyleSheet, SafeAreaView, View, Platform } from "react-native";
 import Card from "../components/Card";
 import colors from "../assets/colors";
+import TabBarIcon from "../components/TabBarIcon";
 
 export default class Quizzes extends Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation}) => ({
     title: "Quizzes",
     headerStyle: {
-      backgroundColor: colors.primary
+      backgroundColor: colors.primary,
     },
     headerTintColor: colors.primaryText,
     headerTitleStyle: {
       fontWeight: "bold"
-    }
-  };
+    },
+    headerRight: (
+      <TabBarIcon
+        style={{marginRight: 15}}
+        name={Platform.OS === "ios" ? "ios-information-circle" : "ios-information-circle"}
+        onPress={() => navigation.navigate('AboutUs')}
+      />
+    ),
+  });
 
   state = {
     heart: [
       {
         question: "What region is labelled by the letter O?",
-        answers: ["Right Atrium", "Left Atrium", "Aorta", "Left Ventricle"],
+        answers: ["Right Atrium", "Left Atrium", "Pulmonary Valve", "Left Ventricle"],
         answerColors: {
           "Right Atrium": colors.primary,
           "Left Atrium": colors.primary,
-          "Aorta": "green",
+          "Pulmonary Valve": "green",
           "Left Ventricle": colors.primary,
         },
-        correctAnswer: "Aorta",
-        image: "http://clipart-library.com/images/rTLoR4oxc.jpg",
+        correctAnswer: "Pulmonary Valve",
+        image: "http://d1tjf70w3r56al.cloudfront.net/1582915594990",
         chosenAnswer: ""
       },
       {
         question: "What region is labelled by the letter G?",
-        answers: ["Superior Vena Cava", "Inferior Vena Cava", "Mitral Valve", "Trabeculae Carneae"],
+        answers: ["Superior Vena Cava", "Auricle R", "Mitral Valve", "Trabeculae Carneae"],
         answerColors: {
           "Superior Vena Cava": colors.primary,
           "Mitral Valve": colors.primary,
-          "Inferior Vena Cava": "green",
+          "Auricle R": "green",
           "Trabeculae Carneae": colors.primary,
         },
-        correctAnswer: "Inferior Vena Cava",
-        image: "http://clipart-library.com/images/rTLoR4oxc.jpg",
+        correctAnswer: "Auricle R",
+        image: "http://d1tjf70w3r56al.cloudfront.net/1582915819797",
         chosenAnswer: ""
       },
       {
-        question: "What region is labelled by the letter I?",
-        answers: ["Aortic Valve", "Pulmonary Valve", "Left Ventricle", "Right Ventricle"],
+        question: "What region is labelled by the letter O?",
+        answers: ["Right Atrium", "Left Atrium", "Pulmonary Valve", "Left Ventricle"],
         answerColors: {
-          "Aortic Valve": colors.primary,
-          "Pulmonary Valve": colors.primary,
-          "Left Ventricle": "green",
-          "Right Ventricle": colors.primary,
-        },
-        correctAnswer: "Left Ventricle",
-        image: "http://clipart-library.com/images/rTLoR4oxc.jpg",
-        chosenAnswer: ""
-      },
-      {
-        question: "What region is labelled by the letter F?",
-        answers: ["Aortic Valve", "Pulmonary Valve", "Left Ventricle", "Right Ventricle"],
-        answerColors: {
-          "Aortic Valve": colors.primary,
-          "Pulmonary Valve": colors.primary,
+          "Right Atrium": colors.primary,
+          "Left Atrium": colors.primary,
+          "Pulmonary Valve": "green",
           "Left Ventricle": colors.primary,
-          "Right Ventricle": "green",
         },
-        correctAnswer: "Right Ventricle",
-        image: "http://clipart-library.com/images/rTLoR4oxc.jpg",
+        correctAnswer: "Pulmonary Valve",
+        image: "http://d1tjf70w3r56al.cloudfront.net/1582915594990",
+        chosenAnswer: ""
+      },
+      {
+        question: "What region is labelled by the letter G?",
+        answers: ["Superior Vena Cava", "Auricle R", "Mitral Valve", "Trabeculae Carneae"],
+        answerColors: {
+          "Superior Vena Cava": colors.primary,
+          "Mitral Valve": colors.primary,
+          "Auricle R": "green",
+          "Trabeculae Carneae": colors.primary,
+        },
+        correctAnswer: "Auricle R",
+        image: "http://d1tjf70w3r56al.cloudfront.net/1582915819797",
         chosenAnswer: ""
       },
     ],

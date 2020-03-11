@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 // Import routes
 const bodyParser = require("body-parser");
@@ -20,6 +21,7 @@ const app = express();
 // middle wares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 // initialize the routes
 initializeFlashcardRoutes(app);

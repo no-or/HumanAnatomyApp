@@ -11,19 +11,93 @@ import {
 } from 'react-native';
 import colors from '../assets/colors';
 import VideoCard from "../components/VideoCard";
+import TabBarIcon from "../components/TabBarIcon";
+import {HOST_NAME} from "../constants/Constants"
 
 export default class ExploreLabVideosScreen extends Component {
-  
-  static navigationOptions = {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      videos:null,
+      viewCount:null,
+     }
+  }
+
+  componentDidMount() {
+    this.apiFetch();
+  }
+
+  apiFetch() {
+    var host = HOST_NAME
+    fetch(host+'/video')
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({videos: responseJson});
+      // alert(JSON.stringify(this.state.videos))
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
+  renderVideos=()=> {
+    const videoCards = [];
+    const tempArray = [];
+    if (this.state.videos) {
+      this.state.videos.map((video, index) => {
+        let link = video.link
+        let videoId = this.youtube_parser(link)
+        let thumbnail = "https://img.youtube.com/vi/"+videoId+"/0.jpg"
+
+        let info = {
+          'title': video.title,
+          'uri': thumbnail,
+          'url': link,
+          'key': videoId
+        }
+
+        let object = {
+          'title': video.region,
+          'data' : [info]
+        }
+
+        if (videoCards.length == 0) {
+          videoCards.push(object)
+        } else if (videoCards.find(({ title }) => title == video.region)) {
+          const currentIndex = videoCards.findIndex(element => element.title == video.region)
+          videoCards[currentIndex].data.push(info)
+        } else if (videoCards.find(({ title }) => title != video.region)) {
+          videoCards.push(object)
+        }
+      })
+    }
+    return videoCards;
+  }
+
+  youtube_parser = (url) => {
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+    var match = url.match(regExp);
+    return (match&&match[7].length==11)? match[7] : false;
+  }
+
+  static navigationOptions = ({navigation}) => ({
     title: 'Videos',
     headerStyle: {
-      backgroundColor: colors.primary
+      backgroundColor: colors.primary,
     },
     headerTintColor: colors.primaryText,
     headerTitleStyle: {
         fontWeight: 'bold',
     },
-  };
+    headerRight: (
+      <TabBarIcon
+        style={{marginRight: 15}}
+        name={Platform.OS === "ios" ? "ios-information-circle" : "ios-information-circle"}
+        onPress={() => navigation.navigate('AboutUs')}
+      />
+    ),
+  });
 
   render() {
     return (
@@ -34,43 +108,12 @@ export default class ExploreLabVideosScreen extends Component {
               style={styles.container}
               contentContainerStyle={styles.contentContainer}
             >
-            <VideoCard
-                uri="https://img.youtube.com/vi/6Yr-xk2cUg8/maxresdefault.jpg"
-                cardTitle="Axilla, Arm, and Cubital Fossa Dissection Guide"
-                cardViews="519 Views"
-                url="https://www.youtube.com/watch?v=6Yr-xk2cUg8"
+            <SectionList
+              sections={this.renderVideos()}
+              renderItem={({item}) => <VideoCard cardTitle={item.title} cardTitle={item.title} uri={item.uri} url={item.url} key={item.key}/>}
+              renderSectionHeader={({section}) => <Text style={styles.sectionHeader}>{section.title}</Text>}
+              keyExtractor={(item, index) => index}
             />
-            <VideoCard
-                uri="https://img.youtube.com/vi/crXC7FwoSe4/0.jpg"
-                cardTitle="Dissection Guide of the Forearm"
-                cardViews="318 Views"
-                url="https://www.youtube.com/watch?v=crXC7FwoSe4"
-            />
-            <VideoCard
-                uri="https://img.youtube.com/vi/PeZbuT7CEmw/0.jpg"
-                cardTitle="Dissection Guide of the Palm of the Hand"
-                cardViews="98 Views"
-                url="https://www.youtube.com/watch?v=PeZbuT7CEmw"
-            />
-            <VideoCard
-                uri="https://img.youtube.com/vi/U9YStSt7fvk/maxresdefault.jpg"
-                cardTitle="Dissection Guide of the Gluteal and Thigh..."
-                cardViews="477 Views"
-                url="https://www.youtube.com/watch?v=U9YStSt7fvk"
-            />
-            <VideoCard
-                uri="https://img.youtube.com/vi/whYtpPZA748/maxresdefault.jpg"
-                cardTitle="Lung Dissection Guide"
-                cardViews="1.8K Views"
-                url="https://www.youtube.com/watch?v=whYtpPZA748"
-            />
-            <VideoCard
-                uri="https://img.youtube.com/vi/W43DkWsrTGk/maxresdefault.jpg"
-                cardTitle="Dissection Guide of the Pectoral Region"
-                cardViews="1.8K Views"
-                url="https://www.youtube.com/watch?v=W43DkWsrTGk"
-            />
-
             </ScrollView>
           </View>
         </SafeAreaView>
@@ -83,5 +126,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff"
+  },
+  sectionHeader: {
+    fontSize: 18,
+    marginTop: 10,
+    fontWeight: 'bold',
+    color: colors.primary
   }
 });

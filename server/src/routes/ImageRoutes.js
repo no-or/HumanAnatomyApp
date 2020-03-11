@@ -3,6 +3,7 @@ const upload = require("../services/imgUpload");
 const aws = require('aws-sdk');
 const s3 = new aws.S3();
 const verifyAdmin = require("../util/verifyToken");
+const ImageModel = require("../models/images");
 
 const CLOUDFRONT = 'd1tjf70w3r56al.cloudfront.net';
 
@@ -19,7 +20,7 @@ const initializeImageRoutes = (app) => {
     app.use('/image', imageRouter);
 
     /* Post an image to AWS S3 */
-    imageRouter.post('/', verifyAdmin, (req, res) => {
+    imageRouter.post('/s3', verifyAdmin, (req, res) => {
         singleUpload(req, res, function(err) {
             if (err) {
                 return res.status(422).send({errors: [{title: 'File Upload Error', detail: err.message}] });
@@ -29,7 +30,7 @@ const initializeImageRoutes = (app) => {
     });
 
     /* Remove an image from AWS S3 */
-    imageRouter.delete('/:id', verifyAdmin, (req, res) => {
+    imageRouter.delete('/s3/:id', verifyAdmin, (req, res) => {
         const params = {
             Bucket: 'anatomy-bucket',
             Key: req.params.id,
@@ -41,6 +42,34 @@ const initializeImageRoutes = (app) => {
             }
             return res.json('Deletion Successful!');
         });
+    });
+
+    /* Post an image to Mongo */
+    imageRouter.post('/', verifyAdmin, async (req, res) =>{
+        const image = new ImageModel(req.body);
+        if(!image.imageUrl || !image.region){
+            return res.status(400).send('Please pass appropriate body');
+        }
+        try {
+            await image.save().then((item) => res.send(item));
+        } catch (e) {
+            res.status(400).send(`Could not create the image for ${e.message}`);
+        }
+    });
+
+    /* get all the images or by query from Mongo */
+    imageRouter.get('/', async (req, res) => {
+        try {
+            const images = await ImageModel.find(req.query);
+            if (images === null || images.length === 0) {
+                res.status(404).send(`No images found`);
+            } else {
+                res.status(200);
+                await res.json(images);
+            }
+        } catch (e) {
+            res.status(500).send(`Could not get the images with query ${req.query} for ${e.message}`);
+        }
     });
 };
 

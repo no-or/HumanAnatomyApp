@@ -1,20 +1,28 @@
 import React, { Component } from "react";
-import { ScrollView, StyleSheet, SafeAreaView, View, Image, Text, Button, Dimensions } from "react-native";
+import { ScrollView, StyleSheet, SafeAreaView, View, Platform, Image, Text, Button, Dimensions } from "react-native";
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import colors from "../assets/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import TabBarIcon from "../components/TabBarIcon";
 
 export default class Quizzes extends Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation}) => ({
     title: "Quiz",
     headerStyle: {
-      backgroundColor: colors.primary
+      backgroundColor: colors.primary,
     },
     headerTintColor: colors.primaryText,
     headerTitleStyle: {
       fontWeight: "bold"
-    }
-  };
+    },
+    headerRight: (
+      <TabBarIcon
+        style={{marginRight: 15}}
+        name={Platform.OS === "ios" ? "ios-information-circle" : "ios-information-circle"}
+        onPress={() => navigation.navigate('AboutUs')}
+      />
+    ),
+  });
 
   state = {
     questions: [

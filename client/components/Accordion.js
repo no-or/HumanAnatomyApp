@@ -32,11 +32,11 @@ export default class Accordion extends Component{
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({item, index}) =>
                         <View>
-                            <TouchableOpacity style={[styles.childRow, styles.button, item.value ? styles.btnInActive : styles.btnActive]} onPress={()=>this.onClick(item, index, this.props.navigation)}>
+                            <TouchableOpacity style={[styles.childRow, styles.button, item.value ? styles.btnInActive : styles.btnActive]} onPress={()=>this.onClick(item.subRegion, index, this.props.navigation)}>
                                 <Text
                                     style={[styles.font, styles.itemInActive]}
                                 >
-                                 {item}
+                                 {item.subRegion}
                                 </Text>
                             </TouchableOpacity>
                             <View style={styles.childHr}/>
