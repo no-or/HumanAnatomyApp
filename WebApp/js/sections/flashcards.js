@@ -92,7 +92,7 @@ function submitFlashcard() {
     return;
   }
 
-  ajaxPostImage("http://localhost:8090/image/s3", imageFile, function(link){
+  ajaxPostImage(website + "/image/s3", imageFile, function(link){
     alert(link.imageUrl)
     console.log(link.imageUrl)
     var data2 = data;
