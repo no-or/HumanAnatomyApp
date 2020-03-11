@@ -160,7 +160,7 @@ export default class Flashcard extends Component {
               style={[panStyle, cardStyle(this.state.bgcolor), {opacity:this.state.opacity}]}
             >
                 <Image 
-                source={{uri: 'http://d1tjf70w3r56al.cloudfront.net/1583004924846'}}
+                source={{uri: this.props.uri}}
                 style={styles.cardImage}>
                 </Image>
             </Animated.View>

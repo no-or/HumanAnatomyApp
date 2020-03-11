@@ -25,9 +25,10 @@ export default class FlashStack extends Component {
       //   "answer": "data2"
       // }],
       right: 0,
-      region: this.props.navigation.getParam("region", "brain"),
+      region: this.props.navigation.getParam("title", "brain"),
       offline: false
     };
+
 
     this.off = new offline;
 
@@ -44,7 +45,7 @@ export default class FlashStack extends Component {
         if(this.state.offline){
           let promise2 = new Promise((resolve, reject) => {
             // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-              resolve(this.off.grabData('Heart', 'flashcard'));
+              resolve(this.off.grabData('Larynx', 'flashcard'));
           }) 
           
           promise2.then((data) => {
@@ -76,6 +77,7 @@ export default class FlashStack extends Component {
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({data: responseJson});
+      console.log(responseJson);
       return responseJson;
     })
     .catch((error) => {
@@ -112,9 +114,10 @@ export default class FlashStack extends Component {
     var totalSwiped = 0;
 
     this.state.data.forEach(function (tmp) {
+      console.log(tmp.imageUrl);
         stack.push(
           <Flashcard
-          uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
+          uri = {tmp.imageUrl}
           cardTitle="Respiratory System"
           answer={tmp.answer}
           key={totalSwiped}

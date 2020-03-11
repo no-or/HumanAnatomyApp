@@ -49,7 +49,7 @@ export default class offline {
     };
 
     //update which flashcard regions should be offline, and either populate or delete cache for said region
-    updateButton(toggle, region){
+    updateButton(toggle, region, type){
 
         _storeData = async () => {
             try {
@@ -57,14 +57,14 @@ export default class offline {
               //retrieve current JSON state
               let promise = new Promise((resolve, reject) => {
                 // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-                  resolve(this._retrieveData("flashcard"));
+                  resolve(this._retrieveData(type));
               }) 
               
               promise.then((data) => {
                 this.state.flashcard = data;
                 this.state.flashcard[region] = toggle;
-                console.log(this.state.flashcard);
-                AsyncStorage.setItem('flashcard', JSON.stringify(this.state.flashcard));
+
+                AsyncStorage.setItem(type, JSON.stringify(this.state.flashcard));
               });
 
               //console.log("updating " + region + " to " + toggle + this.state.flashcard[region]);
@@ -108,7 +108,7 @@ export default class offline {
                 responseJson.forEach(function (tmp) {
 
                   FileSystem.downloadAsync(
-                    tmp.image,
+                    tmp.imageUrl,
                     FileSystem.documentDirectory + tmp._id + '.jpg'
                     )
                     .then(({ uri }) => {
@@ -122,7 +122,8 @@ export default class offline {
 
                     //console.log(tmp);
                     
-                    tmp.image = FileSystem.documentDirectory + tmp._id + '.jpg';
+                    console.log(tmp.imageUrl);
+                    tmp.imageUrl = FileSystem.documentDirectory + tmp._id + '.jpg';
 
                 });
 

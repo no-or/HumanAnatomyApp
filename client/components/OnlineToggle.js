@@ -6,6 +6,7 @@ import SwitchToggle from "react-native-switch-toggle";
 import offline from "../Offline";
 
 
+
 export default class OnlineToggle extends Component {
 
   constructor(props) {
@@ -19,7 +20,7 @@ export default class OnlineToggle extends Component {
     
       let promise = new Promise((resolve, reject) => {
         // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-          resolve(this.off.checkButton(this.props.region, 'flashcard'));
+          resolve(this.off.checkButton(this.props.region, this.props.type));
       }) 
       
       promise.then((data) => {
@@ -31,8 +32,8 @@ export default class OnlineToggle extends Component {
 
   render() {
         return (
-            <View style = {{flexDirection: "row", flex: 1, alignItems: "center"}}>
-                <Text style={{fontWeight: "bold", padding: 10}}>Downloaded </Text>
+            <View style = {{flexDirection: "row", alignItems: "center"}}>
+                <Text style={{fontSize: 12, padding: 10}}>Downloaded </Text>
                 <SwitchToggle
                     backgroundColorOn="#00A7E1"
                     backgroundColorOff="#e5e1e0"
@@ -51,10 +52,10 @@ export default class OnlineToggle extends Component {
     this.setState({ switchOn1: temp });
 
     console.log(this.props.region);
-    this.off.updateButton(temp, this.props.region);
+    this.off.updateButton(temp, this.props.region, this.props.type);
 
     if(temp)
-        this.off.popData(this.props.region, "flashcard");
+        this.off.popData(this.props.region, this.props.type);
   };
 
 }
