@@ -71,7 +71,7 @@ export default class FlashStack extends Component {
 
   //populates state.data with flashcards
   apiFetch(){
-    return fetch('http://localhost:8080/flashcard?region=' + this.state.region)
+    return fetch('http://137.82.155.92:8090/flashcard?region=' + this.state.region)
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({data: responseJson});

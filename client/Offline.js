@@ -100,7 +100,7 @@ export default class offline {
         _storeData = async () => {
             try {
               console.log('successful1');
-            return fetch('http://localhost:8080/' + type + '?region=' + region)
+            return fetch('http://137.82.155.92:8090/' + type + '?region=' + region)
             .then((response) => response.json())
             .then((responseJson) => {
                 //nutty things with the responseJson to store this shit locally. Must convert image URLs to local URIS. FML.
