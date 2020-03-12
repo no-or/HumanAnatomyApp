@@ -1,9 +1,11 @@
 import React, { Component } from "react";
-import { ScrollView, View, SafeAreaView, StyleSheet, TouchableOpacity, Text, Dimensions, Platform } from "react-native";
+import { ScrollView, View, SafeAreaView, StyleSheet, TouchableOpacity, Text, Dimensions, Platform, Alert } from "react-native";
 import colors from "../assets/colors";
 import Flashcard from "../components/Flashcard";
 import normalize from 'react-native-normalize';
 import TabBarIcon from "../components/TabBarIcon";
+
+import offline from "../Offline";
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height
@@ -14,34 +16,73 @@ export default class FlashStack extends Component {
     super(props);
 
     this.state = {
-      data: [{
-        "id": "1",
-        "answer": "data1"
-      }, {
-        "id": "2",
-        "answer": "data2"
-      }],
+      data: [],
+      // data: [{
+      //   "id": "1",
+      //   "answer": "data1"
+      // }, {
+      //   "id": "2",
+      //   "answer": "data2"
+      // }],
       right: 0,
-      region: this.props.navigation.getParam("region", "brain")
+      region: this.props.navigation.getParam("title", "brain"),
+      offline: false
     };
+
+
+    this.off = new offline;
+
+    //These nested promises are meant to see if online or offline mode should be used.
+      let promise = new Promise((resolve, reject) => {
+          resolve(this.off._retrieveData('flashcard'));
+      }) 
+      
+      //depending whether the offline button is toggled on or off, fetch from local or remote, respectively.
+      promise.then((data) => {
+
+        this.setState({offline: data[this.state.region]});
+
+        if(this.state.offline){
+          let promise2 = new Promise((resolve, reject) => {
+            // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+              resolve(this.off.grabData('Larynx', 'flashcard'));
+          }) 
+          
+          promise2.then((data) => {
+            // successMessage is whatever we passed in the resolve(...) function above.
+            console.log("offline data");
+            this.setState({data: data});
+          });
+        }else{
+          //else if offline not available
+          console.log("online data");
+          this.apiFetch();
+        }
+
+      });
 
   }
 
   componentDidMount(){
       //run this function if you want to connect to DB and not run demo JSON
-      this.apiFetch();
+      //this.apiFetch();
+      //this.off.popData('Heart', 'flashcard');
+      //this.setState({data: this.off.grabData('Heart', 'flashcard')});
+
   }
 
   //populates state.data with flashcards
   apiFetch(){
-    return fetch('http://localhost:8080/flashcard?region=' + this.state.region)
+    return fetch('http://137.82.155.92:8090/flashcard?region=' + this.state.region)
     .then((response) => response.json())
     .then((responseJson) => {
-     this.setState({data: responseJson});
-    return responseJson;
+      this.setState({data: responseJson});
+      console.log(responseJson);
+      return responseJson;
     })
     .catch((error) => {
-    console.error(error);
+      console.error(error);
+      Alert.alert("You are offline, or there was an issue with the server!");
     });
   }
 
@@ -73,9 +114,10 @@ export default class FlashStack extends Component {
     var totalSwiped = 0;
 
     this.state.data.forEach(function (tmp) {
+      console.log(tmp.imageUrl);
         stack.push(
           <Flashcard
-          uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
+          uri = {tmp.imageUrl}
           cardTitle="Respiratory System"
           answer={tmp.answer}
           key={totalSwiped}

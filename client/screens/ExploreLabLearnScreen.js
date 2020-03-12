@@ -54,8 +54,10 @@ export default class ExploreLabLearnScreen extends Component {
                     data = {item.subRegions}
                     key = {item.region}
                     id = {item.region}
+                    path = "ExploreLabLearnDropdownOption"
                     image = {item.imageUrl}
                     navigation = {this.props.navigation}
+                    type = "explore"
                 />
             );
       })

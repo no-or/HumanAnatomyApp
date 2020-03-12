@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { View, TouchableOpacity, Text, FlatList, StyleSheet, Image} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import OnlineToggle from "../components/OnlineToggle";
 
 export default class Accordion extends Component{
 
@@ -9,6 +10,8 @@ export default class Accordion extends Component{
         this.state = {
             data: props.data,
             expanded : false,
+            path: this.props.path,
+            type: this.props.type // quiz, flashcard, or explore (spelled however the endpoint is spelled)
         }
     }
 
@@ -37,7 +40,7 @@ export default class Accordion extends Component{
                                     style={[styles.font, styles.itemInActive]}
                                 >
                                  {item.subRegion}
-                                </Text>
+                                </Text><OnlineToggle region={item.subRegion} type={this.state.type} style={{justifyContent: 'flex-end'}}></OnlineToggle>
                             </TouchableOpacity>
                             <View style={styles.childHr}/>
                         </View>
@@ -52,9 +55,9 @@ export default class Accordion extends Component{
     const temp = this.state.data.slice()
     temp[index].value = !temp[index].value
     this.setState({data: temp})
-    navigation.push("ExploreLabLearnDropdownOption", {
+    navigation.push(this.state.path, {
         title: item,
-        navigation: navigation
+        navigation: navigation,
     })
   }
 

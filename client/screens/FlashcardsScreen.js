@@ -1,10 +1,45 @@
 import React, { Component } from "react";
 import { ScrollView, View, SafeAreaView, StyleSheet, Platform } from "react-native";
+import * as FileSystem from 'expo-file-system';
+
 import colors from "../assets/colors";
 import Card from "../components/Card";
-import TabBarIcon from "../components/TabBarIcon";
+import OnlineToggle from "../components/OnlineToggle";
+import offline from "../Offline.js";
+import TabBarIcon from "../components/TabBarIcon"
+import {HOST_NAME} from "../constants/Constants"
+import Accordion from '../components/Accordion'
 
 export default class FlashcardsScreen extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state= {
+      menu: null,
+    }
+
+    };
+
+    componentDidMount() {
+      this.apiFetch();
+    }
+  
+    apiFetch() {
+      var host = HOST_NAME
+  
+      fetch(host+'/hierarchy')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({menu: responseJson[0]});
+        // alert(JSON.stringify(this.state.menu))
+        // alert(JSON.stringify(responseJson[0].regions));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    }
+
   static navigationOptions = ({navigation}) => ({
     title: "Flashcards",
     headerStyle: {
@@ -24,42 +59,55 @@ export default class FlashcardsScreen extends Component {
   });
 
   render() {
-    return (
-      <SafeAreaView style={styles.wrapper}>
-        <View style={styles.content}>
-          <ScrollView
-            style={styles.container}
-            contentContainerStyle={styles.contentContainer}
-          >
-            <Card
-              uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
-              cardTitle="Respiratory System"
-              callback={() => this.props.navigation.navigate("FlashStack", {region: "Heart"})}
-            />
-            <Card
-              uri="https://www.simtics.com/media/28745/mlla.jpg"
-              cardTitle="Lower Limb"
-              callback={() => this.props.navigation.navigate("FlashStack", {region: "Thorax"})}
-            />
-            <Card
-              uri="http://www.interactive-biology.com/wp-content/uploads/2012/10/Hand-and-arm-bone-1280x640.jpg"
-              cardTitle="Upper Limb"
-              callback={() => this.props.navigation.navigate("FlashStack", {region: "Heart"})}
-            />
-            <Card
-              uri="https://st.depositphotos.com/2363887/2564/i/950/depositphotos_25640047-stock-photo-man-anatomy-thorax-cutaway-with.jpg"
-              cardTitle="Thorax"
-              callback={() => this.props.navigation.navigate("FlashStack", {region: "Thorax"})}
-            />
-            <Card
-              uri="https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg"
-              cardTitle="The Metacarpals"
-              callback={() => this.props.navigation.navigate("FlashStack", {region: "Heart"})}
-            />
-          </ScrollView>
-        </View>
-      </SafeAreaView>
-    );
+    //return (
+      const items = [];
+    if (this.state.menu) {
+      this.state.menu.regions.map((item) => {
+        items.push(
+                <Accordion
+                    title = {item.region}
+                    data = {item.subRegions}
+                    key = {item.region}
+                    id = {item.region}
+                    image = {item.imageUrl}
+                    path = "FlashStack"
+                    navigation = {this.props.navigation}
+                    type = "flashcard"
+                />
+            );
+      })
+    }
+    return items;
+      // <SafeAreaView style={styles.wrapper}>
+      //   <View style={styles.content}>
+      //     <ScrollView
+      //       style={styles.container}
+      //       contentContainerStyle={styles.contentContainer}
+      //     >
+      //       <Card
+      //         uri={FileSystem.documentDirectory + 'kittycat.jpg'}
+      //         cardTitle="Heart"
+      //         callback={() => this.props.navigation.navigate("FlashStack", {region: "Larynx"})}
+      //       ></Card><OnlineToggle region="Larynx"></OnlineToggle>
+      //       <Card
+      //         uri="https://www.simtics.com/media/28745/mlla.jpg"
+      //         cardTitle="Trunk"
+      //         callback={() => this.props.navigation.navigate("FlashStack", {region: "Trunk"})}
+      //       /><OnlineToggle region="Trunk"></OnlineToggle>
+      //       <Card
+      //         uri="http://www.interactive-biology.com/wp-content/uploads/2012/10/Hand-and-arm-bone-1280x640.jpg"
+      //         cardTitle="Upper Limb"
+      //         callback={() => this.props.navigation.navigate("FlashStack", {region: "Upper Limb"})}
+      //       /><OnlineToggle region="UpperLimbs"></OnlineToggle>
+      //       <Card
+      //         uri="https://st.depositphotos.com/2363887/2564/i/950/depositphotos_25640047-stock-photo-man-anatomy-thorax-cutaway-with.jpg"
+      //         cardTitle="Lower Limb"
+      //         callback={() => this.props.navigation.navigate("FlashStack", {region: "Lower Limb"})}
+      //       /><OnlineToggle region="LowerLimbs"></OnlineToggle>
+      //     </ScrollView>
+      //   </View>
+      // </SafeAreaView>
+    //);
   }
 }
 
