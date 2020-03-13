@@ -4,6 +4,8 @@ const Joi = require("@hapi/joi");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const verifyAdmin = require("../util/verifyToken");
+const generateToken = require("../util/generateToken");
+const refreshTokenService = require("../services/refreshTokenService");
 
 const ValidationSchema = Joi.object().keys({
     name: Joi.string().min(6).required(),
@@ -79,7 +81,7 @@ const initializeAdminRoutes = (app) => {
         }
     });
 
-    /* login */
+    /* login a user */
     adminRouter.post('/login', async (req, res) => {
         //Check if email exists
         const admin = await AdminModel.findOne({email:req.body.email});
@@ -90,8 +92,56 @@ const initializeAdminRoutes = (app) => {
         if(!validPass) return res.status(400).send(`Invalid Password`);
 
         //Create and assign a token
-        const token = jwt.sign({_id: admin._id}, process.env.TOKEN_SECRET);
-        res.header('auth-token', token).send(`Logged in!`);
+        const accessToken = generateToken(admin);
+        const refreshToken = jwt.sign({_id: admin._id, name: admin.name }, process.env.REFRESH_TOKEN_SECRET);
+
+        const uploadToken = await refreshTokenService.uploadToken(refreshToken);
+
+        if(uploadToken) {
+            await res.json({ accessToken, refreshToken });
+        }
+        else {
+            res.status(500).send('Please try again');
+        }
+    });
+
+    /* logout an admin */
+    adminRouter.post('/logout', async (req, res) => {
+        if(!req.body.refreshToken) {
+            return res.status(403).send('Pass refreshToken in the req body');
+        }
+        const refreshToken = req.body.refreshToken.trim();
+        const deleteToken = await refreshTokenService.deleteToken(refreshToken);
+
+        if(!deleteToken){
+            return res.status(500).send('Internal server error');
+        }
+        else{
+            return res.status(200).send('Logged out successfully');
+        }
+    });
+
+    /* get new token using the refreshToken */
+    adminRouter.post('/refreshToken', async (req, res) => {
+        if(!req.body.refreshToken) {
+            res.status(403).send('Pass refreshToken in the req body');
+        }
+
+        const refreshToken = req.body.refreshToken.trim();
+
+        //check if the token exists in DB
+        const tokenExists = await refreshTokenService.findToken(refreshToken);
+        if(tokenExists) {
+            jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, admin) => {
+                if(err){
+                    res.status(403).send(err);
+                }
+                else {
+                    const accessToken = generateToken(admin);
+                    res.send({accessToken});
+                }
+            })
+        }
     });
 };
 
