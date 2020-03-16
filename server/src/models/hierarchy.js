@@ -1,33 +1,42 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const subSubRegionSchema = new mongoose.Schema({
-    subSubRegion:{
-        type:String,
-        required:true
+const subSubRegionSchema = new mongoose.Schema(
+  {
+    subSubRegion: {
+      type: String,
+      required: true
     }
-},{_id: false});
+  },
+  { _id: false }
+);
 
-const subRegionSchema = new mongoose.Schema({
-    subRegion:{
-        type:String,
-        required:true
+const subRegionSchema = new mongoose.Schema(
+  {
+    subRegion: {
+      type: String,
+      required: true
     },
-    subSubRegions:[subSubRegionSchema],
-},{_id: false});
+    subSubRegions: [subSubRegionSchema]
+  },
+  { _id: false }
+);
 
-const regionSchema = new mongoose.Schema({
-    region:{
-        type:String,
-        required:true
+const regionSchema = new mongoose.Schema(
+  {
+    region: {
+      type: String,
+      required: true
     },
-    imageUrl:{
-        type: String
+    imageUrl: {
+      type: String
     },
-    subRegions:[subRegionSchema],
-},{_id: false});
+    subRegions: [subRegionSchema]
+  },
+  { _id: false }
+);
 
 const HierarchySchema = new mongoose.Schema({
-    regions: [regionSchema]
+  regions: [regionSchema]
 });
 
-module.exports = mongoose.model('Hierarchy', HierarchySchema);
+module.exports = mongoose.model("Hierarchy", HierarchySchema);
