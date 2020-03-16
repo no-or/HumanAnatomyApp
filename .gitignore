@@ -1,4 +1,4 @@
-node_modules
+node_modules/
 .expo/*
 npm-debug.*
 *.jks
@@ -19,3 +19,8 @@ tmp/
 
 *.tern-port
 coverage
+
+node_modules/**/*
+
+server/node_modules/**/*
+client/node_modules/**/*
