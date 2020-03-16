@@ -4,6 +4,8 @@ import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/R
 import colors from "../assets/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import TabBarIcon from "../components/TabBarIcon";
+import {HOST_NAME} from "../constants/Constants";
+import offline from "../Offline";
 
 export default class Quizzes extends Component {
   static navigationOptions = ({navigation}) => ({
@@ -88,10 +90,106 @@ export default class Quizzes extends Component {
   }
 
   componentDidMount() {
-    let questions = this.props.navigation.getParam("questions");
-    this.setState({
-      questions
+    this.loadData();
+    // this.apiFetch();
+  }
+
+  loadData() {
+    let off = new offline; // create new offline class
+    let subregion = this.props.navigation.getParam("title"); // get subregion 
+    let subregionParam = subregion.replace(" ", ""); // remove spaces
+
+    // Promise grabs data for this quiz
+    let promise = new Promise((resolve, reject) => {
+      resolve(off.grabData(subregionParam, 'quiz'));
+    }); 
+
+    promise.then((data) => {
+      console.log(data);
+      if(data == 400) { // pull data from server
+        console.log("I'm here");
+        this.apiFetch();
+      } else { // use local data
+        var questions = data.map(question => {
+          var answerColors = {};
+          for (var index in question.options) {
+            var answer = question.options[index];
+            answerColors[answer] = (answer === question.correctAnswer) ? "green" : colors.primary;
+          }
+          return {
+            question: question.question,
+            answers: question.options,
+            answerColors: answerColors,
+            correctAnswer: question.correctAnswer,
+            image: question.imageUrl,
+            chosenAnswer: "",
+            explanation: question.explanation
+          };
+        });
+  
+        this.setState({
+          questions: questions
+        });
+      }
+    });
+  }
+
+  apiFetch() {
+    let subregion = this.props.navigation.getParam("title");
+    let subregionParam = subregion.replace(" ", "+");
+    var host = HOST_NAME;
+
+    // fetch entire region hierarchy from server
+    fetch(host + '/quiz?region=' + subregionParam)
+    .then((response) => {
+      if(response.status == 200) {
+        return response.json();
+      } else {
+        dummyData = [
+          {
+            "options": [
+                "Placeholder A",
+                "Placeholder B",
+                "Placeholder C",
+                "Placeholder D"
+            ],
+            "explanation": [
+                "No explanation"
+            ],
+            "imageUrl": "https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg",
+            "correctAnswer": "Placeholder A",
+            "question": "No quiz available."
+          }
+        ]
+        return dummyData;
+      }
     })
+    .then((responseJson) => {
+      // set up format of data coming in from server
+      var questions = responseJson.map(question => {
+        var answerColors = {};
+        for (var index in question.options) {
+          var answer = question.options[index];
+          answerColors[answer] = (answer === question.correctAnswer) ? "green" : colors.primary;
+        }
+        return {
+          question: question.question,
+          answers: question.options,
+          answerColors: answerColors,
+          correctAnswer: question.correctAnswer,
+          image: question.imageUrl,
+          chosenAnswer: "",
+          explanation: question.explanation
+        };
+      });
+
+      this.setState({
+        questions: questions
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   }
 
   render() {

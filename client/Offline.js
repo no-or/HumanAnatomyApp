@@ -27,7 +27,7 @@ export default class offline {
         const value = await AsyncStorage.getItem(type);
         if (value !== null) {
           return JSON.parse(value);
-        }else{
+        } else {
           await AsyncStorage.setItem(type, this.state.flashcard);
         }
       } catch (error) {
@@ -86,9 +86,14 @@ export default class offline {
               if (value !== null) {
                 return JSON.parse(value);
                 console.log(value);
+              } else {
+                let status = 400;
+                return status;
               }
             } catch (error) {
               // Error retrieving data
+              let status = 400;
+              return status;
             }
           };
 
