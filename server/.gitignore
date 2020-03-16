@@ -6,5 +6,4 @@ tmp/
 *.tern-port
 
 dist
-node_modules
-node_modules/**/*
+node_modules/

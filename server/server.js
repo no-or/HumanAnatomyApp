@@ -36,14 +36,18 @@ initializeHierarchyRoutes(app);
 
 // Connect to DB
 mongoose
-    .connect(DB_CONNECTION_STRING, { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true })
-    .then(() => console.log('Connected to MongoDB!'));
+  .connect(String(DB_CONNECTION_STRING), {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+  })
+  .then(() => console.log("Connected to MongoDB!"));
 
 try {
-    app.listen(PORT);
-    console.log(`Server listening on port ${PORT}`);
+  app.listen(PORT);
+  console.log(`Server listening on port ${PORT}`);
 } catch (e) {
-    console.error(e);
-    throw e;
+  console.error(e);
+  throw e;
 }
-
