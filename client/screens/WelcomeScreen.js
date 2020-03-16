@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  AsyncStorage,
   Button,
   Text,
   StyleSheet,
@@ -30,7 +31,9 @@ export default class WelcomeScreen extends Component {
       degree: null,
       educationLevel: null,
       year: null,
+      hasStats: '0'
      }
+     this._isMounted = false;
   }
 
 
@@ -45,8 +48,41 @@ export default class WelcomeScreen extends Component {
     }
   };
 
-  postStats = () => {
+  componentDidMount() {
+    this._isMounted = true;
+    this._retrieveData();
+  }
+
+  _retrieveData = async () => {
+    if (this._isMounted) {
+      try {
+        const value = await AsyncStorage.getItem('hasStats');
+        if (value == '1') {
+          this.props.navigation.navigate("Root")
+        } else {
+        }
+      } catch (error) {
+      }
+    }
+  };
+
+  _storeData = async () => {
+    try {
+      await AsyncStorage.setItem('hasStats', '1');
+      if (this._isMounted) {
+        this.setState({'hasStats': '1'})
+      }
+    } catch (error) {
+    }
+  };
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  postStats = (university, degree, educationLevel, year) => {
     const host = HOST_NAME
+    this._storeData()
     fetch(HOST_NAME + "/stat", {
       method: 'POST',
       headers: {
@@ -54,10 +90,10 @@ export default class WelcomeScreen extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        university: this.state.university,
-        degree: this.state.degree,
-        educationLevel: this.state.educationLevel,
-        year: parseInt(this.state.year),
+        university: university,
+        degree: degree,
+        educationLevel: educationLevel,
+        year: parseInt(year),
       }),
     }).then((response) => response.json())
       .then((responseJson) => {
@@ -69,11 +105,17 @@ export default class WelcomeScreen extends Component {
   }
 
   navigateRoot = () => {
-    this.postStats()
-    this.props.navigation.navigate("Root")
+    let {university, degree, educationLevel, year} = this.state;
+    if (!university && !degree && !educationLevel && !year) {
+      alert("Please enter a value")
+    } else {
+      this.postStats(university, degree, educationLevel, year)
+      this.props.navigation.navigate("Root")
+    }
   }
 
   render() {
+    const {hasStats} = this.state;
     return (
       <SafeAreaView style={styles.wrapper}>
         <DismissKeyboard>
@@ -113,7 +155,12 @@ export default class WelcomeScreen extends Component {
               onPress={this.navigateRoot}
             />
             <TouchableOpacity>
-              <Text style={styles.text}>Not A Student?</Text>
+              <Text
+                style={styles.text}
+                onPress={() => this.props.navigation.navigate("Root")}
+              >
+                Not A Student?
+              </Text>
             </TouchableOpacity>
 
           </View>
