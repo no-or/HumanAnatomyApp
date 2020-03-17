@@ -14,6 +14,8 @@ import colors from '../assets/colors';
 import TabBarIcon from "../components/TabBarIcon";
 import {HOST_NAME} from "../constants/Constants"
 
+import offline from "../Offline";
+
 function Item({ content }) {
 
     return (
@@ -35,12 +37,45 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
       super(props);
       this.state = {
         menu: [
-        ]
+        ],
+        offline: false,
+        region: this.props.navigation.getParam("title", ""),
       }
+
+      this.off = new offline;
+
+      //These nested promises are meant to see if online or offline mode should be used.
+      let promise = new Promise((resolve, reject) => {
+        resolve(this.off._retrieveData('explore'));
+      })
+
+      //depending whether the offline button is toggled on or off, fetch from local or remote, respectively.
+      promise.then((data) => {
+
+        this.setState({offline: data[this.state.region]});
+
+        if(this.state.offline){
+          let promise2 = new Promise((resolve, reject) => {
+            // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+              resolve(this.off.grabData(this.state.region, 'explore'));
+          })
+
+          promise2.then((data) => {
+            // successMessage is whatever we passed in the resolve(...) function above.
+            console.log("offline data");
+            this.setState({menu: data});
+          });
+        }else{
+          //else if offline not available
+          console.log("online data");
+          this.apiFetch();
+        }
+
+      });
     }
 
     componentDidMount() {
-      this.apiFetch();
+      // this.apiFetch();
     }
 
     apiFetch() {
