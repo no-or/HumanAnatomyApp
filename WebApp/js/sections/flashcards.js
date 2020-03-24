@@ -30,7 +30,6 @@ function flashcardOnclick(thisElement, flashcards){
   $(".image-gallery").empty();
   var img = '<img src="' + flashcards[thisElement.title].imageUrl + '" id="yourImage"/>'
   $(".image-gallery").append(img)
-  //$("#explanation").val(flashcards[thisElement.title].explanation)
   disableFlashcardFields();
   $(".options-panel").children().remove();
   $(".options-panel").append('<button onclick="deleteFlashcard()">Delete Flashcard</button><button onclick="makeNewFlashcard()">Make New Flashcard</button>') 
@@ -45,26 +44,21 @@ function loadFlashcardManager() {
  $(".question-display").append('<label for="answer">Answer</label><textarea id="answer" name="answer" placeholder="Enter your Answer" rows="1"></textarea>')  
  //$(".question-display").append('<label for="explanation">Explanation</label><textarea id="explanation" name="explanation" placeholder="Enter your explanation" rows="3"></textarea>')
  $(".management-area").append('<div class="image-gallery"></div>')
- /*
- $(".image-gallery").append('<div id="column1" class="column"></div>')
- for(var i = 0; i < 7; i++){
- $("#column1").append('<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80">')
- }
- $(".image-gallery").append('<div id="column2" class="column"></div>')
- for(var i = 0; i < 7; i++){
- $("#column2").append('<img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2533&q=80">')
- }*/
  $(".management-area").append('<div class="options-panel"></div>')
  $(".options-panel").append('<button onclick="deleteFlashcard()">Delete Flashcard</button><button onclick="makeNewFlashcard()">Make New Flashcard</button>')         
-
 }
 
 function makeNewFlashcard() {
   $(".options-panel").empty();
   $(".image-gallery").empty();
   enableFlashcardFields();
+  var region = getRegion();
+  buildImageScroll(region);
   $(".options-panel").append('<button onclick="submitFlashcard()">Submit</button>');
-  $(".question-display").append('<form id="myform"><input type="file" name="filename"></form>')
+  $(".question-display").append('<form id="myform"><input id="fileUploader" type="file" name="filename"></form>')
+  const inputElement = document.getElementById("fileUploader");
+  inputElement.addEventListener("change", handleFiles, false);
+  
 }
 
 function submitFlashcard() {
@@ -78,28 +72,41 @@ function submitFlashcard() {
     alert("Please fill in flashcard field");
     return;
   }
-  if($(".subSubRegionSelected")[0]){
-    data.region = $(".subSubRegionSelected").attr('title');
-  } else{
-    data.region = $(".subRegionSelected").attr('title');
-  }
-  //data.explanation = [$("#explanation").val()];
+  data.region = getRegion();
   data.question = $("#question").val()
   data.answer = $("#answer").val()
-  var imageFile = document.forms.myform.elements.filename.files[0];
-  if(!(imageFile)){
-    alert("please select an image")
+  if(imageSelectedSource == 2){
+    alert("select an image");
     return;
   }
 
-  ajaxPostImage("http://localhost:8090/image/s3", imageFile, function(link){
-    alert(link.imageUrl)
-    console.log(link.imageUrl)
+  if(imageSelectedSource == 1){
+      var imageFile = document.forms.myform.elements.filename.files[0];
+      if(!(imageFile)){
+        alert("please select an image")
+        return;
+      }
+       
+      ajaxPostImage(website + "/image/s3", imageFile, function(link){
+        var realLink = 'http://' + link.imageUrl;
+        link.imageUrl = realLink;
+        addFlashcard(data, link);
+        addImage(data, link);
+      },
+      function(){
+        alert("image failed to be added")
+      },1);
+  } else{
+      var link = {};
+      link.imageUrl = $("#yourImage").attr("src");
+      addFlashcard(data, link)
+  }
+}
+
+function addFlashcard(data, link) {
+  console.log(link.imageUrl)
     var data2 = data;
-    data2.imageUrl = 'http://' + link.imageUrl
-    var data3 = {};
-    data3.region = data2.region;
-    data3.imageUrl = 'http://' + link.imageUrl;
+    data2.imageUrl = link.imageUrl
     ajaxPost(website + "/flashcard", data2, function(){
       alert("item added correctly");
       if($(".subSubRegionSelected")[0]){
@@ -110,20 +117,8 @@ function submitFlashcard() {
     },
     function(){
       alert("item failed to be added")
-    });
-    ajaxPost(website + "/image", data3, function(){
-      alert("image added to scroll correctly");
-    },
-    function(){
-      alert("iamge failed to be added to scroll")
-    });
-  },
-  function(){
-    alert("image failed to be added")
-  });
-
+    },1);
 }
-
 
 function disableFlashcardFields(){
 	$("#question").prop("readonly", true);
@@ -152,6 +147,6 @@ function deleteFlashcard(){
       }
     }, function(){
       alert("flashcard was not deleted");
-    })
+    }, 1)
   }
 }

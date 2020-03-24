@@ -1,5 +1,5 @@
 
-var ajaxDelete = function (url, onSuccess, onError){
+var ajaxDelete = function (url, onSuccess, onError, tryNumber){
   this.url = url;
   this.onSuccess = onSuccess;
   this.onError = onError;
@@ -8,18 +8,34 @@ var ajaxDelete = function (url, onSuccess, onError){
         if(xhttp.readyState == 4 && xhttp.status == 200) {
             onSuccess(xhttp.responseText);            
         }
-        //else onError(xhttp.responseText);
+        else {
+            if(tryNumber == 2) {
+                onError(xhttp.responseText);
+            } else if(xhttp.readyState == 4){
+                updateToken()
+                ajaxDelete(this.url, this.onSuccess, this.onError, 2)
+            }
+        }
     }
-    xhttp.open('DELETE', this.url, true);
-    xhttp.setRequestHeader('Auth-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTMxMGMyZjUzZmZjMjFhMGEzYjNlZmYiLCJpYXQiOjE1ODAyNzc2OTl9.XZnj5CtA_rYOxDo48d_kK3l4_EkEvf91ZoeG4-0naXA');
-    xhttp.setRequestHeader('Content-Type', "application/json")
-    xhttp.send();
+
+
+    var token = getCookie("accessToken")
+    accessToken = 'Bearer ' + token
+    if(!(token)){
+        console.log("login again", token);
+    }else{
+        xhttp.open('DELETE', this.url, true);
+        xhttp.setRequestHeader('Authorization', accessToken);
+        xhttp.setRequestHeader('Content-Type', "application/json")
+        xhttp.send();
+    }
 }
 
-var ajaxPost = function (url, data, onSuccess, onError){
+var ajaxPost = function (url, data, onSuccess, onError, tryNumber){
     this.url = url;
     this.onSuccess = onSuccess;
     this.onError = onError;
+    this.data = data;
 
     var xhttp = new XMLHttpRequest();
     //xhttp.timeout = 5000;
@@ -30,19 +46,29 @@ var ajaxPost = function (url, data, onSuccess, onError){
             onSuccess(xhttp.responseText);
         }
         else {
-          if (xhttp.readyState == 4) {
-            onError(xhttp.responseText);
-          }
+          if(tryNumber == 2) {
+                onError(xhttp.responseText);
+            } else if(xhttp.readyState == 4){
+                updateToken()
+                ajaxPost(this.url, this.data, this.onSuccess, this.onError, 2)
+            }
         }
     }
-    xhttp.open('POST', this.url, true);
-    xhttp.setRequestHeader('Auth-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTMxMGMyZjUzZmZjMjFhMGEzYjNlZmYiLCJpYXQiOjE1ODAyNzc2OTl9.XZnj5CtA_rYOxDo48d_kK3l4_EkEvf91ZoeG4-0naXA');
-    xhttp.setRequestHeader('Content-Type', "application/json")
-    xhttp.send(JSON.stringify(data));
+
+    var token = getCookie("accessToken")
+    accessToken = 'Bearer ' + token
+    if(!(token)){
+        console.log("login again");
+    }else{
+        xhttp.open('POST', this.url, true);
+        xhttp.setRequestHeader('Authorization', accessToken);
+        xhttp.setRequestHeader('Content-Type', "application/json")
+        xhttp.send(JSON.stringify(data));
+    }
 
 }
 
-var ajaxPostImage = function (url, file, onSuccess, onError){
+var ajaxPostImage = function (url, file, onSuccess, onError, tryNumber){
     this.url = url;
     this.onSuccess = onSuccess;
     this.onError = onError;
@@ -59,14 +85,25 @@ var ajaxPostImage = function (url, file, onSuccess, onError){
             onSuccess(JSON.parse(xhttp.responseText));
         }
         else {
-          if (xhttp.readyState == 4) {
-            onError(xhttp.responseText);
-          }
+            if(tryNumber == 2) {
+                onError(xhttp.responseText);
+            } else if(xhttp.readyState == 4){
+                updateToken();
+                ajaxPostImage(this.url, this.file, this.onSuccess, this.onError, 2);
+            }
         }
     }
-    xhttp.open('POST', this.url, true);
-    xhttp.setRequestHeader('Auth-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTMxMGMyZjUzZmZjMjFhMGEzYjNlZmYiLCJpYXQiOjE1ODAyNzc2OTl9.XZnj5CtA_rYOxDo48d_kK3l4_EkEvf91ZoeG4-0naXA');
-    xhttp.send(formdata);
+
+
+    var token = getCookie("accessToken")
+    accessToken = 'Bearer ' + token
+    if(!(token)){
+        console.log("login again");
+    }else{
+        xhttp.open('POST', this.url, true);
+        xhttp.setRequestHeader('Authorization', accessToken);
+        xhttp.send(formdata);
+    }
 
 }
 
@@ -108,4 +145,42 @@ var ajaxGet = function (url, onSuccess, onError) {
     }
     xhttp.open("GET", url, true);
     xhttp.send();
+}
+
+var updateToken = function() {
+    var refreshToken = getCookie("refreshToken");
+    if(refreshToken){
+        var body = {};
+        body.refreshToken = refreshToken;
+        this.url = "http://localhost:8090/admin/refreshToken";
+        var i = 0;
+        var xhttp = new XMLHttpRequest();
+        xhttp.timeout = 5000;
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+                var response = JSON.parse(xhttp.responseText);
+                if(response.accessToken){
+                    setCookie("accessToken", response.accessToken);
+                }else {
+                    window.location.href = 'login.html'
+                }
+            }
+            else {
+                if (i > 2) {
+                    console.log("error: ");
+                    console.log(xhttp.responseText);
+                    window.location.href = 'login.html'
+                    i = 0;
+                }else{
+                  i++;
+                }
+            }
+        }
+        xhttp.open("POST", this.url, true);
+        xhttp.setRequestHeader('Content-Type', "application/json")
+        xhttp.send(JSON.stringify(body));
+
+    } else{
+        window.location.href = 'login.html'
+    }
 }

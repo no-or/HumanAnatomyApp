@@ -111,6 +111,7 @@ const initializeAdminRoutes = app => {
   /* login a user */
   adminRouter.post("/login", async (req, res) => {
     //Check if email exists
+    console.log("logging in")
     const admin = await AdminModel.findOne({ email: req.body.email });
     if (!admin) return res.status(400).send(`User does not exist`);
 

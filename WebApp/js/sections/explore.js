@@ -1,3 +1,5 @@
+
+
 function exploreLayout(explore){
   console.log(explore)
   loadExploreManager();
@@ -7,7 +9,7 @@ function exploreLayout(explore){
   }else{
     for(item in explore){
       $(".questions-scroll").append('<div id="' + explore[item]._id + '" title="' + item +'" class="question">Q' + item + '</div>')
-      $('#' + explore[item]._id ).click( function(){
+      $('#' + explore[item]._id ).unbind().click( function(){
         exploreOnclick(this, explore);
       })
       if(item == 0){
@@ -28,7 +30,6 @@ function exploreOnclick(thisElement, explore){
    $(".image-gallery").empty();
   var img = '<img src="' + explore[thisElement.title].imageUrl + '" id="yourImage"/>'
   $(".image-gallery").append(img)
-  //$("#explanation").val(flashcards[thisElement.title].explanation)
   disableExploreFields();
   $(".options-panel").children().remove();
   $(".options-panel").append('<button onclick="deleteExplore()">Delete Explore Section</button><button onclick="makeNewExplore()">Make New Explore Section</button>') 
@@ -50,8 +51,12 @@ function makeNewExplore() {
   $(".options-panel").empty();
   $(".image-gallery").empty();
   enableExploreFields();
+  var region = getRegion();
+  buildImageScroll(region);
   $(".options-panel").append('<button onclick="submitExplore()">Submit</button>');
-  $(".question-display").append('<form id="myform"><input type="file" name="filename"></form>')
+  $(".question-display").append('<form id="myform"><input id="fileUploader" type="file" name="filename"></form>')
+  const inputElement = document.getElementById("fileUploader");
+  inputElement.addEventListener("change", handleFiles, false);
 }
 
 function submitExplore() {
@@ -73,19 +78,39 @@ function submitExplore() {
   data.title = $("#title").val()
 
 
-  var imageFile = document.forms.myform.elements.filename.files[0];
-  if(!(imageFile)){
-    alert("please select an image")
+  if(imageSelectedSource == 2){
+    alert("select an image");
     return;
   }
-  ajaxPostImage("http://localhost:8090/image/s3", imageFile, function(link){
-    alert(link.imageUrl)
+
+  if(imageSelectedSource == 1){
+      var imageFile = document.forms.myform.elements.filename.files[0];
+      if(!(imageFile)){
+        alert("please select an image")
+        return;
+      }
+       
+      ajaxPostImage(website + "/image/s3", imageFile, function(link){
+        var realLink = 'http://' + link.imageUrl;
+        link.imageUrl = realLink;
+        addExplore(data, link);
+        addImage(data, link);
+      },
+      function(){
+        alert("image failed to be added")
+      }, 1);
+  } else{
+      var link = {};
+      link.imageUrl = $("#yourImage").attr("src");
+      addExplore(data, link)
+  }
+
+}
+
+function addExplore(data, link) {
     console.log(link.imageUrl)
     var data2 = data;
-    data2.imageUrl = 'http://' + link.imageUrl
-    var data3 = {};
-    data3.region = data2.region;
-    data3.imageUrl = 'http://' + link.imageUrl;
+    data2.imageUrl =  link.imageUrl
     ajaxPost(website + "/explore", data2, function(){
       alert("item added correctly");
       if($(".subSubRegionSelected")[0]){
@@ -96,20 +121,8 @@ function submitExplore() {
     },
     function(){
       alert("item failed to be added")
-    });
-    ajaxPost(website + "/image", data3, function(){
-      alert("image added to scroll correctly");
-    },
-    function(){
-      alert("iamge failed to be added to scroll")
-    });
-  },
-  function(){
-    alert("image failed to be added")
-  });
-
+    },1);
 }
-
 
 function disableExploreFields(){
 	$("#title").prop("readonly", true);
@@ -133,7 +146,7 @@ function deleteExplore(){
   if(x){
     ajaxDelete(website+ "/explore/" + id, function(){
       alert("Explore section deleted");
-      if($(".regionSelected").attr('id') == "trunk"){
+      if($(".subSubRegionSelected")[0]){
         $(".subSubRegionSelected").trigger("click");
       } else{
         $(".subRegionSelected").trigger("click");
