@@ -6,7 +6,7 @@ $(document).ready(function(){
 
 
 function codeToSignup(event, values) {
-  var url = "http://localhost:8080/code";
+  var url = "http://137.82.155.92:8090/code";
   var onSuccess = function(response) {
     var inputCode = values[0].value;
     var dbCode = response[0].code;

@@ -1,4 +1,4 @@
-var website = "http://localhost:8090"
+var website = "http://137.82.155.92:8090"
 $(document).ready(function(){
   updateToken();
   getMenuObject();

@@ -152,7 +152,7 @@ var updateToken = function() {
     if(refreshToken){
         var body = {};
         body.refreshToken = refreshToken;
-        this.url = "http://localhost:8090/admin/refreshToken";
+        this.url = "http://137.82.155.92:8090/admin/refreshToken";
         var i = 0;
         var xhttp = new XMLHttpRequest();
         xhttp.timeout = 5000;
