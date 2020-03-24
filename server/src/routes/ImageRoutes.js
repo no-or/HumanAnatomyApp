@@ -21,10 +21,8 @@ const initializeImageRoutes = app => {
 
   /* Post an image to AWS S3 */
   imageRouter.post("/s3", verifyAdmin, (req, res) => {
-    console.log("posting")
     singleUpload(req, res, function(err) {
       if (err) {
-        console.log(err)
         return res.status(422).send({
           errors: [{ title: "File Upload Error", detail: err.message }]
         });
@@ -35,7 +33,6 @@ const initializeImageRoutes = app => {
 
   /* Remove an image from AWS S3 */
   imageRouter.delete("/s3/:id", verifyAdmin, (req, res) => {
-    console.log("here")
     const params = {
       Bucket: "anatomy-bucket",
       Key: req.params.id
@@ -53,7 +50,6 @@ const initializeImageRoutes = app => {
 
   /* Post an image to Mongo */
   imageRouter.post("/", verifyAdmin, async (req, res) => {
-    console.log("posting")
     const image = new ImageModel(req.body);
     if (!image.imageUrl || !image.region) {
       return res.status(400).send("Please pass appropriate body");
