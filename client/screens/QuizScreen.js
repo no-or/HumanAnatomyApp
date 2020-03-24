@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { ScrollView, StyleSheet, SafeAreaView, View, Platform, Image, Text, Button, Dimensions } from "react-native";
+import { ScrollView, StyleSheet, SafeAreaView, View, Platform, Image, Text, Button, Dimensions, Alert } from "react-native";
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import colors from "../assets/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import TabBarIcon from "../components/TabBarIcon";
 import {HOST_NAME} from "../constants/Constants";
 import offline from "../Offline";
+import { Ionicons } from '@expo/vector-icons';
 
 export default class Quizzes extends Component {
   static navigationOptions = ({navigation}) => ({
@@ -89,6 +90,12 @@ export default class Quizzes extends Component {
     }
   }
 
+  _getExplanation = (questionIndex) => {
+    // update this to properly index explanation array!!!!
+    Alert.alert("Why " + this.state.questions[questionIndex].correctAnswer + "?", 
+                this.state.questions[questionIndex].explanation[0]);
+  }
+
   componentDidMount() {
     this.loadData();
     // this.apiFetch();
@@ -105,9 +112,7 @@ export default class Quizzes extends Component {
     }); 
 
     promise.then((data) => {
-      console.log(data);
       if(data == 400) { // pull data from server
-        console.log("I'm here");
         this.apiFetch();
       } else { // use local data
         var questions = data.map(question => {
@@ -228,10 +233,25 @@ export default class Quizzes extends Component {
                           backgroundColor: this.state.questions[this.state.questionIndex].chosenAnswer === "" ? colors.primary : this.state.questions[this.state.questionIndex].answerColors[answer],
                           ...styles.buttonStyle
                         }}
-                        disabled={this.state.questions[this.state.questionIndex].chosenAnswer !== ""}
+                        // disabled={this.state.questions[this.state.questionIndex].chosenAnswer !== ""}
                         onPress={() => this._answerQuestion(answer)}
                         >
                         <Text style={styles.buttonTextStyle}>{answer}</Text>
+                        {answer == this.state.questions[this.state.questionIndex].correctAnswer 
+                          && this.state.questions[this.state.questionIndex].chosenAnswer !== "" ?
+                        <View style={styles.explanationBtn}>
+                          <Ionicons
+                            name={Platform.OS === "ios" ? "ios-help-circle" : "md-help-circle"}
+                            size={20}
+                            style={{
+                              color: "white",
+                              opacity: 0.8
+                            }}
+                            onPress={() => this._getExplanation(this.state.questionIndex)}
+                          />
+                        </View> 
+                        :
+                        <View></View>}
                       </TouchableOpacity>
                     </View>
                   )}
@@ -385,6 +405,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 5,
     marginBottom: 5,
+    // opacity: 10
     // backgroundColor: colors.primary
   },
   buttonTextStyle: {
@@ -452,5 +473,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: colors.primaryText
+  },
+  explanationBtn: {
+    position: "absolute",
+    alignContent: "flex-end",
+    alignItems: "flex-end",
+    alignSelf: "flex-end",
+    paddingRight: 10
   }
 });
