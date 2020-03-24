@@ -79,6 +79,25 @@ const initializeImageRoutes = app => {
         );
     }
   });
+
+  /* remove a iamge with the id */
+  imageRouter.delete("/:id", verifyAdmin, async (req, res) => {
+    const id = req.params.id.trim();
+    try {
+      const image = await ImageModel.findByIdAndDelete(id);
+      if (image === null) {
+        res.status(404).send(`No image found with id ${req.params.id}`);
+      } else {
+        res.status(200).send(`removed the iamge with id ${id}`);
+      }
+    } catch (e) {
+      res
+        .status(500)
+        .send(
+          `Could not remove the image with id ${req.params.id} for ${e.message}`
+        );
+    }
+  });
 };
 
 module.exports = initializeImageRoutes;
