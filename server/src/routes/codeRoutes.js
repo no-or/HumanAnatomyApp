@@ -8,7 +8,7 @@ const initializeCodeRoutes = app => {
   app.use("/code", codeRouter);
 
   /* get which admins have codes */
-  codeRouter.get("/", async (req, res) => {
+  codeRouter.get("/", verifyAdmin, async (req, res) => {
     try {
       const codes = await CodeModel.find();
       if (codes === null) {
@@ -26,7 +26,7 @@ const initializeCodeRoutes = app => {
     }
   });
 
-  /* post a secret the code */
+  /* post a secret code */
   codeRouter.post("/", verifyAdmin, async (req, res) => {
     if (!req.body.code) {
       return res.status(400).send("Please provide a code in the body");
@@ -74,7 +74,7 @@ const initializeCodeRoutes = app => {
     const code = await CodeModel.findOne({ createdBy: req.body.authorizedBy });
     if (!code) {
       return res
-        .status(400)
+        .status(401)
         .send(`We do not recognize ${req.body.authorizedBy}`);
     }
 
