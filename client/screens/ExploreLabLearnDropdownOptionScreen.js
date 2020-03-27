@@ -20,8 +20,9 @@ function Item({ content }) {
 
     return (
         <View style={styles.optionContainer}>
-            <View style={styles.imageContainer}>
-              {/* <ReactNativeZoomableView
+          <View style={styles.imageContainer}>
+            <ScrollView minimumZoomScale={1} maximumZoomScale={5}>
+              <ReactNativeZoomableView
                   maxZoom={2.5}
                   minZoom={1.0}
                   zoomStep={0.1}
@@ -32,18 +33,18 @@ function Item({ content }) {
                   style={styles.image}
                   source={{uri: content.imageUrl}}
                 />
-              </ReactNativeZoomableView> */}
-              <ScrollView minimumZoomScale={1} maximumZoomScale={5} scrollEnabled={true}>
-                <Image
-                  style={styles.image}
-                  source={{uri: content.imageUrl}}
-                />
-              </ScrollView>
-            </View>
-            <Text style={styles.text}>{content.title}</Text>
+              </ReactNativeZoomableView>
+            </ScrollView>
+          </View>
+          <Text style={styles.text}>{content.title}</Text>
         </View>
     );
-}
+  }
+  {/* <ScrollView minimumZoomScale={1} maximumZoomScale={5}> */}
+    {/* <Image
+      style={styles.image}
+      source={{uri: content.imageUrl}}
+    /> */}
 
 export default class ExploreLabLearnDropdownOptionScreen extends Component {
 
