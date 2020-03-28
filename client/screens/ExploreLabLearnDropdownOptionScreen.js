@@ -3,6 +3,7 @@ import {
   Image,
   StyleSheet,
   SafeAreaView,
+  Dimensions,
   View,
   Text,
   FlatList,
@@ -12,7 +13,7 @@ import {
 import colors from '../assets/colors';
 import TabBarIcon from "../components/TabBarIcon";
 import {HOST_NAME} from "../constants/Constants"
-import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 import offline from "../Offline";
 
@@ -21,30 +22,31 @@ function Item({ content }) {
     return (
         <View style={styles.optionContainer}>
           <View style={styles.imageContainer}>
-            <ScrollView minimumZoomScale={1} maximumZoomScale={5}>
-              <ReactNativeZoomableView
-                  maxZoom={2.5}
-                  minZoom={1.0}
-                  zoomStep={0.1}
-                  initialZoom={1.0}
-                  style={styles.zoomableView}
-                >
+            <ScrollView minimumZoomScale={1} maximumZoomScale={4}>
+            {Platform.OS === "ios" ? (
+              <Image
+                style={styles.image}
+                source={{uri: content.imageUrl}}
+              />
+            ) : (
+              <ImageZoom 
+                cropWidth={Dimensions.get('window').width}
+                cropHeight={styles.image.height}
+                imageWidth={Dimensions.get('window').width}
+                imageHeight={styles.image.height}
+              >
                 <Image
                   style={styles.image}
                   source={{uri: content.imageUrl}}
                 />
-              </ReactNativeZoomableView>
+              </ImageZoom>
+            )}
             </ScrollView>
           </View>
           <Text style={styles.text}>{content.title}</Text>
         </View>
     );
   }
-  {/* <ScrollView minimumZoomScale={1} maximumZoomScale={5}> */}
-    {/* <Image
-      style={styles.image}
-      source={{uri: content.imageUrl}}
-    /> */}
 
 export default class ExploreLabLearnDropdownOptionScreen extends Component {
 
@@ -128,14 +130,12 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
     render() {
       return (
           <SafeAreaView style={styles.container}>
-            <ScrollView>
-              <FlatList
-                  data={this.state.menu}
-                  renderItem={({ item }) => <Item content={item}/>}
-                  keyExtractor={item => item._id}
-              >
-              </FlatList>
-            </ScrollView>
+            <FlatList
+                data={this.state.menu}
+                renderItem={({ item }) => <Item content={item}/>}
+                keyExtractor={item => item._id}
+            >
+            </FlatList>
           </SafeAreaView>
       );
     }
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       borderRadius: 10,
       marginBottom: 10,
+      width: "95%",
     },
     container: {
         justifyContent: "center",
@@ -165,6 +166,9 @@ const styles = StyleSheet.create({
     optionContainer: {
         margin: 10,
         marginBottom: 20,
+        alignContent: "center",
+        alignItems: 'center',
+        justifyContent: "center",
     },
     text: {
       textAlign: "center",
