@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+var path = require("path");
 
 // Import routes
 const bodyParser = require("body-parser");
@@ -15,13 +16,18 @@ const initializeVideoRoutes = require("./src/routes/videoRoutes");
 const initializeHierarchyRoutes = require("./src/routes/hierarchyRoutes");
 
 const PORT = process.env.PORT;
-const DB_CONNECTION_STRING = process.env.DB_CONNECTION;
+const DB_CONNECTION_STRING = String(process.env.DB_CONNECTION);
 const app = express();
 
 // middle wares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+
+
+app.use(express.static(path.join(__dirname, '/../WebApp/')))
+app.use(express.static(path.join(__dirname, '/../WebApp/css')))
+app.use(express.static(path.join(__dirname, '/../WebApp/js')))
 
 // initialize the routes
 initializeFlashcardRoutes(app);
@@ -36,14 +42,18 @@ initializeHierarchyRoutes(app);
 
 // Connect to DB
 mongoose
-    .connect(DB_CONNECTION_STRING, { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true })
-    .then(() => console.log('Connected to MongoDB!'));
+  .connect(DB_CONNECTION_STRING, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+  })
+  .then(() => console.log("Connected to MongoDB Atlas!"));
 
 try {
-    app.listen(PORT);
-    console.log(`Server listening on port ${PORT}`);
+  app.listen(PORT);
+  console.log(`Server listening on port ${PORT}`);
 } catch (e) {
-    console.error(e);
-    throw e;
+  console.error(e);
+  throw e;
 }
-

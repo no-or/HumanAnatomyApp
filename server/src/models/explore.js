@@ -1,22 +1,22 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ExplorelabSchema = new mongoose.Schema({
-    region:{
-        type: String,
-        required: true
-    },
-    title:{
-        type: String,
-        required: true,
-        unique: true
-    },
-    imageUrl:{
-        type: String,
-        required: true
-    },
-    explanation:{
-        type: String
-    }
+  region: {
+    type: String,
+    required: true
+  },
+  title: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  imageUrl: {
+    type: String,
+    required: true
+  },
+  explanation: {
+    type: String
+  }
 });
 
-module.exports = mongoose.model('Explorelab', ExplorelabSchema);
+module.exports = mongoose.model("Explorelab", ExplorelabSchema);

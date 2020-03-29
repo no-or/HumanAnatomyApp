@@ -1,22 +1,22 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const FlashcardSchema = new mongoose.Schema({
-    region:{
-        type: String,
-        required: true
-    },
-    imageUrl:{
-        type: String,
-        required: true
-    },
-    question:{
-        type: String,
-        required: true
-    },
-    answer:{
-        type: String,
-        required: true
-    }
+  region: {
+    type: String,
+    required: true
+  },
+  imageUrl: {
+    type: String,
+    required: true
+  },
+  question: {
+    type: String,
+    required: true
+  },
+  answer: {
+    type: String,
+    required: true
+  }
 });
 
-module.exports = mongoose.model('FlashCards', FlashcardSchema);
+module.exports = mongoose.model("FlashCards", FlashcardSchema);

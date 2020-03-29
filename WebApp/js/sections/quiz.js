@@ -98,7 +98,11 @@ function makeNewQuiz() {
   enableQuizFields();
   $(".optionSelected").removeClass("optionSelected")
   $(".options-panel").append('<button onclick="submitQuiz()">Submit</button>');
-  $(".question-display").append('<form id="myform"><input type="file" name="filename"></form>')
+  $(".question-display").append('<form id="myform"><input id="fileUploader" type="file" name="filename"></form>')
+  const inputElement = document.getElementById("fileUploader");
+  inputElement.addEventListener("change", handleFiles, false);
+  var region = getRegion();
+  buildImageScroll(region);
 
 }
 
@@ -143,19 +147,34 @@ function submitQuiz() {
   data.question = $("#question").val()
   console.log(JSON.stringify(data))
 
-  var imageFile = document.forms.myform.elements.filename.files[0];
-  if(!(imageFile)){
-    alert("please select an image")
-    return;
+  if(imageSelectedSource == 1){
+      var imageFile = document.forms.myform.elements.filename.files[0];
+      if(!(imageFile)){
+        alert("please select an image")
+        return;
+      }
+       
+      ajaxPostImage(website + "/image/s3", imageFile, function(link){
+        var realLink = 'http://' + link.imageUrl;
+        link.imageUrl = realLink;
+        addQuiz(data, link);
+        addImage(data, link);
+      },
+      function(){
+        alert("image failed to be added")
+      },1);
+  } else{
+      var link = {};
+      link.imageUrl = $("#yourImage").attr("src");
+      addQuiz(data, link)
   }
-  ajaxPostImage("http://localhost:8090/image/s3", imageFile, function(link){
-    alert(link.imageUrl)
+}
+
+function addQuiz(data, link) {
+  alert(link.imageUrl)
     console.log(link.imageUrl)
     var data2 = data;
-    data2.imageUrl = 'http://' + link.imageUrl
-    var data3 = {};
-    data3.region = data2.region;
-    data3.imageUrl = 'http://' + link.imageUrl;
+    data2.imageUrl =  link.imageUrl
     ajaxPost(website + "/quiz", data2, function(){
       alert("item added correctly");
       if($(".subSubRegionSelected")[0]){
@@ -166,19 +185,7 @@ function submitQuiz() {
     },
     function(){
       alert("item failed to be added")
-    });
-    ajaxPost(website + "/image", data3, function(){
-      alert("image added to scroll correctly");
-    },
-    function(){
-      alert("iamge failed to be added to scroll")
-    });
-  },
-  function(){
-    alert("image failed to be added")
-  });
-  
-
+    },1);
 }
 
 function disableQuizFields(){

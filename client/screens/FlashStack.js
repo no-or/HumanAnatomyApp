@@ -33,33 +33,33 @@ export default class FlashStack extends Component {
     this.off = new offline;
 
     //These nested promises are meant to see if online or offline mode should be used.
-    let promise = new Promise((resolve, reject) => {
-        resolve(this.off._retrieveData('flashcard'));
-    }); 
-    
-    //depending whether the offline button is toggled on or off, fetch from local or remote, respectively.
-    promise.then((data) => {
+      let promise = new Promise((resolve, reject) => {
+          resolve(this.off._retrieveData('flashcard'));
+      }) 
+      
+      //depending whether the offline button is toggled on or off, fetch from local or remote, respectively.
+      promise.then((data) => {
 
-      this.setState({offline: data[this.state.region]});
+        this.setState({offline: data[this.state.region]});
 
-      if(this.state.offline){
-        let promise2 = new Promise((resolve, reject) => {
-          // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-            resolve(this.off.grabData('Larynx', 'flashcard'));
-        }) 
-        
-        promise2.then((data) => {
-          // successMessage is whatever we passed in the resolve(...) function above.
-          console.log("offline data");
-          this.setState({data: data});
-        });
-      }else{
-        //else if offline not available
-        console.log("online data");
-        this.apiFetch();
-      }
+        if(this.state.offline){
+          let promise2 = new Promise((resolve, reject) => {
+            // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+              resolve(this.off.grabData(this.state.region, 'flashcard'));
+          }) 
+          
+          promise2.then((data) => {
+            // successMessage is whatever we passed in the resolve(...) function above.
+            console.log("offline data");
+            this.setState({data: data});
+          });
+        }else{
+          //else if offline not available
+          console.log("online data");
+          this.apiFetch();
+        }
 
-    });
+      });
 
   }
 
@@ -113,6 +113,9 @@ export default class FlashStack extends Component {
     var stack = [];
     var totalSwiped = 0;
 
+
+    if(this.state.data != null){
+
     this.state.data.forEach(function (tmp) {
       console.log(tmp.imageUrl);
         stack.push(
@@ -127,6 +130,10 @@ export default class FlashStack extends Component {
         totalSwiped += 1;
     }.bind(this));
 
+  }else{
+    Alert.alert("You are offline, but have no data saved for this section!");
+  }
+
     return (
         //<TouchableOpacity onPress={alert("dsf")}> 
         <View>
@@ -134,7 +141,7 @@ export default class FlashStack extends Component {
           <View style={styles.resultView}>
             <Text style={styles.result}>Amount correct: {this.state.right}</Text>
             <Text style={styles.result}>Total cards swiped: {totalSwiped}</Text>
-            <Text style={styles.result}>Percentage correct: {this.state.right/totalSwiped*100} %</Text>
+            <Text style={styles.result}>Percentage correct: {Math.round(this.state.right/totalSwiped*100)} %</Text>
           </View>
 
             <View

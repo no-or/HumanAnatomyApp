@@ -138,6 +138,7 @@ export default class offline {
             return responseJson;
             })
             .catch((error) => {
+            Alert.alert("You are offline, or there was an issue with the server!");
             console.error(error);
             });
               

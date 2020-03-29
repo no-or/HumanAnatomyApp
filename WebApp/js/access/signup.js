@@ -10,7 +10,7 @@ function userSignup(event, values) {
     email: values[1].value,
     password: values[2].value,
   }
-  var url = 'http://localhost:8080/admin/register'
+  var url = 'http://137.82.155.92:8090/admin/register'
   var onSuccess = function() {
     alert("Successful User Creation")
     window.location.href = 'login.html';
