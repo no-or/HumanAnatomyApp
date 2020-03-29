@@ -81,7 +81,6 @@ export default class WelcomeScreen extends Component {
   }
 
   postStats = (university, degree, educationLevel, year) => {
-    const host = HOST_NAME
     this._storeData()
     fetch(HOST_NAME + "/stat", {
       method: 'POST',
