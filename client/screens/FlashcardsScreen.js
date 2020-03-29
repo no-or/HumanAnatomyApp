@@ -77,7 +77,11 @@ export default class FlashcardsScreen extends Component {
             );
       })
     }
-    return items;
+    return (
+      <ScrollView>
+      {items}
+      </ScrollView>
+    );
       // <SafeAreaView style={styles.wrapper}>
       //   <View style={styles.content}>
       //     <ScrollView

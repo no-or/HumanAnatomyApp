@@ -4,8 +4,10 @@ import colors from "../assets/colors";
 import Flashcard from "../components/Flashcard";
 import normalize from 'react-native-normalize';
 import TabBarIcon from "../components/TabBarIcon";
+import ProgressBarAnimated from 'react-native-progress-bar-animated';
 
 import offline from "../Offline";
+import { cloneWithoutLoc } from "@babel/types";
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height
@@ -26,7 +28,8 @@ export default class FlashStack extends Component {
       // }],
       right: 0,
       region: this.props.navigation.getParam("title", "brain"),
-      offline: false
+      offline: false,
+      swiped: 0
     };
 
 
@@ -63,6 +66,7 @@ export default class FlashStack extends Component {
 
   }
 
+
   componentDidMount(){
       //run this function if you want to connect to DB and not run demo JSON
       //this.apiFetch();
@@ -87,7 +91,7 @@ export default class FlashStack extends Component {
   }
 
   static navigationOptions = ({navigation}) => ({
-    title: "FlashStack",
+    title: navigation.getParam("title", "Flashcards"),
     headerStyle: {
       backgroundColor: colors.primary,
     },
@@ -106,6 +110,7 @@ export default class FlashStack extends Component {
 
   handleSwipe(val) {
     this.setState({ right: this.state.right + val });
+    this.setState({ swiped: this.state.swiped + 1});
   };
 
   render() {
@@ -136,7 +141,7 @@ export default class FlashStack extends Component {
 
     return (
         //<TouchableOpacity onPress={alert("dsf")}> 
-        <View>
+        <View style={{flex: 1, flexDirection: 'column'}}>
 
           <View style={styles.resultView}>
             <Text style={styles.result}>Amount correct: {this.state.right}</Text>
@@ -148,9 +153,23 @@ export default class FlashStack extends Component {
               style={styles.container}
               contentContainerStyle={styles.contentContainer}
             >
-              
-              {stack}
+
+                {stack}
+
             </View>
+
+            <View style={{position:'relative', alignItems:'center', paddingBottom: normalize(10)}}>
+              <Text style={{fontWeight:'bold'}}>What is the highlighted region?</Text>
+            </View>
+
+            <View style={{position:'relative', alignItems:'center', paddingBottom: normalize(10)}}>
+             <ProgressBarAnimated
+                width={deviceWidth*0.8}
+                value={Math.round(this.state.swiped/totalSwiped*100)}
+                backgroundColorOnComplete="#6CC644"
+              />
+            </View>
+
         </View>
         //</TouchableOpacity>
 
@@ -163,6 +182,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: deviceHeight*0.1,
     alignItems: "center",
+    flexDirection: 'column'
   },
   resultView: {
     marginTop: deviceHeight*0.1,
@@ -172,7 +192,7 @@ const styles = StyleSheet.create({
     width: deviceWidth,
     height: deviceWidth * 1.04
   },
-  result:{
+  prog:{
 
   }
 });
