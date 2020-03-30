@@ -1,9 +1,12 @@
 import React, { Component } from "react";
-import { ScrollView, StyleSheet, SafeAreaView, View, Platform, Image, Text, Button, Dimensions } from "react-native";
+import { ScrollView, StyleSheet, SafeAreaView, View, Platform, Image, Text, Button, Dimensions, Alert } from "react-native";
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import colors from "../assets/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import TabBarIcon from "../components/TabBarIcon";
+import {HOST_NAME} from "../constants/Constants";
+import offline from "../Offline";
+import { Ionicons } from '@expo/vector-icons';
 
 export default class Quizzes extends Component {
   static navigationOptions = ({navigation}) => ({
@@ -87,11 +90,111 @@ export default class Quizzes extends Component {
     }
   }
 
+  _getExplanation = (questionIndex) => {
+    // update this to properly index explanation array!!!!
+    Alert.alert("Why " + this.state.questions[questionIndex].correctAnswer + "?", 
+                this.state.questions[questionIndex].explanation[0]);
+  }
+
   componentDidMount() {
-    let questions = this.props.navigation.getParam("questions");
-    this.setState({
-      questions
+    this.loadData();
+    // this.apiFetch();
+  }
+
+  loadData() {
+    let off = new offline; // create new offline class
+    let subregion = this.props.navigation.getParam("title"); // get subregion 
+    let subregionParam = subregion.replace(" ", ""); // remove spaces
+
+    // Promise grabs data for this quiz
+    let promise = new Promise((resolve, reject) => {
+      resolve(off.grabData(subregionParam, 'quiz'));
+    }); 
+
+    promise.then((data) => {
+      if(data == 400) { // pull data from server
+        this.apiFetch();
+      } else { // use local data
+        var questions = data.map(question => {
+          var answerColors = {};
+          for (var index in question.options) {
+            var answer = question.options[index];
+            answerColors[answer] = (answer === question.correctAnswer) ? "green" : colors.primary;
+          }
+          return {
+            question: question.question,
+            answers: question.options,
+            answerColors: answerColors,
+            correctAnswer: question.correctAnswer,
+            image: question.imageUrl,
+            chosenAnswer: "",
+            explanation: question.explanation
+          };
+        });
+  
+        this.setState({
+          questions: questions
+        });
+      }
+    });
+  }
+
+  apiFetch() {
+    let subregion = this.props.navigation.getParam("title");
+    let subregionParam = subregion.replace(" ", "+");
+    var host = HOST_NAME;
+
+    // fetch entire region hierarchy from server
+    fetch(host + '/quiz?region=' + subregionParam)
+    .then((response) => {
+      if(response.status == 200) {
+        return response.json();
+      } else {
+        dummyData = [
+          {
+            "options": [
+                "Placeholder A",
+                "Placeholder B",
+                "Placeholder C",
+                "Placeholder D"
+            ],
+            "explanation": [
+                "No explanation"
+            ],
+            "imageUrl": "https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg",
+            "correctAnswer": "Placeholder A",
+            "question": "No quiz available."
+          }
+        ]
+        return dummyData;
+      }
     })
+    .then((responseJson) => {
+      // set up format of data coming in from server
+      var questions = responseJson.map(question => {
+        var answerColors = {};
+        for (var index in question.options) {
+          var answer = question.options[index];
+          answerColors[answer] = (answer === question.correctAnswer) ? "green" : colors.primary;
+        }
+        return {
+          question: question.question,
+          answers: question.options,
+          answerColors: answerColors,
+          correctAnswer: question.correctAnswer,
+          image: question.imageUrl,
+          chosenAnswer: "",
+          explanation: question.explanation
+        };
+      });
+
+      this.setState({
+        questions: questions
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   }
 
   render() {
@@ -130,10 +233,25 @@ export default class Quizzes extends Component {
                           backgroundColor: this.state.questions[this.state.questionIndex].chosenAnswer === "" ? colors.primary : this.state.questions[this.state.questionIndex].answerColors[answer],
                           ...styles.buttonStyle
                         }}
-                        disabled={this.state.questions[this.state.questionIndex].chosenAnswer !== ""}
+                        // disabled={this.state.questions[this.state.questionIndex].chosenAnswer !== ""}
                         onPress={() => this._answerQuestion(answer)}
                         >
                         <Text style={styles.buttonTextStyle}>{answer}</Text>
+                        {answer == this.state.questions[this.state.questionIndex].correctAnswer 
+                          && this.state.questions[this.state.questionIndex].chosenAnswer !== "" ?
+                        <View style={styles.explanationBtn}>
+                          <Ionicons
+                            name={Platform.OS === "ios" ? "ios-help-circle" : "md-help-circle"}
+                            size={20}
+                            style={{
+                              color: "white",
+                              opacity: 0.8
+                            }}
+                            onPress={() => this._getExplanation(this.state.questionIndex)}
+                          />
+                        </View> 
+                        :
+                        <View></View>}
                       </TouchableOpacity>
                     </View>
                   )}
@@ -287,6 +405,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 5,
     marginBottom: 5,
+    // opacity: 10
     // backgroundColor: colors.primary
   },
   buttonTextStyle: {
@@ -354,5 +473,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: colors.primaryText
+  },
+  explanationBtn: {
+    position: "absolute",
+    alignContent: "flex-end",
+    alignItems: "flex-end",
+    alignSelf: "flex-end",
+    paddingRight: 10
   }
 });

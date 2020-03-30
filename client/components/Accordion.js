@@ -8,9 +8,9 @@ export default class Accordion extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            data: props.data,
+            data: props.data, //subregions
             expanded : false,
-            path: this.props.path,
+            path: this.props.path, // screen to navigate to
             type: this.props.type // quiz, flashcard, or explore (spelled however the endpoint is spelled)
         }
     }
@@ -40,7 +40,8 @@ export default class Accordion extends Component{
                                     style={[styles.font, styles.itemInActive]}
                                 >
                                  {item.subRegion}
-                                </Text><OnlineToggle region={item.subRegion} type={this.state.type} style={{justifyContent: 'flex-end'}}></OnlineToggle>
+                                </Text>
+                                <OnlineToggle region={item.subRegion} type={this.state.type} style={{justifyContent: 'flex-end'}}></OnlineToggle>
                             </TouchableOpacity>
                             <View style={styles.childHr}/>
                         </View>
