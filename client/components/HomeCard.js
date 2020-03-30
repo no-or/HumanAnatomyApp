@@ -9,6 +9,7 @@ import {
 } from "react-native";
 
 export default class HomeCard extends Component {
+
   render() {
     return (
       <TouchableOpacity style={styles.card} onPress={this.props.callback}>
@@ -18,7 +19,6 @@ export default class HomeCard extends Component {
           <View style={styles.textView}>
             <Text style={styles.textStyle}>{this.props.cardTitle}</Text>
           </View>
-          {/* <Text style={styles.textStyle}>{this.props.cardTitle}</Text> */}
         </TouchableOpacity>
       </TouchableOpacity>
     );
