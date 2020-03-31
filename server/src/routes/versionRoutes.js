@@ -7,21 +7,21 @@ const initializeVersionRoutes = app => {
   app.use("/version", versionRouter);
 
   /* create a version */
-  versionRouter.post("/", async (req, res) => {
+  versionRouter.post("/", verifyAdmin, async (req, res) => {
     if (
-      req.body.module !== "Flashcard" &&
-      req.body.module !== "Quiz" &&
-      req.body.module !== "Explore"
+      req.body.module !== "flashcard" &&
+      req.body.module !== "quiz" &&
+      req.body.module !== "explore"
     )
       return res
         .status(400)
-        .send("The value for module can only be Flashcard/Quiz/Explore");
+        .send("The value for module can only be flashcard/quiz/explore");
     try {
       const findVersion = await VersionModel.findOne(req.body);
       if (findVersion)
         return res
           .status(400)
-          .send("Similar data exists on DB; try updating instead");
+          .send("Similar data exists in the DB; try updating instead");
       const version = new VersionModel(req.body);
       await version.save().then(item => res.send(item));
     } catch (e) {
@@ -32,7 +32,7 @@ const initializeVersionRoutes = app => {
   });
 
   /* update a veriosn component */
-  versionRouter.put("/", async (req, res) => {
+  versionRouter.put("/", verifyAdmin, async (req, res) => {
     if (!req.body.module || !req.body.subRegion) {
       return res.status(400).send("Invalid request body");
     }
@@ -48,7 +48,7 @@ const initializeVersionRoutes = app => {
           .send("No such version component found in the DB");
       } else {
         res.status(200);
-        res.json("Updated Sucessfully");
+        res.json(version);
       }
     } catch (e) {
       res
