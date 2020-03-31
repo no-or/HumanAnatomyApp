@@ -7,7 +7,9 @@ import {
   SafeAreaView,
   View,
   Text,
-  SectionList
+  SectionList,
+  Linking,
+  Button
 } from 'react-native';
 import colors from '../assets/colors';
 import Card from "../components/Card";
@@ -67,7 +69,7 @@ export default class AboutUsScreen extends Component {
                 <TabBarIcon
                   name={Platform.OS === "ios" ? "ios-mail" : "md-mail"}
                 />
-                <Text style={styles.email}>majid.doroudi@ubc.ca</Text>
+                <Button style={styles.email} onPress={() => Linking.openURL('mailto:majid.doroudi@ubc.ca')} title="majid.doroudi@ubc.ca" />
               </View>
             </View>
             <View style={styles.divider}></View>
