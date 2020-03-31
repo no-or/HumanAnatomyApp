@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 
 export default class offline {
@@ -112,9 +112,20 @@ export default class offline {
 
                 responseJson.forEach(function (tmp) {
 
+                  //This piece of code hashes the image path so that each image is only stored once on the device
+                  var hash = 0; 
+        
+                  if (tmp.imageUrl.length == 0) return hash; 
+                    
+                  for (i = 0; i < tmp.imageUrl.length; i++) { 
+                      char = tmp.imageUrl.charCodeAt(i); 
+                      hash = ((hash << 5) - hash) + char; 
+                      hash = hash & hash; 
+                  } 
+
                   FileSystem.downloadAsync(
                     tmp.imageUrl,
-                    FileSystem.documentDirectory + tmp._id + '.jpg'
+                    FileSystem.documentDirectory + hash + '.jpg' // use hashed var instead of temp ID
                     )
                     .then(({ uri }) => {
                         console.log('Finished downloading to ', uri);
@@ -128,7 +139,7 @@ export default class offline {
                     //console.log(tmp);
                     
                     console.log(tmp.imageUrl);
-                    tmp.imageUrl = FileSystem.documentDirectory + tmp._id + '.jpg';
+                    tmp.imageUrl = FileSystem.documentDirectory + hash + '.jpg'; // use hashed var instead of temp ID
 
                 });
 
@@ -148,7 +159,29 @@ export default class offline {
             }
           };
 
+          _storeDate = async () => {
+            try {
+              console.log('successful1');
+            return fetch('http://137.82.155.92:8090/version?module=' + type + '?subRegion=' + region)
+            .then((response) => response.json())
+            .then((responseJson) => {
+
+              console.log(responseJson);
+                //AsyncStorage.setItem(type.concat(region).concat("Date"), JSON.stringify(responseJson.type.region));
+
+            return responseJson;
+            })
+            .catch((error) => {
+              console.log('FUCK');
+            });
+              
+            } catch (error) {
+              console.log('FUCK AGAIN');
+            }
+          };
+
           _storeData();
+          _storeDate();
     }
 
 

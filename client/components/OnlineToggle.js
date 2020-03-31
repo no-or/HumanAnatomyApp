@@ -25,6 +25,18 @@ export default class OnlineToggle extends Component {
       
       promise.then((data) => {
         // successMessage is whatever we passed in the resolve(...) function above.
+///
+///
+///
+        //if data == true
+          //promise fetch external date(
+            //fetch internal date(
+              //compare internal and external, if false call popData();
+            //))
+            ///
+            //
+            ///
+
         console.log("toggle class: " + data);
         this.setState({switchOn1: data});
     });
