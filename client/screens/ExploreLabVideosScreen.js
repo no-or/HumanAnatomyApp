@@ -34,7 +34,6 @@ export default class ExploreLabVideosScreen extends Component {
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({videos: responseJson});
-      // alert(JSON.stringify(this.state.videos))
     })
     .catch((error) => {
       console.error(error);
