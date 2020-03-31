@@ -14,6 +14,7 @@ const initializeCodeRoutes = require("./src/routes/codeRoutes");
 const initializeExploreRoutes = require("./src/routes/exploreRoutes");
 const initializeVideoRoutes = require("./src/routes/videoRoutes");
 const initializeHierarchyRoutes = require("./src/routes/hierarchyRoutes");
+const initializeVersionRoutes = require("./src/routes/versionRoutes");
 
 const PORT = process.env.PORT;
 const DB_CONNECTION_STRING = String(process.env.DB_CONNECTION);
@@ -24,10 +25,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-
-app.use(express.static(path.join(__dirname, '/../WebApp/')))
-app.use(express.static(path.join(__dirname, '/../WebApp/css')))
-app.use(express.static(path.join(__dirname, '/../WebApp/js')))
+app.use(express.static(path.join(__dirname, "/../WebApp/")));
+app.use(express.static(path.join(__dirname, "/../WebApp/css")));
+app.use(express.static(path.join(__dirname, "/../WebApp/js")));
 
 // initialize the routes
 initializeFlashcardRoutes(app);
@@ -39,6 +39,7 @@ initializeCodeRoutes(app);
 initializeExploreRoutes(app);
 initializeVideoRoutes(app);
 initializeHierarchyRoutes(app);
+initializeVersionRoutes(app);
 
 // Connect to DB
 mongoose
