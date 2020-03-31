@@ -48,7 +48,6 @@ export default class HomeScreen extends React.Component {
     let {regionArray} = this.state
     let randomRegionIndex = Math.floor(Math.random()*regionArray.length)
     let randomRegion = regionArray[randomRegionIndex]
-    // alert(regionArray)
     this.props.navigation.push(path, {
       title: randomRegion,
       navigation: this.props.navigation

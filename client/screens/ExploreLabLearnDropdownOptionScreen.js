@@ -56,6 +56,7 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
         menu: [
         ],
         offline: false,
+        firstTime: true,
         region: this.props.navigation.getParam("title", ""),
       }
 
@@ -66,9 +67,12 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
       })
 
       promise.then((data) => {
-
-        this.setState({offline: data[this.state.region]});
-
+        if (this.state.firstTime == true) {
+          this.setState({firstTime: false})
+        } else {
+          this.setState({offline: data[this.state.region]});
+        }
+i
         if(this.state.offline){
           let promise2 = new Promise((resolve, reject) => {
               resolve(this.off.grabData(this.state.region, 'explore'));
@@ -147,10 +151,6 @@ const styles = StyleSheet.create({
         height: 350,
         resizeMode: "contain",
     },
-    // zoomableView: {
-    //   alignContent: "center",
-    //   alignItems: 'center',
-    // },
     imageContainer: {
       flex: 3,
       overflow: "hidden",
