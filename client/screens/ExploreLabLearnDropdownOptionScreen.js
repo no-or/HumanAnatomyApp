@@ -67,12 +67,8 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
       })
 
       promise.then((data) => {
-        if (this.state.firstTime == true) {
-          this.setState({firstTime: false})
-        } else {
-          this.setState({offline: data[this.state.region]});
-        }
-i
+        this.setState({offline: data[this.state.region]});
+
         if(this.state.offline){
           let promise2 = new Promise((resolve, reject) => {
               resolve(this.off.grabData(this.state.region, 'explore'));
