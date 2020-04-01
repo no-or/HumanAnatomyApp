@@ -10,7 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default class Quizzes extends Component {
   static navigationOptions = ({navigation}) => ({
-    title: "Quiz",
+    title: navigation.getParam("title"),
     headerStyle: {
       backgroundColor: colors.primary,
     },
@@ -39,7 +39,7 @@ export default class Quizzes extends Component {
           "Left Ventricle": colors.primary,
         },
         correctAnswer: "Right Atrium",
-        image: "http://www.aljanh.net/data/archive/img/3085128125.jpeg",
+        image: "https://membershipdrive.com/wp-content/uploads/2014/06/placeholder.png",
         chosenAnswer: ""
       }
     ],
@@ -112,7 +112,8 @@ export default class Quizzes extends Component {
     }); 
 
     promise.then((data) => {
-      if(data == 400) { // pull data from server
+      // console.log(typeof(data));
+      if(data == undefined) { // pull data from server
         this.apiFetch();
       } else { // use local data
         var questions = data.map(question => {
@@ -161,7 +162,7 @@ export default class Quizzes extends Component {
             "explanation": [
                 "No explanation"
             ],
-            "imageUrl": "https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg",
+            "imageUrl": "https://membershipdrive.com/wp-content/uploads/2014/06/placeholder.png",
             "correctAnswer": "Placeholder A",
             "question": "No quiz available."
           }
@@ -236,10 +237,12 @@ export default class Quizzes extends Component {
                         // disabled={this.state.questions[this.state.questionIndex].chosenAnswer !== ""}
                         onPress={() => this._answerQuestion(answer)}
                         >
-                        <Text style={styles.buttonTextStyle}>{answer}</Text>
                         {answer == this.state.questions[this.state.questionIndex].correctAnswer 
                           && this.state.questions[this.state.questionIndex].chosenAnswer !== "" ?
                         <View style={styles.explanationBtn}>
+                          <TouchableOpacity 
+                          onPress={() => this._getExplanation(this.state.questionIndex)}
+                          style={styles.explanationOpacity}>
                           <Ionicons
                             name={Platform.OS === "ios" ? "ios-help-circle" : "md-help-circle"}
                             size={20}
@@ -247,11 +250,13 @@ export default class Quizzes extends Component {
                               color: "white",
                               opacity: 0.8
                             }}
-                            onPress={() => this._getExplanation(this.state.questionIndex)}
+                            // onPress={() => this._getExplanation(this.state.questionIndex)}
                           />
+                          </TouchableOpacity>
                         </View> 
                         :
                         <View></View>}
+                        <Text style={styles.buttonTextStyle}>{answer}</Text>
                       </TouchableOpacity>
                     </View>
                   )}
@@ -479,6 +484,11 @@ const styles = StyleSheet.create({
     alignContent: "flex-end",
     alignItems: "flex-end",
     alignSelf: "flex-end",
-    paddingRight: 10
+  },
+  explanationOpacity: {
+    paddingTop: 40,
+    paddingBottom: 40,
+    paddingLeft: 40,
+    paddingRight: 20
   }
 });

@@ -56,12 +56,10 @@ export default class FlashStack extends Component {
           
           promise2.then((data) => {
             // successMessage is whatever we passed in the resolve(...) function above.
-            console.log("offline data");
             this.setState({data: data});
           });
         }else{
           //else if offline not available
-          console.log("online data");
           this.apiFetch();
         }
 
@@ -84,7 +82,6 @@ export default class FlashStack extends Component {
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({data: responseJson});
-      console.log(responseJson);
       return responseJson;
     })
     .catch((error) => {

@@ -1,8 +1,10 @@
-var imageSelectedSource = 2;
+var imageSelectedSource = 2; //used to determine if the user uploaded an image or selected an already existing one
 
-
+/**
+ * @desc builds the image selection menu for choosing pre-existing images for that region
+ * @param string region - name of the region that images should belong to
+*/
 function buildImageScroll(region) {
-
     ajaxGet(website + "/image?region=" + region, function(response) {
         $(".image-gallery").empty();
         console.log(response)
@@ -31,6 +33,11 @@ function buildImageScroll(region) {
     })
 }
 
+
+/**
+ * @desc takes the selected image and replaces the image gallery with an enlargened version of it
+ * @param int imageSelected - index in the gallery of the selected image
+*/
 function pictureSelected(imageSelected) {
     var id = "imageScroll" + imageSelected; 
     console.log(id);
@@ -44,6 +51,9 @@ function pictureSelected(imageSelected) {
     imageSelectedSource = 0;
 }
 
+/**
+ * @desc creates an uploadable image object for when the user uploads the question
+*/
 function handleFiles() {
     const imageFile = this.files[0];
     var reader  = new FileReader();
@@ -61,6 +71,9 @@ function handleFiles() {
      imageSelectedSource = 1;
 }
 
+/**
+ * @desc rebuilds the image galary and allows for the user to upload another image
+*/ 
 function changeImage() {
     var region = getRegion();
     buildImageScroll(region);
@@ -72,6 +85,10 @@ function changeImage() {
     inputElement.addEventListener("change", handleFiles, false);
 }
 
+/**
+ * @desc gets the current selected region
+ * @return name of currently selected region from region menu
+*/ 
 function getRegion() {
     if($(".subSubRegionSelected")[0]){
         region = $(".subSubRegionSelected").attr('title');
@@ -81,14 +98,19 @@ function getRegion() {
     return region;
 }
 
+/**
+ * @desc adds an image link to the list of images coresponding to the specific region
+ * @param data - data.region - region that the image is to be added to
+ * @param link - url to the stored image (s3)
+*/
+
 function addImage(data, link) {
     var data3 = {};
     data3.region = data.region;
     data3.imageUrl =  link.imageUrl;
     ajaxPost(website + "/image", data3, function(){
-      alert("image added to scroll correctly");
     },
     function(){
-      alert("iamge failed to be added to scroll")
+        alert("iamge failed to be added to scroll")
     });
 }

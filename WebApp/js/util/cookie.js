@@ -1,7 +1,13 @@
 
-
+/**
+ * @desc sets a cookie for to a desired value
+ * @param string name - name of the cookie
+ * @param value - whatever value you wish for the cookie to store
+ * @param int hours - number of hours before the cookie expires
+*/
 function setCookie(name, value, hours) {
     var expires;
+    console.log("cookie updated");
     //console.log(name + "    " + value)
     if (hours) {
         var date = new Date();
@@ -13,6 +19,11 @@ function setCookie(name, value, hours) {
     document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
 }
 
+/**
+ * @desc gets the value from a desired cookie
+ * @param string name - name of the cookie to get the value from
+ * @return value of the desired cookie
+*/
 function getCookie(name) {
     var nameEQ = encodeURIComponent(name) + "=";
     var ca = document.cookie.split(';');
@@ -26,6 +37,10 @@ function getCookie(name) {
     return null;
 }
 
+/**
+ * @desc deletes a specified cookie
+ * @param string name - name of the cookie to be deleted
+*/
 function eraseCookie(name) {
-    createCookie(name, "", -1);
+    setCookie(name, "", -1);
 }

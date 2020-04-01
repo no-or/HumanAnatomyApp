@@ -28,10 +28,7 @@ export default class FlashcardsScreen extends Component {
       
       //depending whether the offline button is toggled on or off, fetch from local or remote, respectively.
       promise.then((data) => {
-
-        console.log(data);
         this.setState({menu: data});
-
       })
       .catch((error)=> {
         console.error(error);

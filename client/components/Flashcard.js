@@ -75,8 +75,6 @@ export default class Flashcard extends Component {
                   this.setState({
                     isFlipped: true
                   }));
-                  console.log("clicked");
-                  //this.setState({isFlipped: true});
                 }else{
                   Animated.timing(this.state.flipDegrees, {
                     toValue: 0,
@@ -85,8 +83,6 @@ export default class Flashcard extends Component {
                   this.setState({
                     isFlipped: false
                   }));
-                  console.log("clicked");
-                  //his.setState({isFlipped: false});
                 }
             } else{
                   //else, if the card wasn't dragged into the target zone, spring it back into it's original place 
@@ -95,7 +91,6 @@ export default class Flashcard extends Component {
                       friction: 6
                     }).start();
                     this.setState({movement: false});
-                    console.log("dragged");
               }
               this.state.bgcolor.setValue(0.5);
           }
