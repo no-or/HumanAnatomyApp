@@ -189,7 +189,7 @@ export default class Flashcard extends Component {
 
                 <TouchableOpacity onPress={()=>this.openModal()}>
 
-                  <Text style={{textAlign:'center', fontSize: deviceWidth*.1, color: colors.primary, fontWeight:900}}>ZOOM</Text>
+                  <Text style={{textAlign:'center', fontSize: deviceWidth*.1, color: colors.primary, fontWeight: "900"}}>ZOOM</Text>
                 </TouchableOpacity>
 
             </Animated.View>
