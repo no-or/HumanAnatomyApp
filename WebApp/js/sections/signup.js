@@ -9,7 +9,6 @@ function buildSignupMenu(section){
    	$(".management-area").append('<div class="question-content"</div>')
 	$(".question-content").prepend('<form class="question-display"></form>')
 	$(".question-display").append('<label for="code">Code</label><textarea id="code" name="code" placeholder="Enter your Secret Code" rows="1"></textarea>') 
-	$(".question-display").append('<label for="authBy">Authorized By (First and Last)</label><textarea id="authBy" name="authBy" placeholder="Enter the name of authorizing member" rows="1"></textarea>')  
 	$(".question-display").append('<label for="yourName">Your Name (First and Last)</label><textarea id="yourName" name="yourName" placeholder="Enter your name" rows="1"></textarea>')  
 	$(".question-display").append('<label for="password">New Password</label><textarea id="password" name="password" placeholder="Enter your password" rows="3"></textarea>')
 	$(".question-display").append('<label for="email">Your Email</label><textarea id="email" name="email" placeholder="Enter your email" rows="3"></textarea>')
@@ -23,10 +22,6 @@ function makeNewAdmin(){
 		return;
 	}
 
-	if($("#authBy").val() == ""){
-		alert("Please fill in authorizing field");
-		return;
-	}
 
 	if($("#yourName").val() == ""){
 		alert("Please fill in Your name field");
@@ -44,7 +39,11 @@ function makeNewAdmin(){
 	}
 	var data = {};
 	data.code = $("#code").val();
-	data.authorizedBy = $("#authBy").val();
+	var token = getCookie("accessToken");
+	if(!token){
+		alert("login again")
+	}
+	data.authorizedBy = parseJwt(token);
 	data.name = $("#yourName").val();
 	data.password = $("#password").val();
 	data.email = $("#email").val();
