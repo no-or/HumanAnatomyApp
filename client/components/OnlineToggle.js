@@ -36,6 +36,36 @@ export default class OnlineToggle extends Component {
             ///
             //
             ///
+            if(data == true){
+              let promise2 = new Promise((resolve, reject) => {
+                // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+                  resolve(this.off.grabDate(this.props.region, this.props.type));
+              }) 
+              
+              promise2.then((dIn) => {
+                // successMessage is whatever we passed in the resolve(...) function above.
+
+                dInternal = new Date(dIn);
+
+                let promise3 = new Promise((resolve, reject) => {
+                  // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+                    resolve(this.off._retrieveDate(this.props.region, this.props.type));
+                }) 
+                
+                promise3.then((dEx) => {
+                  dExternal = new Date(dEx);
+                  // successMessage is whatever we passed in the resolve(...) function above.
+                  console.log("We grabbed the External Date: " + dExternal.getTime());
+
+                  if(dExternal.getTime() > dInternal.getTime()){
+                    console.log("HHHHDHDHDDHDHDHHDDHHDDDHHDHDDHHDHDDHDDHDDHDHHDDHDHDHDHDDHDDHHDDDDHDHDDHDDH");
+                    this.off.popData(this.props.region, this.props.type);
+                  }
+                });
+
+                console.log("We grabbed the Internal Date: " + dInternal.getTime());
+              });
+            }
 
         console.log("toggle class: " + data);
         this.setState({switchOn1: data});

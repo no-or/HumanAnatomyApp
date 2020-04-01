@@ -4,11 +4,16 @@ import * as Font from "expo-font";
 import React, { useState } from "react";
 import { Platform, StatusBar, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import offline from "./Offline";
 
 import AppNavigator from "./navigation/AppNavigator";
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
+
+  this.off = new offline;
+
+  off.UpdateHierarchy();
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { AsyncStorage, Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system';
+import {HOST_NAME} from "./constants/Constants"
 
 export default class offline {
 
@@ -28,7 +29,7 @@ export default class offline {
         if (value !== null) {
           return JSON.parse(value);
         } else {
-          await AsyncStorage.setItem(type, this.state.flashcard);
+          await AsyncStorage.setItem(type, JSON.stringify(this.state.flashcard));
         }
       } catch (error) {
         // Error retrieving data
@@ -100,6 +101,103 @@ export default class offline {
           return _retrieveData();
     }
 
+    grabDate(region, type){
+      //Retrieve the date for a type of functionality and region of the app
+      _retrieveData = async () => {
+          try {
+            const value = await AsyncStorage.getItem(type.concat(region).concat("Date"));
+            if (value !== null) {
+              console.log(JSON.parse(value));
+              return JSON.parse(value);
+              console.log(value);
+            } else {
+              let status = 400;
+              return status;
+            }
+          } catch (error) {
+            // Error retrieving data
+            let status = 400;
+            return status;
+          }
+        };
+
+        return _retrieveData();
+  }
+
+  UpdateHierarchy() {
+    var host = HOST_NAME;
+
+    fetch(host+'/hierarchy')
+    .then((response) => response.json())
+    .then((responseJson) => {
+      //this.setState({menu: responseJson[0]});
+      //console.log(responseJson);
+      //AsyncStorage.setItem("hierarchy", JSON.stringify(responseJson));
+//console.log(responseJson[0].regions);
+  responseJson[0].regions.forEach(function (tmp) {
+        console.log(tmp);
+        //This piece of code hashes the image path so that each image is only stored once on the device
+        var hash = 0; 
+
+        if (tmp.imageUrl.length == 0) return hash; 
+          
+        for (i = 0; i < tmp.imageUrl.length; i++) { 
+            char = tmp.imageUrl.charCodeAt(i); 
+            hash = ((hash << 5) - hash) + char; 
+            hash = hash & hash; 
+        } 
+
+        FileSystem.downloadAsync(
+          tmp.imageUrl,
+          FileSystem.documentDirectory + hash + '.jpg' // use hashed var instead of temp ID
+          )
+          .then(({ uri }) => {
+              console.log('Finished downloading to ', uri);
+          })
+          .catch(error => {
+              console.error(error);
+          });
+          
+          //return URI created for image
+
+          //console.log(tmp);
+          
+          console.log(tmp.imageUrl);
+          tmp.imageUrl = FileSystem.documentDirectory + hash + '.jpg'; // use hashed var instead of temp ID
+
+      });
+
+      AsyncStorage.setItem("hierarchy", JSON.stringify(responseJson));
+
+      // alert(JSON.stringify(this.state.menu))
+      // alert(JSON.stringify(responseJson[0].regions));
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
+  FetchHierarchy() {
+    _retrieveData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("hierarchy");
+        if (value !== null) {
+          return JSON.parse(value)[0];
+          console.log(value);
+        } else {
+          let status = 400;
+          return status;
+        }
+      } catch (error) {
+        // Error retrieving data
+        let status = 400;
+        return status;
+      }
+    };
+
+    return _retrieveData();
+  }
+
     //where region is region of the body (use same as API endpoints), and type is flashcard, quiz, etc... use same as API endpoints
     popData(region, type){
         _storeData = async () => {
@@ -162,21 +260,22 @@ export default class offline {
           _storeDate = async () => {
             try {
               console.log('successful1');
-            return fetch('http://137.82.155.92:8090/version?module=' + type + '?subRegion=' + region)
+            return fetch('http://137.82.155.92:8090/version?module=' + type + '&subRegion=' + region)
             .then((response) => response.json())
             .then((responseJson) => {
 
-              console.log(responseJson);
-                //AsyncStorage.setItem(type.concat(region).concat("Date"), JSON.stringify(responseJson.type.region));
+              var d1 = new Date(responseJson[0].updatedOn);
+              console.log(d1);
+              AsyncStorage.setItem(type.concat(region).concat("Date"), JSON.stringify(d1));
 
             return responseJson;
             })
             .catch((error) => {
-              console.log('FUCK');
+              AsyncStorage.setItem(type.concat(region).concat("Date"), JSON.stringify(new Date()));
             });
               
             } catch (error) {
-              console.log('FUCK AGAIN');
+              console.log('Error fetching date');
             }
           };
 
@@ -184,6 +283,27 @@ export default class offline {
           _storeDate();
     }
 
+    _retrieveDate = async (region, type) => {
+      try {
+        console.log('successful1');
+      return fetch('http://137.82.155.92:8090/version?module=' + type + '&subRegion=' + region)
+      .then((response) => response.json())
+      .then((responseJson) => {
+
+        //let temp = new Date(responseJson[0].updatedOn);
+        //console.log("THE RETIREVE DATE: " + temp.getTime());
+
+        return responseJson[0].updatedOn;
+
+      })
+      .catch((error) => {
+        return 0;
+      });
+        
+      } catch (error) {
+        console.log('Error fetching date');
+      }
+    };
 
     storeImage(url, id){
         FileSystem.downloadAsync(
