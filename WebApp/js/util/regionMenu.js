@@ -17,6 +17,9 @@ function buildRegionMenu(section, onClick){
     }
     $(".category-area").append('<div class="anatomy-section"><div class="management-area"><img src="https://www.medicalexamprep.co.uk/wp-content/uploads/2017/10/Anatomy-Prep-Banner.jpg" id="banner"></div> <div class="questions-scroll"></div>')    
     selectedRegion = onClick;
+    if(section == "Menu Manager"){
+        menuManager();
+    }
 };
 
 function menuChange(region, regionName) {
@@ -91,6 +94,7 @@ function addMenuItems(region, regionName, regionLevel, onClick){
 function getMenuObject() {
     ajaxGet(website + "/hierarchy" , function(response) {
         menu = JSON.parse(JSON.stringify(response));
+        console.log(menu)
     }, function(error){
         alert(error)
     })

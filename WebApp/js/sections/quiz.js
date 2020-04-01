@@ -68,6 +68,7 @@ function quizOnclick(thisElement, quizzes){
       break;
     default: alert("no selected answer");
   }
+  $("#myform").remove();
   $(".options-panel").children().remove();
   $(".options-panel").append('<button onclick="deleteQuiz()">Delete Question</button><button onclick="makeNewQuiz()">Make New Quiz</button>') 
 }
@@ -145,7 +146,6 @@ function submitQuiz() {
   }
   data.explanation = [$("#explanation").val()];
   data.question = $("#question").val()
-  console.log(JSON.stringify(data))
 
   if(imageSelectedSource == 1){
       var imageFile = document.forms.myform.elements.filename.files[0];
@@ -171,7 +171,6 @@ function submitQuiz() {
 }
 
 function addQuiz(data, link) {
-  alert(link.imageUrl)
     console.log(link.imageUrl)
     var data2 = data;
     data2.imageUrl =  link.imageUrl
@@ -179,8 +178,10 @@ function addQuiz(data, link) {
       alert("item added correctly");
       if($(".subSubRegionSelected")[0]){
         $(".subSubRegionSelected").trigger("click");
+        updateVersion("quiz", $(".subSubRegionSelected").attr("title"))
       } else{
         $(".subRegionSelected").trigger("click");
+        updateVersion("quiz", $(".subRegionSelected").attr("title"))
       }
     },
     function(){
@@ -228,8 +229,10 @@ function deleteQuiz(){
       alert("question deleted");
       if($(".subSubRegionSelected")[0]){
         $(".subSubRegionSelected").trigger("click");
+        updateVersion("quiz", $(".subSubRegionSelected").attr("title"))
       } else{
         $(".subRegionSelected").trigger("click");
+        updateVersion("quiz", $(".subRegionSelected").attr("title"))
       }
     }, function(){
       alert("question was not deleted");

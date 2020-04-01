@@ -32,6 +32,7 @@ function exploreOnclick(thisElement, explore){
   $(".image-gallery").append(img)
   disableExploreFields();
   $(".options-panel").children().remove();
+  $("#myform").remove();
   $(".options-panel").append('<button onclick="deleteExplore()">Delete Explore Section</button><button onclick="makeNewExplore()">Make New Explore Section</button>') 
 }
 
@@ -115,8 +116,10 @@ function addExplore(data, link) {
       alert("item added correctly");
       if($(".subSubRegionSelected")[0]){
         $(".subSubRegionSelected").trigger("click");
+        updateVersion("explore", $(".subSubRegionSelected").attr("title"))
       } else{
         $(".subRegionSelected").trigger("click");
+        updateVersion("explore", $(".subRegionSelected").attr("title"))
       }
     },
     function(){
@@ -132,7 +135,7 @@ function disableExploreFields(){
 
 function enableExploreFields(){
   $("#title").val("").prop("readonly", false);
-	$("#explanation").prop("readonly", false);
+	$("#explanation").val("").prop("readonly", false);
 	$("#image").val("").prop("readonly", false);
 }
 
@@ -148,8 +151,10 @@ function deleteExplore(){
       alert("Explore section deleted");
       if($(".subSubRegionSelected")[0]){
         $(".subSubRegionSelected").trigger("click");
+        updateVersion("explore", $(".subSubRegionSelected").attr("title"))
       } else{
         $(".subRegionSelected").trigger("click");
+        updateVersion("explore", $(".subRegionSelected").attr("title"))
       }
     }, function(){
       alert("Explore section was not deleted");

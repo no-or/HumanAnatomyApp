@@ -111,8 +111,10 @@ function addFlashcard(data, link) {
       alert("item added correctly");
       if($(".subSubRegionSelected")[0]){
         $(".subSubRegionSelected").trigger("click");
+        updateVersion("flashcard", $(".subSubRegionSelected").attr("title"))
       } else{
         $(".subRegionSelected").trigger("click");
+        updateVersion("flashcard", $(".subRegionSelected").attr("title"))
       }
     },
     function(){
@@ -142,8 +144,10 @@ function deleteFlashcard(){
       alert("flashcard deleted");
       if($(".subSubRegionSelected")[0]){
         $(".subSubRegionSelected").trigger("click");
+        updateVersion("flashcard", $(".subSubRegionSelected").attr("title"))
       } else{
         $(".subRegionSelected").trigger("click");
+        updateVersion("flashcard", $(".subRegionSelected").attr("title"))
       }
     }, function(){
       alert("flashcard was not deleted");

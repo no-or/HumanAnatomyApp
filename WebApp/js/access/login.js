@@ -8,7 +8,8 @@ function userLogin(event, values) {
       email: values[0].value,
       password: values[1].value
     }
-    this.url = 'http://137.82.155.92:8090/admin/login'
+    //this.url = 'http://137.82.155.92:8090/admin/login'
+    this.url = 'http://localhost:8090/admin/login'
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(xhttp.readyState == 4 && xhttp.status == 200) {
