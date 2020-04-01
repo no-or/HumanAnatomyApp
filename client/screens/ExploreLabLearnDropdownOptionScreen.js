@@ -17,6 +17,8 @@ import ImageZoom from 'react-native-image-pan-zoom';
 
 import offline from "../Offline";
 
+const assets = require('../utils/assets')
+
 function Item({ content }) {
 
     return (
@@ -26,10 +28,13 @@ function Item({ content }) {
             {Platform.OS === "ios" ? (
               <Image
                 style={styles.image}
-                source={{uri: content.imageUrl}}
+                source={ content.region == "N/A"
+                  ? assets['inProgressImage']
+                  : {uri: content.imageUrl}
+                }
               />
             ) : (
-              <ImageZoom 
+              <ImageZoom
                 cropWidth={Dimensions.get('window').width}
                 cropHeight={styles.image.height}
                 imageWidth={Dimensions.get('window').width}
@@ -37,7 +42,10 @@ function Item({ content }) {
               >
                 <Image
                   style={styles.image}
-                  source={{uri: content.imageUrl}}
+                  source={ content.region == "N/A"
+                    ? assets['inProgressImage']
+                    : {uri: content.imageUrl}
+                  }
                 />
               </ImageZoom>
             )}
