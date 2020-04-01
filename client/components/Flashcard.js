@@ -102,24 +102,6 @@ export default class Flashcard extends Component {
         });
       }
 
-  openModal = () =>{
-    this.setState({
-    isModalVisible:true
-    })
-    }
-
-  toggleModal = () =>{
-    this.setState({
-    isModalVisible:!this.state.isModalVisible
-    })
-    }
-
-  closeModal = () =>{
-    this.setState({
-    isModalVisible:false
-    })
-    }
-
 //render the card within the view
   render() {
     return (
@@ -187,35 +169,8 @@ export default class Flashcard extends Component {
                 style={styles.cardImage}>
                 </Image>
 
-                <TouchableOpacity onPress={()=>this.openModal()}>
-
-                  <Text style={{textAlign:'center', fontSize: deviceWidth*.1, color: colors.primary, fontWeight: "900"}}>ZOOM</Text>
-                </TouchableOpacity>
-
             </Animated.View>
 
-            <Modal animationIn="slideInUp" animationOut="slideOutDown" onBackdropPress={()=>this.closeModal()} onSwipeComplete={()=>this.closeModal()} swipeDirection="right" isVisible={this.state.isModalVisible} style={{backgroundColor:'white', top: 20, maxHeight:Dimensions.get('window').height / 2}}>
-              <View style={{ flex: 1,justifyContent:'center'}}>
-              <ImageZoom 
-                cropWidth={Dimensions.get('window').width}
-                cropHeight={styles.image.height}
-                imageWidth={Dimensions.get('window').width}
-                imageHeight={styles.image.height}
-              >
-                <Image
-                  style={styles.image}
-                  source={{uri: this.props.uri}}
-                />
-              </ImageZoom>
-              </View>
-              <View style={{ flex: 1,justifyContent:'center',position:'absolute',bottom:0}}>
-              <View style={{flexDirection:'row',}}>
-                <TouchableOpacity style={{backgroundColor:'red',width:"100%"}} onPress={()=>this.closeModal()}>
-                  <Text style={{color:'white',textAlign:'center',padding:10}}>Cancel</Text>
-                </TouchableOpacity>
-              </View>
-              </View>
-            </Modal>
           </View>
 
         );
@@ -242,9 +197,9 @@ let RADIUS = deviceWidth*.8;
 
 const styles = StyleSheet.create({
   cardImage: {
-    width: deviceWidth*0.65,
+    width: "90%",
     height: deviceWidth*0.65,
-    resizeMode: "cover",
+    resizeMode: "contain",
     borderWidth: 2
   },
   cardText: {
