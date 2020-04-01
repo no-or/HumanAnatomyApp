@@ -56,8 +56,6 @@ export default class ExploreLabLearnScreen extends Component {
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({menu: responseJson[0]});
-      // alert(JSON.stringify(this.state.menu))
-      // alert(JSON.stringify(responseJson[0].regions));
     })
     .catch((error) => {
       console.error(error);
