@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import { ScrollView, View, SafeAreaView, StyleSheet, TouchableOpacity, Text, Dimensions, Platform, Alert } from "react-native";
+import { ScrollView, View, SafeAreaView, Image, StyleSheet, TouchableOpacity, Text, Dimensions, Platform, Alert } from "react-native";
 import colors from "../assets/colors";
 import Flashcard from "../components/Flashcard";
 import normalize from 'react-native-normalize';
 import TabBarIcon from "../components/TabBarIcon";
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
+import Modal from 'react-native-modal';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 import offline from "../Offline";
 import { cloneWithoutLoc } from "@babel/types";
@@ -29,7 +31,8 @@ export default class FlashStack extends Component {
       right: 0,
       region: this.props.navigation.getParam("title", "brain"),
       offline: false,
-      swiped: 0
+      swiped: 0,
+      isModalVisible:false
     };
 
 
@@ -110,12 +113,32 @@ export default class FlashStack extends Component {
     this.setState({ swiped: this.state.swiped + 1});
   };
 
+  openModal = () =>{
+    this.setState({
+    isModalVisible:true
+    })
+    }
+
+  toggleModal = () =>{
+    this.setState({
+    isModalVisible:!this.state.isModalVisible
+    })
+    }
+
+  closeModal = () =>{
+    this.setState({
+    isModalVisible:false
+    })
+    }
+
+
   render() {
 
     var stack = [];
     var totalSwiped = 0;
+    var uris = [];
 
-    console.log(this.state.data);
+    console.log(this.state.data[this.state.total - this.state.swiped]);
 
     if(this.state.data != null){
 
@@ -130,8 +153,8 @@ export default class FlashStack extends Component {
           />
         );
         totalSwiped += 1;
+        uris.push(tmp.imageUrl);
     }.bind(this));
-
   }else{
     Alert.alert("You are offline, but have no data saved for this section!");
   }
@@ -150,6 +173,10 @@ export default class FlashStack extends Component {
                 <Text style={styles.scoreNumber}>{"Percentage: " + Math.round(this.state.right/totalSwiped*100) + "%"}</Text>
               </View>
             </View>
+
+            <TouchableOpacity onPress={()=>this.openModal()}>
+              <Text style={{textAlign:'center', fontSize: deviceWidth*.1, color: colors.primary, fontWeight: "900"}}>ZOOM</Text>
+            </TouchableOpacity>
 
             <View
               style={styles.container}
@@ -171,6 +198,29 @@ export default class FlashStack extends Component {
                 backgroundColorOnComplete="#6CC644"
               />
             </View>
+
+            <Modal animationIn="slideInUp" animationOut="slideOutDown" onBackdropPress={()=>this.closeModal()} onSwipeComplete={()=>this.closeModal()} swipeDirection="right" isVisible={this.state.isModalVisible} style={{backgroundColor:'white', top: 20, maxHeight:Dimensions.get('window').height / 2}}>
+              <View style={{ flex: 1,justifyContent:'center'}}>
+              <ImageZoom 
+                cropWidth={Dimensions.get('window').width}
+                cropHeight={styles.image.height}
+                imageWidth={Dimensions.get('window').width}
+                imageHeight={styles.image.height}
+              >
+                <Image
+                  style={styles.image}
+                  source={{uri: uris[totalSwiped - this.state.swiped - 1]}}
+                />
+              </ImageZoom>
+              </View>
+              <View style={{ flex: 1,justifyContent:'center',position:'absolute',bottom:0}}>
+              <View style={{flexDirection:'row',}}>
+                <TouchableOpacity style={{backgroundColor:'red',width:"100%"}} onPress={()=>this.closeModal()}>
+                  <Text style={{color:'white',textAlign:'center',padding:10}}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+              </View>
+            </Modal>
 
         </View>
         //</TouchableOpacity>
@@ -225,4 +275,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.primaryText
   },
+  image: {
+    width: "100%",
+    height: 350,
+    resizeMode: "contain",
+},
 });
