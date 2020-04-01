@@ -36,7 +36,7 @@ export default class FlashcardsScreen extends Component {
       .catch((error)=> {
         console.error(error);
       });
-      
+
     };
 
     componentDidMount() {

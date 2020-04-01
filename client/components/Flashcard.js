@@ -1,6 +1,10 @@
 import React, { Component } from "react";
-import { Image, StyleSheet, Text, Dimensions, Platform, Animated, PanResponder, View} from "react-native";
+import { Image, StyleSheet, TouchableOpacity, Text, Dimensions, Platform, Animated, PanResponder, View} from "react-native";
 import normalize from 'react-native-normalize';
+import Modal from 'react-native-modal';
+import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
+import colors from "../assets/colors";
+import ImageZoom from 'react-native-image-pan-zoom';
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height
@@ -18,7 +22,8 @@ export default class Flashcard extends Component {
           flipDegrees: new Animated.Value(0),
           isFlipped: false,
           bgcolor: new Animated.Value(0.5),//'white',
-          movement: false
+          movement: false,
+          isModalVisible:false
         };
           
       this._val = { x:0, y:0 }
@@ -27,9 +32,9 @@ export default class Flashcard extends Component {
       this.panResponder = PanResponder.create({
           onMoveShouldSetPanResponder : (e, gesture) => {
           const {dx, dy} = gesture;
-          //if(Math.abs(gesture.dx) + Math.abs(gesture.dy) < normalize(50))
-            //  return false;
-          return  true ;//Math.abs(dy) > normalize(25);
+          if(Math.abs(gesture.dx) + Math.abs(gesture.dy) < normalize(2))
+              //return false;
+          return  true;//Math.abs(dy) > normalize(25);
       },
           onPanResponderGrant: (e, gesture) => {
             this.state.pan.setOffset({
@@ -97,6 +102,24 @@ export default class Flashcard extends Component {
         });
       }
 
+  openModal = () =>{
+    this.setState({
+    isModalVisible:true
+    })
+    }
+
+  toggleModal = () =>{
+    this.setState({
+    isModalVisible:!this.state.isModalVisible
+    })
+    }
+
+  closeModal = () =>{
+    this.setState({
+    isModalVisible:false
+    })
+    }
+
 //render the card within the view
   render() {
     return (
@@ -154,7 +177,6 @@ export default class Flashcard extends Component {
 
       if (this.state.showDraggable && !this.state.isFlipped) {
         return (
-          
             <View style={{ position: "absolute" }}>
             <Animated.View
               {...this.panResponder.panHandlers}
@@ -164,8 +186,38 @@ export default class Flashcard extends Component {
                 source={{uri: this.props.uri}}
                 style={styles.cardImage}>
                 </Image>
+
+                <TouchableOpacity onPress={()=>this.openModal()}>
+
+                  <Text style={{textAlign:'center', fontSize: deviceWidth*.1, color: colors.primary, fontWeight:900}}>ZOOM</Text>
+                </TouchableOpacity>
+
             </Animated.View>
+
+            <Modal animationIn="slideInUp" animationOut="slideOutDown" onBackdropPress={()=>this.closeModal()} onSwipeComplete={()=>this.closeModal()} swipeDirection="right" isVisible={this.state.isModalVisible} style={{backgroundColor:'white', top: 20, maxHeight:Dimensions.get('window').height / 2}}>
+              <View style={{ flex: 1,justifyContent:'center'}}>
+              <ImageZoom 
+                cropWidth={Dimensions.get('window').width}
+                cropHeight={styles.image.height}
+                imageWidth={Dimensions.get('window').width}
+                imageHeight={styles.image.height}
+              >
+                <Image
+                  style={styles.image}
+                  source={{uri: this.props.uri}}
+                />
+              </ImageZoom>
+              </View>
+              <View style={{ flex: 1,justifyContent:'center',position:'absolute',bottom:0}}>
+              <View style={{flexDirection:'row',}}>
+                <TouchableOpacity style={{backgroundColor:'red',width:"100%"}} onPress={()=>this.closeModal()}>
+                  <Text style={{color:'white',textAlign:'center',padding:10}}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+              </View>
+            </Modal>
           </View>
+
         );
       }else if (this.state.showDraggable && this.state.isFlipped) {
         return (
@@ -204,5 +256,11 @@ const styles = StyleSheet.create({
     transform: [
       {rotateY: '180deg'},
   ],
-  }
+  },
+  image: {
+    width: "100%",
+    height: 350,
+    resizeMode: "contain",
+},
+
 });
