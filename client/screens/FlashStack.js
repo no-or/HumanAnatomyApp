@@ -118,6 +118,7 @@ export default class FlashStack extends Component {
     var stack = [];
     var totalSwiped = 0;
 
+    console.log(this.state.data);
 
     if(this.state.data != null){
 
