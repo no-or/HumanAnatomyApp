@@ -60,10 +60,15 @@ function buildStatsMenu(section, onClick){
 	    		}
 	    	}
     	}
-    	$(".management-area").append('<table id=uniTable />')
-    	$(".management-area").append('<table id=degreeTable />')
-    	$(".management-area").append('<table id=educationTable />')
-    	$(".management-area").append('<table id=yearTable >')
+        $(".management-area").append('<div id="uniT" class=statTable/>');
+        $(".management-area").append('<div id="degT" class=statTable/>');
+        $(".management-area").append('<div id="eduT" class=statTable/>');
+        $(".management-area").append('<div id="yeaT" class=statTable/>');
+
+    	$("#uniT").append('<table id=uniTable />')
+    	$("#degT").append('<table id=degreeTable />')
+    	$("#eduT").append('<table id=educationTable />')
+    	$("#yeaT").append('<table id=yearTable >')
 
     	$("#uniTable").append('<tr><th> University </th>' + '<th> Number of users </th></tr>')
     	$("#degreeTable").append('<tr><th> Degree </th>' + '<th> Number of users </th></tr>')
