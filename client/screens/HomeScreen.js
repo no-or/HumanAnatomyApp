@@ -62,17 +62,17 @@ export default class HomeScreen extends React.Component {
             style={styles.container}
           >
             <HomeCard
-              uri="http://www.aljanh.net/data/archive/img/3085128125.jpeg"
+              uri={'randomQuizImage'}
               cardTitle="Random Quizzes"
               callback={() => this.randomPath("Quiz")}
             />
             <HomeCard
-              uri="https://c1.wallpaperflare.com/preview/661/540/52/skeleton-hand-bones-anatomy.jpg"
+              uri={'randomFlashcardImage'}
               cardTitle="Random Flashcards"
               callback={() => this.randomPath("FlashStack")}
             />
             <HomeCard
-              uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
+              uri={'randomExploreImage'}
               cardTitle="Random Explore Cards"
               callback={() => this.randomPath("ExploreLabLearnDropdownOption")}
             />

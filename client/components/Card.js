@@ -8,11 +8,13 @@ import {
   View
 } from "react-native";
 
+const assets = require('../utils/assets')
+
 export default class Card extends Component {
   render() {
     return (
       <TouchableOpacity style={styles.card} onPress={this.props.callback}>
-        <Image style={styles.cardImage} source={{ uri: this.props.uri }} />
+        <Image style={styles.cardImage} source={assets[this.props.uri]}/>
         <View style={styles.overlayTint}></View>
         <TouchableOpacity style={styles.textContainer} onPress={this.props.callback}>
           <View style={styles.textView}>

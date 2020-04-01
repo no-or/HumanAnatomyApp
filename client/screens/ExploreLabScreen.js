@@ -40,12 +40,12 @@ export default class ExploreLabScreen extends Component {
             contentContainerStyle={styles.contentContainer}
           >
             <Card
-              uri="https://static2.bigstockphoto.com/8/5/1/large1500/158296634.jpg"
+              uri={'randomExploreImage'}
               cardTitle="Learn"
               callback={() => this.props.navigation.navigate("ExploreLabLearn")}
             />
             <Card
-              uri="https://www.simtics.com/media/28745/mlla.jpg"
+              uri={'randomVideoImage'}
               cardTitle="Videos"
               callback={() => this.props.navigation.navigate("ExploreLabVideos")}
             />
