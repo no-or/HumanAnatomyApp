@@ -112,7 +112,8 @@ export default class Quizzes extends Component {
     }); 
 
     promise.then((data) => {
-      if(data == 400) { // pull data from server
+      // console.log(typeof(data));
+      if(data == undefined) { // pull data from server
         this.apiFetch();
       } else { // use local data
         var questions = data.map(question => {
