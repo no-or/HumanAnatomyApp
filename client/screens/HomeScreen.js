@@ -84,7 +84,7 @@ export default class HomeScreen extends React.Component {
 }
 
 HomeScreen.navigationOptions = ({navigation}) => ({
-  title: "Human Anatomy App",
+  title: "Human Anatomy Teaching App",
   headerStyle: {
     backgroundColor: colors.primary,
   },

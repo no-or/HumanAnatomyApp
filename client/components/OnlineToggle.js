@@ -54,20 +54,14 @@ export default class OnlineToggle extends Component {
                 
                 promise3.then((dEx) => {
                   dExternal = new Date(dEx);
-                  // successMessage is whatever we passed in the resolve(...) function above.
-                  console.log("We grabbed the External Date: " + dExternal.getTime());
 
                   if(dExternal.getTime() > dInternal.getTime()){
-                    console.log("HHHHDHDHDDHDHDHHDDHHDDDHHDHDDHHDHDDHDDHDDHDHHDDHDHDHDHDDHDDHHDDDDHDHDDHDDH");
                     this.off.popData(this.props.region, this.props.type);
                   }
                 });
-
-                console.log("We grabbed the Internal Date: " + dInternal.getTime());
               });
             }
 
-        console.log("toggle class: " + data);
         this.setState({switchOn1: data});
     });
   }
@@ -93,7 +87,6 @@ export default class OnlineToggle extends Component {
     temp = !this.state.switchOn1;
     this.setState({ switchOn1: temp });
 
-    console.log(this.props.region);
     this.off.updateButton(temp, this.props.region, this.props.type);
 
     if(temp)
