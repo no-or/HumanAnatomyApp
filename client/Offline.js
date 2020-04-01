@@ -88,13 +88,13 @@ export default class offline {
                 return JSON.parse(value);
                 console.log(value);
               } else {
-                let status = 400;
-                return status;
+                //let status = 400;
+                //return status;
               }
             } catch (error) {
               // Error retrieving data
-              let status = 400;
-              return status;
+              //let status = 400;
+              //return status;
             }
           };
 
