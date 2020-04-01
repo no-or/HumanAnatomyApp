@@ -141,13 +141,18 @@ export default class FlashStack extends Component {
 
     return (
         //<TouchableOpacity onPress={alert("dsf")}> 
-        <View style={{flex: 1, flexDirection: 'column'}}>
+        <View style={{flex: 1, flexDirection: 'column', backgroundColor: totalSwiped == this.state.swiped ? colors.primary : "white"}}>
+          
 
-          <View style={styles.resultView}>
-            <Text style={styles.result}>Amount correct: {this.state.right}</Text>
-            <Text style={styles.result}>Total cards swiped: {totalSwiped}</Text>
-            <Text style={styles.result}>Percentage correct: {Math.round(this.state.right/totalSwiped*100)} %</Text>
-          </View>
+            <View style={styles.resultView}><View style={styles.scoreNumberContainer}>
+              <View style={styles.scoreHeaderContainer}>
+                <Text style={styles.finalScoreHeader}>FINAL SCORE</Text>
+              </View>
+                <Text style={styles.scoreNumber}>{"Correct: " + this.state.right}</Text>
+                <Text style={styles.scoreNumber}>{"Swiped: " + totalSwiped}</Text>
+                <Text style={styles.scoreNumber}>{"Percentage: " + Math.round(this.state.right/totalSwiped*100) + "%"}</Text>
+              </View>
+            </View>
 
             <View
               style={styles.container}
@@ -182,7 +187,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: deviceHeight*0.1,
     alignItems: "center",
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   resultView: {
     marginTop: deviceHeight*0.1,
@@ -190,9 +195,37 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
     width: deviceWidth,
-    height: deviceWidth * 1.04
+    height: deviceWidth * 1.04,
   },
-  prog:{
-
-  }
+  finalScoreHeader: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "white"
+  },
+  scoreHeaderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+  },
+  scoreStyle: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    // flex: 1,
+    // width: "100%",
+    height: "100%",
+    backgroundColor: colors.primary
+  },
+  scoreNumberContainer: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    alignContent: "center",
+  },
+  scoreNumber: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: colors.primaryText
+  },
 });

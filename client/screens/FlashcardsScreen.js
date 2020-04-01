@@ -19,10 +19,28 @@ export default class FlashcardsScreen extends Component {
       menu: null,
     }
 
+    this.off =  new offline;
+
+        //These nested promises are meant to see if online or offline mode should be used.
+      let promise = new Promise((resolve, reject) => {
+          resolve(this.off.FetchHierarchy());
+      }) 
+      
+      //depending whether the offline button is toggled on or off, fetch from local or remote, respectively.
+      promise.then((data) => {
+
+        console.log(data);
+        this.setState({menu: data});
+
+      })
+      .catch((error)=> {
+        console.error(error);
+      });
+      
     };
 
     componentDidMount() {
-      this.apiFetch();
+      //this.apiFetch();
     }
   
     apiFetch() {

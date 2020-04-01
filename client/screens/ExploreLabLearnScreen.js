@@ -14,7 +14,8 @@ import colors from '../assets/colors';
 import Card from "../components/Card";
 import Accordion from '../components/Accordion'
 import TabBarIcon from "../components/TabBarIcon";
-import {HOST_NAME} from "../constants/Constants"
+import {HOST_NAME} from "../constants/Constants";
+import offline from "../Offline.js";
 
 export default class ExploreLabLearnScreen extends Component {
 
@@ -23,10 +24,29 @@ export default class ExploreLabLearnScreen extends Component {
     this.state = {
       menu : null,
      }
+
+     this.off =  new offline;
+
+        //These nested promises are meant to see if online or offline mode should be used.
+      let promise = new Promise((resolve, reject) => {
+          resolve(this.off.FetchHierarchy());
+      }) 
+      
+      //depending whether the offline button is toggled on or off, fetch from local or remote, respectively.
+      promise.then((data) => {
+
+        console.log(data);
+        this.setState({menu: data});
+
+      })
+      .catch((error)=> {
+        console.error(error);
+      });
+
   }
 
   componentDidMount() {
-    this.apiFetch();
+    //this.apiFetch();
   }
 
   apiFetch() {
