@@ -2,6 +2,7 @@ const express = require("express");
 const CodeModel = require("../models/code");
 const verifyAdmin = require("../util/verifyToken");
 const bcrypt = require("bcryptjs");
+const registerAdmin = require("../services/registerAdmin");
 
 const initializeCodeRoutes = app => {
   const codeRouter = express.Router();
@@ -83,7 +84,9 @@ const initializeCodeRoutes = app => {
     if (!validCode) {
       return res.status(401).send("Invalid Code");
     } else {
-      return res.status(200).send("Success");
+      //if the code is right, register the admin
+      const register = await registerAdmin(req);
+      return res.status(register.status).send(register.message);
     }
   });
 

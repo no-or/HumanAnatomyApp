@@ -1,55 +1,14 @@
 const express = require("express");
 const AdminModel = require("../models/admins");
-const Joi = require("@hapi/joi");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const verifyAdmin = require("../util/verifyToken");
 const generateToken = require("../util/generateToken");
 const refreshTokenService = require("../services/refreshTokenService");
 
-const ValidationSchema = Joi.object().keys({
-  name: Joi.string()
-    .min(6)
-    .required(),
-  email: Joi.string()
-    .required()
-    .email(),
-  password: Joi.string()
-    .min(6)
-    .required(),
-  authorizedBy: Joi.string()
-    .min(6)
-    .required()
-});
-
 const initializeAdminRoutes = app => {
   const adminRouter = express.Router();
   app.use("/admin", adminRouter);
-
-  /* create an admin */
-  adminRouter.post("/register", async (req, res) => {
-    const { error } = ValidationSchema.validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
-    const authByAdmin = await AdminModel.findOne({
-      name: req.body.authorizedBy
-    });
-    if (!authByAdmin)
-      return res
-        .status(400)
-        .send(`We do not recognize ${req.body.authorizedBy}`);
-
-    //Hash the password
-    const salt = await bcrypt.genSalt(10);
-    req.body.password = await bcrypt.hash(req.body.password, salt);
-
-    const admin = new AdminModel(req.body);
-    try {
-      await admin.save().then(item => res.send(item));
-    } catch (e) {
-      res.status(400).send(e.message);
-    }
-  });
 
   /* delete an admin by id */
   adminRouter.delete("/:id", verifyAdmin, async (req, res, next) => {
@@ -108,7 +67,7 @@ const initializeAdminRoutes = app => {
     }
   });
 
-  /* login a user */
+  /* login an admin */
   adminRouter.post("/login", async (req, res) => {
     //Check if email exists
     const admin = await AdminModel.findOne({ email: req.body.email });
@@ -128,14 +87,14 @@ const initializeAdminRoutes = app => {
     const uploadToken = await refreshTokenService.uploadToken(refreshToken);
 
     if (uploadToken) {
-      await res.json({ accessToken, refreshToken });
+      res.json({ accessToken, refreshToken });
     } else {
       res.status(500).send("Please try again");
     }
   });
 
   /* logout an admin */
-  adminRouter.post("/logout", async (req, res) => {
+  adminRouter.post("/logout", verifyAdmin, async (req, res) => {
     if (!req.body.refreshToken) {
       return res.status(403).send("Pass refreshToken in the req body");
     }
