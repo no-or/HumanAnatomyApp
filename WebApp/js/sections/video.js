@@ -59,29 +59,28 @@ function makeNewVideo() {
 
 
 function submitVideo() {
-  var data = {};
-  if($("#title").val() == ""){
-    alert("Please fill in title field");
-    return;
-  }
-  if($("#url").val() == ""){
-    alert("Please fill out url");
-    return;
-  }
-  if($("#region").val() == ""){
-    alert("Please fill out region");
-    return;
-  }
-  data.region = $("#region").val()
-  data.link = $("#url").val();
-  data.title = $("#title").val()
+    var data = {};
+    if($("#title").val() == ""){
+        alert("Please fill in title field");
+        return;
+    }
+    if($("#url").val() == ""){
+        alert("Please fill out url");
+        return;
+    }
+    if($("#region").val() == ""){
+        alert("Please fill out region");
+        return;
+    }
+    data.region = $("#region").val()
+    data.link = $("#url").val();
+    data.title = $("#title").val()
 
 
     ajaxPost(website + "/video", data, function(){
-      alert("video added correctly");
-      $("#videoManager").trigger("click")
-    },
-    function(){
-      alert("item failed to be added")
+        alert("video added correctly");
+        $("#videoManager").trigger("click")
+    }, function(){
+        alert("item failed to be added")
     },1);
 }

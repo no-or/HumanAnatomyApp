@@ -1,7 +1,11 @@
-var selectedRegion;
-var menu; 
+var selectedRegion; //stored onclick function for lowest level regions
+var menu; //current menu objext
 
-
+/**
+ * @desc builds the region menu from the menu object
+ * @param string section - representation for the current section (explore, flashcard, etc)
+ * @param function onClick - called when the lowest level region is selected
+*/
 function buildRegionMenu(section, onClick){
     $(".content").children().remove()
     $(".content").append('<div class="topbar"><h2 class="topbar-title">' + section + '</h2></div>')  
@@ -22,6 +26,11 @@ function buildRegionMenu(section, onClick){
     }
 };
 
+/**
+ * @desc alters the menu when a top level region is selected
+ * @param region - tree representation of the selected region holding any subregions
+ * @param string regionName - name for the selected region
+*/
 function menuChange(region, regionName) {
     $(".subRegion").remove();
     $(".subSubRegion").remove();
@@ -40,6 +49,11 @@ function menuChange(region, regionName) {
     }
 }
 
+/**
+ * @desc alters the menu when a second level region is selected
+ * @param region - tree representation of the selected region holding any subregions
+ * @param string regionName - name for the selected region
+*/
 function subMenuChange(region, regionName) {
     var curSelected = document.getElementsByClassName("subRegionSelected");
     if(!(curSelected.length == 1 && curSelected[0].id == regionName)){
@@ -58,6 +72,13 @@ function subMenuChange(region, regionName) {
     }
 }
 
+/**
+ * @desc adds all the specified regions subregions to the menu 
+ * @param region - tree representation of the selected region holding any subregions
+ * @param string regionName - name for the selected region
+ * @param string regionLevel - level of the selected region (subRegion or region)
+ * @param onClick - called when the new menu items are clicked
+*/
 function addMenuItems(region, regionName, regionLevel, onClick){
     console.log(region)
     $(".subSubRegion").remove();
@@ -90,7 +111,9 @@ function addMenuItems(region, regionName, regionLevel, onClick){
     }
 }
 
-
+/**
+ * @desc fetches all the menu hierarchy from the server and stores it in the global menu object
+*/
 function getMenuObject() {
     ajaxGet(website + "/hierarchy" , function(response) {
         menu = JSON.parse(JSON.stringify(response));

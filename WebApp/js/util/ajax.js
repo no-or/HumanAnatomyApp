@@ -1,4 +1,12 @@
 
+/**
+ * @desc Ajax call for deleting content
+ * @param url - website url 
+ * @param onSuccess - callback for a successful deletion
+ * @param onError - callback for a failed deletion
+ * @param tryNumber - number of attempts to delete content, used for authentication synchronization. Set to 1 when calling.
+*/
+
 var ajaxDelete = function (url, onSuccess, onError, tryNumber){
   this.url = url;
   this.onSuccess = onSuccess;
@@ -12,7 +20,7 @@ var ajaxDelete = function (url, onSuccess, onError, tryNumber){
             if(tryNumber == 2) {
                 onError(xhttp.responseText);
             } else if(xhttp.readyState == 4){
-                updateToken()
+                updateAccessToken()
                 ajaxDelete(this.url, this.onSuccess, this.onError, 2)
             }
         }
@@ -31,26 +39,36 @@ var ajaxDelete = function (url, onSuccess, onError, tryNumber){
     }
 }
 
+/**
+ * @desc Ajax call for posting content
+ * @param url - website url 
+ * @param onSuccess - callback for a successful post
+ * @param onError - callback for a failed post
+ * @param tryNumber - number of attempts to post content, used for authentication synchronization. Set to 1 when calling.
+*/
 var ajaxPost = function (url, data, onSuccess, onError, tryNumber){
     this.url = url;
     this.onSuccess = onSuccess;
     this.onError = onError;
+    var retError = onError;
     this.data = data;
 
-    var xhttp = new XMLHttpRequest();
+    var xhttp1 = new XMLHttpRequest();
     //xhttp.timeout = 5000;
     var i = 0;
 
-    xhttp.onreadystatechange = function() {
-        if(xhttp.readyState == 4 && xhttp.status == 200) {
-            onSuccess(xhttp.responseText);
+    xhttp1.onreadystatechange = function() {
+        if(xhttp1.readyState == 4 && xhttp1.status == 200) {
+            onSuccess(xhttp1.responseText);
         }
         else {
-          if(tryNumber == 2) {
-                onError(xhttp.responseText);
-            } else if(xhttp.readyState == 4){
-                updateToken()
-                ajaxPost(this.url, this.data, this.onSuccess, this.onError, 2)
+            if(tryNumber == 2) {
+                onError(xhttp1.responseText);
+            } else if(this.readyState == XMLHttpRequest.DONE){
+                updateAccessToken(function(){
+                    console.log("posting from inside post");
+                    ajaxPost(this.url, this.data, this.onSuccess, retError, 2)
+                });
             }
         }
     }
@@ -60,14 +78,22 @@ var ajaxPost = function (url, data, onSuccess, onError, tryNumber){
     if(!(token)){
         window.location.href = 'login.html'
     }else{
-        xhttp.open('POST', this.url, true);
-        xhttp.setRequestHeader('Authorization', accessToken);
-        xhttp.setRequestHeader('Content-Type', "application/json")
-        xhttp.send(JSON.stringify(data));
+        xhttp1.open('POST', this.url, true);
+        xhttp1.setRequestHeader('Authorization', accessToken);
+        xhttp1.setRequestHeader('Content-Type', "application/json")
+        xhttp1.send(JSON.stringify(data));
     }
 
 }
 
+/**
+ * @desc Ajax call for posting images
+ * @param url - website url 
+ * @param file - file for the image to be uploaded
+ * @param onSuccess - callback for a successful post
+ * @param onError - callback for a failed post
+ * @param tryNumber - number of attempts to post content, used for authentication synchronization. Set to 1 when calling.
+*/
 var ajaxPostImage = function (url, file, onSuccess, onError, tryNumber){
     this.url = url;
     this.onSuccess = onSuccess;
@@ -88,8 +114,9 @@ var ajaxPostImage = function (url, file, onSuccess, onError, tryNumber){
             if(tryNumber == 2) {
                 onError(xhttp.responseText);
             } else if(xhttp.readyState == 4){
-                updateToken();
-                ajaxPostImage(this.url, this.file, this.onSuccess, this.onError, 2);
+                updateAccessToken(function(){
+                    ajaxPostImage(url, file, onSuccess, onError, 2);
+                });
             }
         }
     }
@@ -172,9 +199,9 @@ var ajaxGetAuth = function (url, onSuccess, onError, tryNumber) {
                 }else{
                     if(tryNumber == 2) {
                         onError(xhttp.responseText);
-                    } else if(xhttp.readyState == 4){
-                        updateToken();
-                        ajaxgetAuth(this.url, this.onSuccess, this.onError, 2);
+                    } else if(this.readyState == XMLHttpRequest.DONE){
+                        updateAccessToken();
+                        ajaxGetAuth(this.url, this.onSuccess, this.onError, 2);
                     }
                 
                 }
@@ -204,7 +231,8 @@ var ajaxGetAuth = function (url, onSuccess, onError, tryNumber) {
 
 
 
-var updateToken = function() {
+var updateAccessToken = function(onSuccess) {
+    this.onSuccess = onSuccess;
     var refreshToken = getCookie("refreshToken");
     if(refreshToken){
         var body = {};
@@ -219,6 +247,9 @@ var updateToken = function() {
                 if(response.accessToken){
                     //console.log("new token: " + response.accessToken)
                     setCookie("accessToken", response.accessToken);
+                    if(onSuccess){
+                        onSuccess()
+                    }
                 }else {
                     window.location.href = 'login.html'
                 }
@@ -262,7 +293,7 @@ var ajaxPut = function (url, data, onSuccess, onError, tryNumber){
           if(tryNumber == 2) {
                 onError(xhttp.responseText);
             } else if(xhttp.readyState == 4){
-                updateToken()
+                updateAccessToken()
                 ajaxPut(this.url, this.data, this.onSuccess, this.onError, 2)
             }
         }
