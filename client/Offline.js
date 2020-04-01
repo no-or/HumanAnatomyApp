@@ -67,8 +67,6 @@ export default class offline {
 
                 AsyncStorage.setItem(type, JSON.stringify(this.state.flashcard));
               });
-
-              //console.log("updating " + region + " to " + toggle + this.state.flashcard[region]);
               
             } catch (error) {
               // Error saving data
@@ -86,7 +84,6 @@ export default class offline {
               const value = await AsyncStorage.getItem(type.concat(region));
               if (value !== null) {
                 return JSON.parse(value);
-                console.log(value);
               } else {
                 let status = 400;
                 return status;
@@ -107,9 +104,7 @@ export default class offline {
           try {
             const value = await AsyncStorage.getItem(type.concat(region).concat("Date"));
             if (value !== null) {
-              console.log(JSON.parse(value));
               return JSON.parse(value);
-              console.log(value);
             } else {
               let status = 400;
               return status;
@@ -130,12 +125,7 @@ export default class offline {
     fetch(host+'/hierarchy')
     .then((response) => response.json())
     .then((responseJson) => {
-      //this.setState({menu: responseJson[0]});
-      //console.log(responseJson);
-      //AsyncStorage.setItem("hierarchy", JSON.stringify(responseJson));
-//console.log(responseJson[0].regions);
-  responseJson[0].regions.forEach(function (tmp) {
-        console.log(tmp);
+      responseJson[0].regions.forEach(function (tmp) {
         //This piece of code hashes the image path so that each image is only stored once on the device
         var hash = 0; 
 
@@ -152,25 +142,16 @@ export default class offline {
           FileSystem.documentDirectory + hash + '.jpg' // use hashed var instead of temp ID
           )
           .then(({ uri }) => {
-              console.log('Finished downloading to ', uri);
+              // console.log('Finished downloading to ', uri);
           })
           .catch(error => {
               console.error(error);
           });
-          
-          //return URI created for image
 
-          //console.log(tmp);
-          
-          console.log(tmp.imageUrl);
           tmp.imageUrl = FileSystem.documentDirectory + hash + '.jpg'; // use hashed var instead of temp ID
-
       });
 
       AsyncStorage.setItem("hierarchy", JSON.stringify(responseJson));
-
-      // alert(JSON.stringify(this.state.menu))
-      // alert(JSON.stringify(responseJson[0].regions));
     })
     .catch((error) => {
       console.error(error);
@@ -183,7 +164,6 @@ export default class offline {
         const value = await AsyncStorage.getItem("hierarchy");
         if (value !== null) {
           return JSON.parse(value)[0];
-          console.log(value);
         } else {
           let status = 400;
           return status;
@@ -202,10 +182,9 @@ export default class offline {
     popData(region, type){
         _storeData = async () => {
             try {
-              console.log('successful1');
-            return fetch('http://137.82.155.92:8090/' + type + '?region=' + region)
-            .then((response) => response.json())
-            .then((responseJson) => {
+              return fetch('http://137.82.155.92:8090/' + type + '?region=' + region)
+              .then((response) => response.json())
+              .then((responseJson) => {
                 //nutty things with the responseJson to store this shit locally. Must convert image URLs to local URIS. FML.
 
                 responseJson.forEach(function (tmp) {
@@ -226,24 +205,19 @@ export default class offline {
                     FileSystem.documentDirectory + hash + '.jpg' // use hashed var instead of temp ID
                     )
                     .then(({ uri }) => {
-                        console.log('Finished downloading to ', uri);
+                        // console.log('Finished downloading to ', uri);
                     })
                     .catch(error => {
                         console.error(error);
                     });
                     
                     //return URI created for image
-
-                    //console.log(tmp);
-                    
-                    console.log(tmp.imageUrl);
                     tmp.imageUrl = FileSystem.documentDirectory + hash + '.jpg'; // use hashed var instead of temp ID
 
                 });
 
                 AsyncStorage.setItem(type.concat(region), JSON.stringify(responseJson));
 
-                console.log('successful');
             return responseJson;
             })
             .catch((error) => {
@@ -253,19 +227,17 @@ export default class offline {
               
             } catch (error) {
               // Error saving data
-              console.log('error');
+              console.error(error);
             }
           };
 
           _storeDate = async () => {
             try {
-              console.log('successful1');
             return fetch('http://137.82.155.92:8090/version?module=' + type + '&subRegion=' + region)
             .then((response) => response.json())
             .then((responseJson) => {
 
               var d1 = new Date(responseJson[0].updatedOn);
-              console.log(d1);
               AsyncStorage.setItem(type.concat(region).concat("Date"), JSON.stringify(d1));
 
             return responseJson;
@@ -275,7 +247,7 @@ export default class offline {
             });
               
             } catch (error) {
-              console.log('Error fetching date');
+              console.error(error);
             }
           };
 
@@ -285,13 +257,9 @@ export default class offline {
 
     _retrieveDate = async (region, type) => {
       try {
-        console.log('successful1');
       return fetch('http://137.82.155.92:8090/version?module=' + type + '&subRegion=' + region)
       .then((response) => response.json())
       .then((responseJson) => {
-
-        //let temp = new Date(responseJson[0].updatedOn);
-        //console.log("THE RETIREVE DATE: " + temp.getTime());
 
         return responseJson[0].updatedOn;
 
@@ -301,7 +269,7 @@ export default class offline {
       });
         
       } catch (error) {
-        console.log('Error fetching date');
+        console.error(error);
       }
     };
 
@@ -311,7 +279,7 @@ export default class offline {
         FileSystem.documentDirectory + id + '.jpg'
         )
         .then(({ uri }) => {
-            console.log('Finished downloading to ', uri);
+            // console.log('Finished downloading to ', uri);
         })
         .catch(error => {
             console.error(error);

@@ -24,8 +24,6 @@ export default class Quizzes extends Component {
       
       //depending whether the offline button is toggled on or off, fetch from local or remote, respectively.
       promise.then((data) => {
-
-        console.log(data);
         this.setState({menu: data});
 
       })
@@ -49,7 +47,6 @@ export default class Quizzes extends Component {
       this.setState({menu: responseJson[0]});
     })
     .catch((error) => {
-      console.log(error);
       console.error(error);
     });
   }
