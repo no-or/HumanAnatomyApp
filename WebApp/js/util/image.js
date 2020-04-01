@@ -86,7 +86,7 @@ function addImage(data, link) {
     data3.region = data.region;
     data3.imageUrl =  link.imageUrl;
     ajaxPost(website + "/image", data3, function(){
-      alert("image added to scroll correctly");
+      //alert("image added to scroll correctly");
     },
     function(){
       alert("iamge failed to be added to scroll")

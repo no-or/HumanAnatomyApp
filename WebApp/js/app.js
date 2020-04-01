@@ -1,4 +1,4 @@
-var website = "http://137.82.155.92:8090"
+var website = "http://localhost:8090"
 $(document).ready(function(){
   updateToken();
   getMenuObject();
@@ -35,7 +35,7 @@ $(document).ready(function(){
 
   })
 
-  $("#imageManager").click(function(){
+  $("#imageManager").unbind().click(function(){
     buildRegionMenu("Image Manager", function(onClick, thisElement){
       ajaxGet(website + "/image?region=" + thisElement.title, function(response) {
       imageLayout(response)
@@ -47,15 +47,46 @@ $(document).ready(function(){
 
   })
 
-  $("#menuManager").click(function(){
+  $("#menuManager").unbind().click(function(){
     buildRegionMenu("Menu Manager");
   })
 
+  $("#videoManager").unbind().click(function(){
+    buildVideoMenu("Video Manager");
+  })
+
   $("#stats").click(function(){
-    buildRegionMenu("User Analytics");
+    buildStatsMenu("User Analytics");
+  })
+
+  $("#signup").click(function(){
+    buildSignupMenu("Sign Up");
+  })
+
+  $("#codeManager").click(function(){
+    buildCodeMenu("Code Manager");
   })
 
 });
+
+
+function logout(){
+  var refreshToken = getCookie("refreshToken");
+    if(refreshToken){
+    var body = {};
+    body.refreshToken = refreshToken;
+    url = website + "/admin/logout";
+    ajaxPost(url, body, function(result){
+      eraseCookie("accessToken");
+      eraseCookie("refreshToken");
+      window.location.href = 'login.html'
+    }, function(error){
+      console.log(error)
+    }, 1)
+  }else{
+    window.location.href = 'login.html'
+  }
+}
 
 
 
