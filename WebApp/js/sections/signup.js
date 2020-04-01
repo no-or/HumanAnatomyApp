@@ -1,4 +1,4 @@
-//signup
+
 function buildSignupMenu(section){
     $(".content").children().remove()
     $(".content").append('<div class="topbar"><h2 class="topbar-title">' + section + '</h2></div>')  
@@ -15,7 +15,6 @@ function buildSignupMenu(section){
 	$(".question-display").append('<label for="email">Your Email</label><textarea id="email" name="email" placeholder="Enter your email" rows="3"></textarea>')
 	$(".management-area").append('<div class="options-panel"></div>')
 	$(".options-panel").append('<button onclick="makeNewAdmin()">Submit Admin</button>')   
-
 };
 
 function makeNewAdmin(){
