@@ -267,7 +267,6 @@ var updateAccessToken = function(onSuccess) {
         }
         xhttp.open("POST", this.url, true);
         xhttp.setRequestHeader('Content-Type', "application/json")
-        console.log(JSON.stringify(body));
         xhttp.send(JSON.stringify(body));
 
     } else{
