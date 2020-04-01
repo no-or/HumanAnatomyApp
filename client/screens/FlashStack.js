@@ -200,7 +200,7 @@ export default class FlashStack extends Component {
             </View>
 
             <Modal animationIn="slideInUp" animationOut="slideOutDown" onBackdropPress={()=>this.closeModal()} onSwipeComplete={()=>this.closeModal()} swipeDirection="right" isVisible={this.state.isModalVisible} style={{backgroundColor:'white', top: 20, maxHeight:Dimensions.get('window').height / 2}}>
-              <View style={{ flex: 1,justifyContent:'center'}}>
+              <View style={{ flex: 1,justifyContent:'center', overflow:"hidden"}}>
               <ImageZoom 
                 cropWidth={Dimensions.get('window').width}
                 cropHeight={styles.image.height}
@@ -232,7 +232,7 @@ export default class FlashStack extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: deviceHeight*0.1,
+    paddingTop: deviceHeight*0.02,
     alignItems: "center",
     flexDirection: 'column',
   },
