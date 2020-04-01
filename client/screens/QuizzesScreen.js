@@ -91,7 +91,11 @@ export default class Quizzes extends Component {
         );
       })
     }
-    return items;
+    return (
+      <ScrollView>
+        {items}
+      </ScrollView>
+    );
   }
 }
 
