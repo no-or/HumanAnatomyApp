@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "start.js",
   "scripts": {
     "test": "env-cmd -f dev.env jest",
     "test:watch": "env-cmd -f dev.env jest --watch",
