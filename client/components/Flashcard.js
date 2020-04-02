@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import { Image, StyleSheet, TouchableOpacity, Text, Dimensions, Platform, Animated, PanResponder, View} from "react-native";
 import normalize from 'react-native-normalize';
 import Modal from 'react-native-modal';
-import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import colors from "../assets/colors";
-import ImageZoom from 'react-native-image-pan-zoom';
 
 let deviceWidth = Dimensions.get('window').width;
 let deviceHeight = Dimensions.get('window').height
@@ -32,7 +30,7 @@ export default class Flashcard extends Component {
       this.panResponder = PanResponder.create({
           onMoveShouldSetPanResponder : (e, gesture) => {
           const {dx, dy} = gesture;
-          if(Math.abs(gesture.dx) + Math.abs(gesture.dy) < normalize(2))
+          //if(Math.abs(gesture.dx) + Math.abs(gesture.dy) < normalize(2))
               //return false;
           return  true;//Math.abs(dy) > normalize(25);
       },
