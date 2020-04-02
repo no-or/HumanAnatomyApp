@@ -20,6 +20,8 @@ const DATA = [
   {title: 'Executives', data: ['Majid Doroudi', 'Tim Bateman', 'Clare Newlands']},
 ];
 
+const assets = require('../utils/assets')
+
 function Item({ title }) {
   return (
     <View style={styles.item}>
@@ -50,7 +52,7 @@ export default class AboutUsScreen extends Component {
             contentContainerStyle={styles.contentContainer}
           >
             <View style={styles.descriptionBox}>
-              <Image style={styles.image} source={{ uri: "https://brand3.sites.olt.ubc.ca/files/2018/09/5NarrowLogo_ex_768.png"}} />
+              <Image style={styles.image} source={assets['humanAnatomyIcon']} />
               <Text style={styles.description}>
                 This app is designed for undergraduate and graduate students as well as medical trainees and medical professionals to increase their confidence in identifying normal anatomical structures. {"\n"}{"\n"}
                 This app is based on the anatomy undergraduate curriculum at the University of British Columbia (UBC), which is located in Vancouver, British Columbia, Canada. The app content is organized into regions (head and neck, trunk, upper limb, and lower limb) and their respective sub-regions.
