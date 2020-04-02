@@ -10,7 +10,7 @@ const {
 } = require("../utils-tests/test-setup");
 
 // Setup a Test Database
-setupDB("ExploreRoutes-Test");
+setupDB("FlashcardRoutes-Test");
 //remove DB after execution
 afterEverything();
 
@@ -30,11 +30,11 @@ beforeAll(async () => {
   await registerAdmin(req);
 });
 
-describe("Test all routes of Explore", () => {
+describe("Test all routes of Flashcard", () => {
   //remove data after describe block
   afterDesc();
 
-  let explore;
+  let flashcard;
 
   it("Should get a valid token for the specified admin", async done => {
     const res = await request
@@ -48,9 +48,9 @@ describe("Test all routes of Explore", () => {
     done();
   });
 
-  it("Should not be able to create an explore for the admin - Unauthorized", async done => {
+  it("Should not be able to create a flashcard for the admin - Unauthorized", async done => {
     const res = await request
-      .post("/explore")
+      .post("/flashcard")
       .send({
         region: "X",
         title: "Y",
@@ -61,9 +61,9 @@ describe("Test all routes of Explore", () => {
     done();
   });
 
-  it("Should create an explore - Authorized", async done => {
+  it("Should not create a flashcard - Bad Request", async done => {
     const res = await request
-      .post("/explore")
+      .post("/flashcard")
       .set("Authorization", `Bearer ${token.accessToken}`)
       .send({
         region: "X",
@@ -71,27 +71,41 @@ describe("Test all routes of Explore", () => {
         imageUrl: "www.ysv.com",
         explanation: "xysskfj"
       })
+      .expect(400);
+    done();
+  });
+
+  it("Should create a flashcard - Success", async done => {
+    const res = await request
+      .post("/flashcard")
+      .set("Authorization", `Bearer ${token.accessToken}`)
+      .send({
+        region: "X",
+        question: "Ydf",
+        imageUrl: "www.ysv.com",
+        answer: "xysskfj"
+      })
       .expect(200);
     done();
   });
 
-  it("Should get the specified explore by query", async done => {
+  it("Should get the specified flashcard by query", async done => {
     const res = await request
-      .get("/explore")
+      .get("/flashcard")
       .query({
         region: "X",
-        title: "Y"
+        question: "Ydf"
       })
       .expect(200);
 
-    explore = res.body[0];
+    flashcard = res.body[0];
     expect(res.body.length).toBe(1);
     done();
   });
 
-  it("Delete an explore - Authorized", async done => {
+  it("Delete an flashcard - Authorized", async done => {
     const res = await request
-      .delete("/explore/" + explore._id)
+      .delete("/flashcard/" + flashcard._id)
       .set("Authorization", `Bearer ${token.accessToken}`)
       .expect(200);
     done();

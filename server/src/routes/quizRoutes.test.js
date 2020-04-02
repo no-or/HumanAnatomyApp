@@ -10,7 +10,7 @@ const {
 } = require("../utils-tests/test-setup");
 
 // Setup a Test Database
-setupDB("ExploreRoutes-Test");
+setupDB("QuizRoutes-Test");
 //remove DB after execution
 afterEverything();
 
@@ -30,11 +30,11 @@ beforeAll(async () => {
   await registerAdmin(req);
 });
 
-describe("Test all routes of Explore", () => {
+describe("Test all routes of quiz", () => {
   //remove data after describe block
   afterDesc();
 
-  let explore;
+  let quiz;
 
   it("Should get a valid token for the specified admin", async done => {
     const res = await request
@@ -48,9 +48,9 @@ describe("Test all routes of Explore", () => {
     done();
   });
 
-  it("Should not be able to create an explore for the admin - Unauthorized", async done => {
+  it("Should not be able to create a quiz for the admin - Unauthorized", async done => {
     const res = await request
-      .post("/explore")
+      .post("/quiz")
       .send({
         region: "X",
         title: "Y",
@@ -61,9 +61,9 @@ describe("Test all routes of Explore", () => {
     done();
   });
 
-  it("Should create an explore - Authorized", async done => {
+  it("Should not create a quiz - Bad Request", async done => {
     const res = await request
-      .post("/explore")
+      .post("/quiz")
       .set("Authorization", `Bearer ${token.accessToken}`)
       .send({
         region: "X",
@@ -71,27 +71,46 @@ describe("Test all routes of Explore", () => {
         imageUrl: "www.ysv.com",
         explanation: "xysskfj"
       })
+      .expect(400);
+    done();
+  });
+
+  it("Should create a quiz - Success", async done => {
+    const res = await request
+      .post("/quiz")
+      .set("Authorization", `Bearer ${token.accessToken}`)
+      .send({
+        region: "X",
+        question: "Ydf",
+        questionType: "multipleChoice",
+        imageUrl: "www.ysv.com",
+        options: ["a", "b", "c", "d"],
+        correctAnswer: "a",
+        explanation: ["asdf", "gffd", "ghtg", "uegur"]
+      })
       .expect(200);
     done();
   });
 
-  it("Should get the specified explore by query", async done => {
+  it("Should get the specified quiz by query", async done => {
     const res = await request
-      .get("/explore")
+      .get("/quiz")
       .query({
         region: "X",
-        title: "Y"
+        question: "Ydf",
+        questionType: "multipleChoice",
+        imageUrl: "www.ysv.com"
       })
       .expect(200);
 
-    explore = res.body[0];
+    quiz = res.body[0];
     expect(res.body.length).toBe(1);
     done();
   });
 
-  it("Delete an explore - Authorized", async done => {
+  it("Delete a quiz - Authorized", async done => {
     const res = await request
-      .delete("/explore/" + explore._id)
+      .delete("/quiz/" + quiz._id)
       .set("Authorization", `Bearer ${token.accessToken}`)
       .expect(200);
     done();
