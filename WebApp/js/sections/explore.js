@@ -96,8 +96,8 @@ function submitExplore() {
             link.imageUrl = realLink;
             addExplore(data, link);
             addImage(data, link);
-        }, function(){
-            alert("image failed to be added")
+        }, function(error){
+            alert("image failed to be added\nerror: " + error)
         }, 1);
 
     } else{
@@ -148,16 +148,16 @@ function deleteExplore(){
     var x = confirm("Are you sure you want to delete explore section id=" + id);
     if(x){
         ajaxDelete(website+ "/explore/" + id, function(){
-        alert("Explore section deleted");
-        if($(".subSubRegionSelected")[0]){
-            $(".subSubRegionSelected").trigger("click");
-            updateVersion("explore", $(".subSubRegionSelected").attr("title"))
-        } else{
-            $(".subRegionSelected").trigger("click");
-            updateVersion("explore", $(".subRegionSelected").attr("title"))
-        }
-        }, function(){
-            alert("Explore section was not deleted");
+            alert("Explore section deleted");
+            if($(".subSubRegionSelected")[0]){
+                $(".subSubRegionSelected").trigger("click");
+                updateVersion("explore", $(".subSubRegionSelected").attr("title"))
+            } else{
+                $(".subRegionSelected").trigger("click");
+                updateVersion("explore", $(".subRegionSelected").attr("title"))
+            }
+        }, function(error){
+            alert("Explore section was not deleted\n error: " + error);
         })
     }
 }

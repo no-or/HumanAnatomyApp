@@ -48,7 +48,7 @@ function deleteVideo(number){
 		alert("video deleted")
 		$("#videoManager").trigger("click")
 	}, function(error){
-		alert(error)
+		alert("video failed to be deleted\n error: " + error)
 	}, 1)
 }
 
@@ -90,6 +90,6 @@ function submitVideo() {
         alert("video added correctly");
         $("#videoManager").trigger("click")
     }, function(){
-        alert("item failed to be added")
+        alert("video failed to be added\n error: " + error)
     },1);
 }
