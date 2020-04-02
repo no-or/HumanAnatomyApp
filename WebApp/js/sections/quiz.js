@@ -155,8 +155,8 @@ function submitQuiz() {
             link.imageUrl = realLink;
             addQuiz(data, link);
             addImage(data, link);
-        }, function(){
-            alert("image failed to be added")
+        }, function(error){
+            alert("image failed to be added\n error: " + error)
         },1);
     } else{
         var link = {};
@@ -178,8 +178,8 @@ function addQuiz(data, link) {
             $(".subRegionSelected").trigger("click");
             updateVersion("quiz", $(".subRegionSelected").attr("title"))
         }
-    }, function(){
-        alert("item failed to be added")
+    }, function(error){
+        alert("item failed to be added\n error: " + error)
     },1);
 }
 
@@ -228,8 +228,8 @@ function deleteQuiz(){
                 $(".subRegionSelected").trigger("click");
                 updateVersion("quiz", $(".subRegionSelected").attr("title"))
             }
-        }, function(){
-            alert("question was not deleted");
+        }, function(error){
+            alert("question was not deleted\n error: " + error);
         })
     }
 }

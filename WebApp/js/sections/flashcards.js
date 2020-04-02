@@ -113,8 +113,8 @@ function addFlashcard(data, link) {
             $(".subRegionSelected").trigger("click");
             updateVersion("flashcard", $(".subRegionSelected").attr("title"))
         }
-    }, function(){
-        alert("item failed to be added")
+    }, function(error){
+        alert("item failed to be added\n error: " + error)
     },1);
 }
 
@@ -145,8 +145,8 @@ function deleteFlashcard(){
                 $(".subRegionSelected").trigger("click");
                 updateVersion("flashcard", $(".subRegionSelected").attr("title"))
             }
-        }, function(){
-            alert("flashcard was not deleted");
+        }, function(error){
+            alert("flashcard was not deleted\n error: " + error);
         }, 1)
     }
 }
