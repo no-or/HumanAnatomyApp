@@ -88,6 +88,6 @@ function buildStatsMenu(section, onClick){
     	}    
 
     }, function (error){
-    	console.log(error)
+    	alert("failed to get statistics\n error: " + error)
     }, 1);    
 };

@@ -14,7 +14,7 @@ $(document).ready(function(){
             ajaxGet(website + "/quiz?region=" + thisElement.title, function(response) {
                 quizLayout(response)
             }, function(error){
-                console.log(error)
+                alert("unable to load content \nerror: " + error)
             })
             onClick(thisElement);
         })
@@ -25,7 +25,7 @@ $(document).ready(function(){
             ajaxGet(website + "/flashcard?region=" + thisElement.title, function(response) {
                 flashcardLayout(response)
             }, function(error){
-                console.log(error)
+                alert("unable to load content \nerror: " + error)
             })
             onClick(thisElement);
         })
@@ -36,7 +36,7 @@ $(document).ready(function(){
             ajaxGet(website + "/explore?region=" + thisElement.title, function(response) {
                 exploreLayout(response)
             }, function(error){
-                console.log(error)
+                alert("unable to load content \nerror: " + error)
             })
             onClick(thisElement);
         })
@@ -47,7 +47,7 @@ $(document).ready(function(){
             ajaxGet(website + "/image?region=" + thisElement.title, function(response) {
                 imageLayout(response)
             }, function(error){
-                console.log(error)
+                alert("unable to load content \nerror: " + error)
             })
             onClick(thisElement);
         })
@@ -87,7 +87,7 @@ function logout(){
             eraseCookie("refreshToken");
             window.location.href = 'login.html'
         }, function(error){
-            console.log(error)
+            alert("unable to logout \nerror: " + error)
         }, 1)
     }else{
         window.location.href = 'login.html'

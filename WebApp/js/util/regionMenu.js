@@ -119,7 +119,7 @@ function getMenuObject() {
         menu = JSON.parse(JSON.stringify(response));
         console.log(menu)
     }, function(error){
-        alert(error)
+        alert("could not load region menu \n error: " + error)
     })
 }
 

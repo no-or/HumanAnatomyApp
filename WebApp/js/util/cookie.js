@@ -7,8 +7,6 @@
 */
 function setCookie(name, value, hours) {
     var expires;
-    console.log("cookie updated: " + name + "  " + value);
-    //console.log(name + "    " + value)
     if (hours) {
         var date = new Date();
         date.setTime(date.getTime() + (hours * 60 * 60 * 1000));

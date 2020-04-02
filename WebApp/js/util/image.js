@@ -29,7 +29,7 @@ function buildImageScroll(region) {
             $("#column2").append('<img id="imageScroll' + imagenumber + '" onclick="pictureSelected(' + imagenumber + ')"  src="' + response[imagenumber].imageUrl + '" title="' + response[imagenumber]._id +'">')
         }
     }, function(error){
-        console.log(error);
+        alert("failed to get images from server \nerror: " + error);
     })
 }
 
