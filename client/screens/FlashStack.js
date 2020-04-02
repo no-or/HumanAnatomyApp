@@ -138,7 +138,7 @@ export default class FlashStack extends Component {
     var totalSwiped = 0;
     var uris = [];
 
-    console.log(this.state.data[this.state.total - this.state.swiped]);
+    //console.log(this.state.data[this.state.total - this.state.swiped]);
 
     if(this.state.data != null){
 
@@ -209,7 +209,7 @@ export default class FlashStack extends Component {
               >
                 <Image
                   style={styles.image}
-                  source={{uri: uris[totalSwiped - this.state.swiped - 1]}}
+                  source={{uri: totalSwiped == 0 ? "" : uris[totalSwiped - this.state.swiped - 1]}}
                 />
               </ImageZoom>
               </View>

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { ScrollView, StyleSheet, SafeAreaView, View, Platform, Image, Text, Button, Dimensions, Alert } from "react-native";
+import { NetInfo, ScrollView, StyleSheet, SafeAreaView, View, Platform, Image, Text, Button, Dimensions, Alert } from "react-native";
+// import { useNetInfo } from "@react-native-community/netinfo";
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import colors from "../assets/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -7,6 +8,8 @@ import TabBarIcon from "../components/TabBarIcon";
 import {HOST_NAME} from "../constants/Constants";
 import offline from "../Offline";
 import { Ionicons } from '@expo/vector-icons';
+
+const assets = require('../utils/assets')
 
 export default class Quizzes extends Component {
   static navigationOptions = ({navigation}) => ({
@@ -39,7 +42,7 @@ export default class Quizzes extends Component {
           "Left Ventricle": colors.primary,
         },
         correctAnswer: "Right Atrium",
-        image: "https://membershipdrive.com/wp-content/uploads/2014/06/placeholder.png",
+        image: "",
         chosenAnswer: ""
       }
     ],
@@ -98,7 +101,6 @@ export default class Quizzes extends Component {
 
   componentDidMount() {
     this.loadData();
-    // this.apiFetch();
   }
 
   loadData() {
@@ -112,9 +114,15 @@ export default class Quizzes extends Component {
     }); 
 
     promise.then((data) => {
-      // console.log(typeof(data));
       if(data == undefined) { // pull data from server
-        this.apiFetch();
+        NetInfo.getConnectionInfo().then(state => {
+          // alert(state.type);
+          if (state.type !== "none" && state.type !== "unknown") {
+            this.apiFetch();
+          } else {
+            Alert.alert("You are offline, or there was an issue with the server!");
+          }
+        });
       } else { // use local data
         var questions = data.map(question => {
           var answerColors = {};
@@ -129,7 +137,8 @@ export default class Quizzes extends Component {
             correctAnswer: question.correctAnswer,
             image: question.imageUrl,
             chosenAnswer: "",
-            explanation: question.explanation
+            explanation: question.explanation,
+            // quizAvailable: true
           };
         });
   
@@ -162,9 +171,10 @@ export default class Quizzes extends Component {
             "explanation": [
                 "No explanation"
             ],
-            "imageUrl": "https://membershipdrive.com/wp-content/uploads/2014/06/placeholder.png",
+            "image": "",
             "correctAnswer": "Placeholder A",
-            "question": "No quiz available."
+            "question": "No quiz available.",
+            // "quizAvailable": false
           }
         ]
         return dummyData;
@@ -185,7 +195,8 @@ export default class Quizzes extends Component {
           correctAnswer: question.correctAnswer,
           image: question.imageUrl,
           chosenAnswer: "",
-          explanation: question.explanation
+          explanation: question.explanation,
+          // quizAvailable: true
         };
       });
 
@@ -212,7 +223,12 @@ export default class Quizzes extends Component {
                   bindToBorders={true}
                   style={styles.zoomableView}
                 >
-                  <Image style={styles.image} source={{ uri: this.state.questions[this.state.questionIndex].image }} />
+                  <Image 
+                    style={styles.image} 
+                    source={(this.state.questions[this.state.questionIndex].image === "" || this.state.questions[this.state.questionIndex].image === undefined)
+                      ? assets['inProgressImage'] 
+                      : {uri: this.state.questions[this.state.questionIndex].image}
+                    } />
                 </ReactNativeZoomableView>
               </View>
 

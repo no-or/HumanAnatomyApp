@@ -20,6 +20,8 @@ const DATA = [
   {title: 'Executives', data: ['Majid Doroudi', 'Tim Bateman', 'Clare Newlands']},
 ];
 
+const assets = require('../utils/assets')
+
 function Item({ title }) {
   return (
     <View style={styles.item}>
@@ -50,7 +52,7 @@ export default class AboutUsScreen extends Component {
             contentContainerStyle={styles.contentContainer}
           >
             <View style={styles.descriptionBox}>
-              <Image style={styles.image} source={{ uri: "https://brand3.sites.olt.ubc.ca/files/2018/09/5NarrowLogo_ex_768.png"}} />
+              <Image style={styles.image} source={assets['humanAnatomyIcon']} />
               <Text style={styles.description}>
                 This app is designed for undergraduate and graduate students as well as medical trainees and medical professionals to increase their confidence in identifying normal anatomical structures. {"\n"}{"\n"}
                 This app is based on the anatomy undergraduate curriculum at the University of British Columbia (UBC), which is located in Vancouver, British Columbia, Canada. The app content is organized into regions (head and neck, trunk, upper limb, and lower limb) and their respective sub-regions.
@@ -78,7 +80,7 @@ export default class AboutUsScreen extends Component {
             <View style={styles.divider}></View>
             <View style={styles.termsOfUse}>
               <Text style={styles.header}>Terms of Use</Text>
-              <ScrollView style={{height:200}}>
+              <View>
                 <Text style={styles.description}>
                   The University of British Columbia has developed an anatomy teaching tool for undergraduate medical students that includes an iOS and android compatible app and website (“Service”). By using the Service, you are subject to the following Terms of Use, which may be amended at any time without notice.{"\n"}{"\n"}
                   The Service is provided for use by medical undergraduate students and medical professionals for educational purposes only. The Service is a supplemental educational tool and should not be referred to or relied upon as a replacement for other sources, or as a substitute for conventional training and study. {"\n"}{"\n"}
@@ -86,7 +88,7 @@ export default class AboutUsScreen extends Component {
                   If your violation of these Terms of Use causes harm to others, you agree to indemnify the University of British Columbia against all claims, actions or demands, liabilities, and settlements including without limitation reasonable legal and accounting fees, resulting directly, or indirectly from your breach of these Terms of Use. If there is any dispute between us concerning these Terms of Use or your use of the Service, the dispute will be remitted to non-binding mediation, followed by binding arbitration. Both the mediation and the arbitration will be governed under the rules of the Province of British Columbia and the federal government of Canada.{"\n"}{"\n"}
                   Your use of the Service is at your own risk. All information included in the components of the Service are provided on an “as is” basis. The University of British Columbia disclaims all warranties, either express or implied, statutory or otherwise, including but not limited to the implied warranties of merchantability, non-infringement of third parties’ rights, and fitness for particular purpose. The University of British Columbia reserves the right to alter, amend, or discontinue the Service at any time without notice.{"\n"}{"\n"}
                 </Text>
-              </ScrollView>
+              </View>
             </View>
             <View style={styles.termsOfUse}>
               <Text style={styles.header}>Privacy Policy</Text>

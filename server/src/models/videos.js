@@ -11,9 +11,7 @@ const VideoSchema = new mongoose.Schema({
     required: true
   },
   region: {
-    type: String,
-    min: 6,
-    max: 255
+    type: String
   }
 });
 
