@@ -11,6 +11,9 @@ import AppNavigator from "./navigation/AppNavigator";
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
+  console.disableYellowBox = true;
+  console.reportErrorsAsExceptions = false;
+
   this.off = new offline;
 
   off.UpdateHierarchy();
