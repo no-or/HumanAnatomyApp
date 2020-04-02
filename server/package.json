@@ -6,6 +6,7 @@
   "scripts": {
     "test": "env-cmd -f dev.env jest",
     "test:watch": "env-cmd -f dev.env jest --watch",
+    "test:cov": "env-cmd -f dev.env jest --coverage",
     "start": "env-cmd -f dev.env node ./start.js",
     "dev": "env-cmd -f dev.env nodemon ./start.js"
   },
