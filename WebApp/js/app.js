@@ -64,14 +64,22 @@ $(document).ready(function(){
     $("#stats").click(function(){
         buildStatsMenu("User Analytics");
     })
+    var token = getCookie("accessToken");
+    if(token){
+        var name = parseJwt(token);
+        if(name == "Majid Doroudi" || name == "Admin Admin" || name == "Kyle Martin"){
+            $(".sidebar-options").append('<li id="signup">Sign Up</li> <li id="codeManager">Code Manager</li>');
+            $("#signup").click(function(){
+                buildSignupMenu("Sign Up");
+            })
 
-    $("#signup").click(function(){
-        buildSignupMenu("Sign Up");
-    })
+            $("#codeManager").click(function(){
+                buildCodeMenu("Code Manager");
+            })
+        }
 
-    $("#codeManager").click(function(){
-        buildCodeMenu("Code Manager");
-    })
+    }
+    $(".sidebar-options").append('<button onclick="logout()">Logout</button>');
 
 });
 
