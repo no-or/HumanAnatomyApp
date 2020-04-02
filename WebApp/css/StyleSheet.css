@@ -25,12 +25,34 @@ li {
 	font-size: 14px;
 }
 
+table {
+	overflow: auto;
+	height: 200px;
+}
+
+.statTable {
+	height: 100%;
+	width: 100%;
+}
+
 #yourImage {
   display: block;
   max-width: 100%;
   height: auto;
 }
 
+.video-area1 {
+	overflow: auto;
+}
+
+.video-area2 {
+	overflow: auto;
+}
+
+.videoMenu {
+	width: 100%;
+	padding-bottom: 20px;
+}
 
 :root {
 	--main-blue: #092042;
@@ -189,6 +211,7 @@ li {
 	display: flex;
 	flex-direction: row;
 	padding: 25px;
+	overflow: auto;
 }
 
 .management-area div {

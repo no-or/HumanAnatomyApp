@@ -122,8 +122,8 @@ function addExplore(data, link) {
             updateVersion("explore", $(".subRegionSelected").attr("title"))
         }
     },
-    function(){
-        alert("item failed to be added")
+    function(error){
+        alert("item failed to be added\n" + error)
     },1);
 }
 

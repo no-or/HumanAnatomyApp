@@ -7,6 +7,8 @@ function buildVideoMenu(section, onClick){
     $(".category-area").append('<div class="area-selection"></div>');
     $(".category-area").append('<div class="anatomy-section"></div>');
     $(".anatomy-section").append('<div class="management-area"/>');
+    $(".management-area").append('<div class="video-area1"/>');
+    $(".management-area").append('<div class="video-area2"/>');
     var url = website + '/video';
     ajaxGet(url, function(result) {
     	var regionList = []
@@ -14,7 +16,11 @@ function buildVideoMenu(section, onClick){
     	for(item in result){
     		var regionListIndex = regionList.indexOf(result[item].region);
     		if(regionListIndex == -1){
-    			$(".management-area").append('<div class="videoMenu" id="videoRegion' + regionNumber + '" />')
+                if(regionNumber % 2 == 0){
+                    $(".video-area1").append('<div class="videoMenu" id="videoRegion' + regionNumber + '" />')
+                } else{
+                    $(".video-area2").append('<div class="videoMenu" id="videoRegion' + regionNumber + '" />')
+                }
     			$("#videoRegion" + regionNumber).append('<h3>' + result[item].region + '</h3>');
     			$("#videoRegion" + regionNumber).append('<div class="video" id="video' + item + '" title="' + result[item]._id + '"/>');
     			$("#video" + item).append("<h4>" + result[item].title + "</h4>");
@@ -55,9 +61,12 @@ function makeNewVideo() {
  	$(".question-display").append('<label for="region">Region</label><textarea id="region" name="region" placeholder="Enter the region this video is for" rows="1"></textarea>')
  	$(".management-area").append('<div class="options-panel"></div>')
  	$(".options-panel").append('<button onclick="submitVideo()">Submit</button>');
+    $(".options-panel").append('<button onclick="cancelVideo()">Cancel</button>');
 }
 
-
+function cancelVideo() {
+    $("#videoManager").trigger("click");
+}
 function submitVideo() {
     var data = {};
     if($("#title").val() == ""){

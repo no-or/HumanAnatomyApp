@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AsyncStorage, Alert } from 'react-native';
+import { NetInfo, AsyncStorage, Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import {HOST_NAME} from "./constants/Constants"
 
@@ -122,39 +122,45 @@ export default class offline {
   UpdateHierarchy() {
     var host = HOST_NAME;
 
-    fetch(host+'/hierarchy')
-    .then((response) => response.json())
-    .then((responseJson) => {
-      responseJson[0].regions.forEach(function (tmp) {
-        //This piece of code hashes the image path so that each image is only stored once on the device
-        var hash = 0; 
+    NetInfo.getConnectionInfo().then(state => {
+      if (state.type !== "none" && state.type !== "unknown") {
+        fetch(host+'/hierarchy')
+        .then((response) => response.json())
+        .then((responseJson) => {
+          responseJson[0].regions.forEach(function (tmp) {
+            //This piece of code hashes the image path so that each image is only stored once on the device
+            var hash = 0; 
 
-        if (tmp.imageUrl.length == 0) return hash; 
-          
-        for (i = 0; i < tmp.imageUrl.length; i++) { 
-            char = tmp.imageUrl.charCodeAt(i); 
-            hash = ((hash << 5) - hash) + char; 
-            hash = hash & hash; 
-        } 
+            if (tmp.imageUrl.length == 0) return hash; 
+              
+            for (i = 0; i < tmp.imageUrl.length; i++) { 
+                char = tmp.imageUrl.charCodeAt(i); 
+                hash = ((hash << 5) - hash) + char; 
+                hash = hash & hash; 
+            } 
 
-        FileSystem.downloadAsync(
-          tmp.imageUrl,
-          FileSystem.documentDirectory + hash + '.jpg' // use hashed var instead of temp ID
-          )
-          .then(({ uri }) => {
-              // console.log('Finished downloading to ', uri);
-          })
-          .catch(error => {
-              console.error(error);
+            FileSystem.downloadAsync(
+              tmp.imageUrl,
+              FileSystem.documentDirectory + hash + '.jpg' // use hashed var instead of temp ID
+              )
+              .then(({ uri }) => {
+                  // console.log('Finished downloading to ', uri);
+              })
+              .catch(error => {
+                  console.error(error);
+              });
+
+              tmp.imageUrl = FileSystem.documentDirectory + hash + '.jpg'; // use hashed var instead of temp ID
           });
 
-          tmp.imageUrl = FileSystem.documentDirectory + hash + '.jpg'; // use hashed var instead of temp ID
-      });
-
-      AsyncStorage.setItem("hierarchy", JSON.stringify(responseJson));
-    })
-    .catch((error) => {
-      console.error(error);
+          AsyncStorage.setItem("hierarchy", JSON.stringify(responseJson));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      } else {
+        Alert.alert("You are offline, or there was an issue with the server!");
+      }
     });
   }
 

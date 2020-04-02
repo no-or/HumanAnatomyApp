@@ -10,37 +10,30 @@ function buildCodeMenu(section){
    	$(".management-area").append('<div class="question-content"</div>')
 	$(".question-content").prepend('<form class="question-display"></form>')
 	$(".question-display").append('<label for="code">Code</label><textarea id="code" name="code" placeholder="Enter your Secret Code" rows="1"></textarea>') 
-	$(".question-display").append('<label for="authBy">Your Name (First and Last)</label><textarea id="authBy" name="authBy" placeholder="Enter the name of authorizing member" rows="1"></textarea>')    
 	$(".management-area").append('<div class="options-panel"></div>')
 	$(".options-panel").append('<button onclick="makeNewCode()">Submit Code</button>')   
 	$(".options-panel").append('<button onclick="deleteCodePressed()">Delete Code</button>')
 };
 
 function deleteCodePressed() {
-	$(".management-area").empty();
-	$(".management-area").append('<div class="question-content"</div>')
-	$(".question-content").prepend('<form class="question-display"></form>')
-	$(".question-display").append('<label for="authBy">Your name (first and last) </label><textarea id="authBy" name="authBy" placeholder="Enter your Name (first and last)" rows="1"></textarea>') 
-	$(".management-area").append('<div class="options-panel"></div>')
-	$(".options-panel").append('<button onclick="deleteCode()">Delete Users Code</button>')  
+	var x = confirm("Are you sure you want to delete your Code?");
+  		if(x){
+			var data = {};
+			var token = getCookie("accessToken")
+			if(!token){
+				alert("login again")
+			}
+			data.createdBy = parseJwt(token);
+			url = website + '/code?createdBy=' + data.createdBy;
+			ajaxDelete(url, function(result){
+				alert("code deleted, you can now make a new one")
+				$("#codeManager").trigger("click")
+			}, function(error) {
+				alert(error);
+			}, 1)
+		}
 }
 
-function deleteCode() {
-	if($("#authBy").val() == ""){
-		alert("Please fill in name field");
-		return;
-	}
-
-	var data = {};
-	data.createdBy = $("#authBy").val();
-	url = website + '/code?createdBy=' + data.createdBy;
-	ajaxDelete(url, function(result){
-		alert("code deleted, you can now make a new one")
-		$("#codeManager").trigger("click")
-	}, function(error) {
-		console.log(error);
-	}, 1)
-}
 
 function makeNewCode(){
 	if($("#code").val() == ""){
@@ -55,7 +48,11 @@ function makeNewCode(){
 
 	var data = {};
 	data.code = $("#code").val();
-	data.createdBy = $("#authBy").val();
+	var token = getCookie("accessToken")
+	if(!token){
+		alert("login again")
+	}
+	data.createdBy = parseJwt(token);
 	url = website + '/code/';
 
 	ajaxPost(url, data, function(result) {

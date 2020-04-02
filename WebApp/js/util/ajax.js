@@ -8,31 +8,34 @@
 */
 
 var ajaxDelete = function (url, onSuccess, onError, tryNumber){
-  this.url = url;
-  this.onSuccess = onSuccess;
-  this.onError = onError;
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
+    var newUrl = url;
+    var newOnSuccess = onSuccess;
+    var newOnError = onError;
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
         if(xhttp.readyState == 4 && xhttp.status == 200) {
             onSuccess(xhttp.responseText);            
         }
         else {
             if(tryNumber == 2) {
+                if(xhttp.readyState == XMLHttpRequest.DONE)
                 onError(xhttp.responseText);
-            } else if(xhttp.readyState == 4){
-                updateAccessToken()
-                ajaxDelete(this.url, this.onSuccess, this.onError, 2)
+            } else if(xhttp.readyState == XMLHttpRequest.DONE){
+                updateAccessToken(function(){
+                    ajaxDelete(newUrl, newOnSuccess, newOnError, 2)
+                })
             }
         }
     }
 
 
     var token = getCookie("accessToken")
-    accessToken = 'Bearer ' + token
+    var accessToken = 'Bearer ' + token
     if(!(token)){
         window.location.href = 'login.html'
     }else{
-        xhttp.open('DELETE', this.url, true);
+        xhttp.open('DELETE', newUrl, true);
         xhttp.setRequestHeader('Authorization', accessToken);
         xhttp.setRequestHeader('Content-Type', "application/json")
         xhttp.send();
@@ -47,38 +50,39 @@ var ajaxDelete = function (url, onSuccess, onError, tryNumber){
  * @param tryNumber - number of attempts to post content, used for authentication synchronization. Set to 1 when calling.
 */
 var ajaxPost = function (url, data, onSuccess, onError, tryNumber){
-    this.url = url;
-    this.onSuccess = onSuccess;
-    this.onError = onError;
-    var retError = onError;
-    this.data = data;
+    var newUrl = url;
+    var newData = data;
+    var newOnSuccess = onSuccess;
+    var newOnError = onError;
 
+    console.log("posting\n url=" + url + "\n data = " + JSON.stringify(data) + "\n tryNumber = " + tryNumber) 
+    
     var xhttp1 = new XMLHttpRequest();
-    //xhttp.timeout = 5000;
-    var i = 0;
 
     xhttp1.onreadystatechange = function() {
         if(xhttp1.readyState == 4 && xhttp1.status == 200) {
             onSuccess(xhttp1.responseText);
         }
         else {
-            if(tryNumber == 2) {
-                onError(xhttp1.responseText);
-            } else if(this.readyState == XMLHttpRequest.DONE){
+            if(tryNumber == 2) { 
+                if(xhttp1.readyState == XMLHttpRequest.DONE){
+                    onError(xhttp1.responseText);
+                }
+            } else if(xhttp1.readyState == XMLHttpRequest.DONE){
                 updateAccessToken(function(){
                     console.log("posting from inside post");
-                    ajaxPost(this.url, this.data, this.onSuccess, retError, 2)
+                    ajaxPost(newUrl, newData, newOnSuccess, newOnError, 2)
                 });
             }
         }
     }
 
     var token = getCookie("accessToken")
-    accessToken = 'Bearer ' + token
+    var accessToken = 'Bearer ' + token
     if(!(token)){
         window.location.href = 'login.html'
     }else{
-        xhttp1.open('POST', this.url, true);
+        xhttp1.open('POST', newUrl, true);
         xhttp1.setRequestHeader('Authorization', accessToken);
         xhttp1.setRequestHeader('Content-Type', "application/json")
         xhttp1.send(JSON.stringify(data));
@@ -95,16 +99,14 @@ var ajaxPost = function (url, data, onSuccess, onError, tryNumber){
  * @param tryNumber - number of attempts to post content, used for authentication synchronization. Set to 1 when calling.
 */
 var ajaxPostImage = function (url, file, onSuccess, onError, tryNumber){
-    this.url = url;
-    this.onSuccess = onSuccess;
-    this.onError = onError;
-    this.file = file;
+    var newUrl = url;
+    var newFile = file;
+    var newOnSuccess = onSuccess;
+    var newOnError = onError;
 
     var formdata = new FormData();
-    formdata.append('image', this.file);
+    formdata.append('image', newFile);
     var xhttp = new XMLHttpRequest();
-    //xhttp.timeout = 5000;
-    var i = 0;
 
     xhttp.onreadystatechange = function() {
         if(xhttp.readyState == 4 && xhttp.status == 200) {
@@ -112,10 +114,12 @@ var ajaxPostImage = function (url, file, onSuccess, onError, tryNumber){
         }
         else {
             if(tryNumber == 2) {
-                onError(xhttp.responseText);
+                if(xhttp.readyState == 4){
+                    onError(xhttp.responseText);
+                }
             } else if(xhttp.readyState == 4){
                 updateAccessToken(function(){
-                    ajaxPostImage(url, file, onSuccess, onError, 2);
+                    ajaxPostImage(newUrl, newFile, newOnSuccess, newOnError, 2);
                 });
             }
         }
@@ -123,11 +127,11 @@ var ajaxPostImage = function (url, file, onSuccess, onError, tryNumber){
 
 
     var token = getCookie("accessToken")
-    accessToken = 'Bearer ' + token
+    var accessToken = 'Bearer ' + token
     if(!(token)){
         window.location.href = 'login.html'
     }else{
-        xhttp.open('POST', this.url, true);
+        xhttp.open('POST', newUrl, true);
         xhttp.setRequestHeader('Authorization', accessToken);
         xhttp.send(formdata);
     }
@@ -135,75 +139,74 @@ var ajaxPostImage = function (url, file, onSuccess, onError, tryNumber){
 }
 
 var ajaxGet = function (url, onSuccess, onError) {
-    this.url = url;
-    this.onSuccess = onSuccess;
-    this.onError = onError;
+    var newUrl = url;
+    var newOnSuccess = onSuccess;
+    var newOnError = onError;
     var i = 0
 
     var xhttp = new XMLHttpRequest();
     xhttp.timeout = 5000;
     xhttp.onreadystatechange = function () {
-        if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+        if (xhttp.readyState == XMLHttpRequest.DONE && xhttp.status == 200) {
             console.log("response: ");
             console.log(typeof(JSON.parse(xhttp.responseText)));
-            onSuccess(JSON.parse(xhttp.responseText));
+            newOnSuccess(JSON.parse(xhttp.responseText));
         }
         else {
             if (i > 2) {
                 console.log("error: ");
                 console.log(xhttp.responseText);
-                if(this.status == 404){
-                  var obj = [];
-                  onSuccess(obj);
+                if(xhttp.status == 404){
+                    var obj = [];
+                    newOnSuccess(obj);
                 }else{
-                  onError(xhttp.responseText);
+                    newOnError(xhttp.responseText);
                 }
                 i = 0;
             }else{
-              i++;
+                i++;
             }
         }
     }
     xhttp.ontimeout = function (e) {
-      alert("fail")
+        alert("fail")
         console.log("error: ");
         console.log("timeout");
-        onError(xhttp.responseText);
+        newOnError(xhttp.responseText);
     }
-    xhttp.open("GET", url, true);
+    xhttp.open("GET", newUrl, true);
     xhttp.send();
 }
 
+
+
 var ajaxGetAuth = function (url, onSuccess, onError, tryNumber) {
-    this.url = url;
-    this.onSuccess = onSuccess;
-    this.onError = onError;
-    this.tryNumber = tryNumber
+    var newUrl = url;
+    var newOnSuccess = onSuccess;
+    var newOnError = onError;
     var i = 0
 
     var xhttp = new XMLHttpRequest();
     xhttp.timeout = 5000;
     xhttp.onreadystatechange = function () {
-        if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-            console.log("response: ");
-            console.log(typeof(JSON.parse(xhttp.responseText)));
-            onSuccess(JSON.parse(xhttp.responseText));
+        if (xhttp.readyState == XMLHttpRequest.DONE && xhttp.status == 200) {
+            newOnSuccess(JSON.parse(xhttp.responseText));
         }
         else {
             if (i > 2) {
-                console.log("error: ");
-                console.log(xhttp.responseText);
-                if(this.status == 404){
+                if(xhttp.status == 404){
                   var obj = [];
-                  onSuccess(obj);
+                  newOnSuccess(obj);
                 }else{
                     if(tryNumber == 2) {
-                        onError(xhttp.responseText);
-                    } else if(this.readyState == XMLHttpRequest.DONE){
-                        updateAccessToken();
-                        ajaxGetAuth(this.url, this.onSuccess, this.onError, 2);
+                        if(xhttp.readyState == XMLHttpRequest.DONE){
+                            newOnError(xhttp.responseText);
+                        }
+                    } else if(xhttp.readyState == XMLHttpRequest.DONE){
+                        updateAccessToken(function() {
+                            ajaxGetAuth(newUrl, newOnSuccess, newOnError, 2);
+                        });
                     }
-                
                 }
                 i = 0;
             }else{
@@ -215,15 +218,15 @@ var ajaxGetAuth = function (url, onSuccess, onError, tryNumber) {
       alert("fail")
         console.log("error: ");
         console.log("timeout");
-        onError(xhttp.responseText);
+        newOnError(xhttp.responseText);
     }
 
     var token = getCookie("accessToken")
-    accessToken = 'Bearer ' + token
+    var accessToken = 'Bearer ' + token
     if(!(token)){
         window.location.href = 'login.html'
     }else{
-        xhttp.open("GET", url, true);
+        xhttp.open("GET", newUrl, true);
         xhttp.setRequestHeader('Authorization', accessToken);
         xhttp.send();
     }
@@ -232,23 +235,23 @@ var ajaxGetAuth = function (url, onSuccess, onError, tryNumber) {
 
 
 var updateAccessToken = function(onSuccess) {
-    this.onSuccess = onSuccess;
+    var newOnSuccess = onSuccess;
     var refreshToken = getCookie("refreshToken");
     if(refreshToken){
         var body = {};
         body.refreshToken = refreshToken;
-        this.url = website + "/admin/refreshToken";
+        var newUrl = website + "/admin/refreshToken";
         var i = 0;
         var xhttp = new XMLHttpRequest();
         xhttp.timeout = 5000;
         xhttp.onreadystatechange = function () {
-            if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+            if (xhttp.readyState == XMLHttpRequest.DONE && xhttp.status == 200) {
                 var response = JSON.parse(xhttp.responseText);
                 if(response.accessToken){
                     //console.log("new token: " + response.accessToken)
                     setCookie("accessToken", response.accessToken);
-                    if(onSuccess){
-                        onSuccess()
+                    if(newOnSuccess){
+                        newOnSuccess()
                     }
                 }else {
                     window.location.href = 'login.html'
@@ -265,7 +268,7 @@ var updateAccessToken = function(onSuccess) {
                 }
             }
         }
-        xhttp.open("POST", this.url, true);
+        xhttp.open("POST", newUrl, true);
         xhttp.setRequestHeader('Content-Type', "application/json")
         xhttp.send(JSON.stringify(body));
 
@@ -276,48 +279,47 @@ var updateAccessToken = function(onSuccess) {
 
 
 var ajaxPut = function (url, data, onSuccess, onError, tryNumber){
-    this.url = url;
-    this.onSuccess = onSuccess;
-    this.onError = onError;
-    this.data = data;
+    var newUrl = url;
+    var newData = data;
+    var newOnSuccess = onSuccess;
+    var newOnError = onError;
 
     var xhttp = new XMLHttpRequest();
-    //xhttp.timeout = 5000;
-    var i = 0;
 
     xhttp.onreadystatechange = function() {
         if(xhttp.readyState == 4 && xhttp.status == 200) {
-            onSuccess(xhttp.responseText);
+            newOnSuccess(xhttp.responseText);
         }
         else {
-          if(tryNumber == 2) {
-                onError(xhttp.responseText);
-            } else if(xhttp.readyState == 4){
-                updateAccessToken()
-                ajaxPut(this.url, this.data, this.onSuccess, this.onError, 2)
+            if(tryNumber == 2) {
+                if(xhttp.readyState == XMLHttpRequest.DONE){
+                    newOnError(xhttp.responseText);
+                }
+            } else if(xhttp.readyState == XMLHttpRequest.DONE){
+                updateAccessToken(function(){
+                    ajaxPut(newUrl, newData, newOnSuccess, newOnError, 2)
+                })
             }
         }
     }
 
     var token = getCookie("accessToken")
-    accessToken = 'Bearer ' + token
+    var accessToken = 'Bearer ' + token
     if(!(token)){
         window.location.href = 'login.html'
     }else{
-        xhttp.open('PUT', this.url, true);
+        xhttp.open('PUT', newUrl, true);
         xhttp.setRequestHeader('Authorization', accessToken);
         xhttp.setRequestHeader('Content-Type', "application/json")
-        xhttp.send(JSON.stringify(data));
+        xhttp.send(JSON.stringify(newData));
     }
 
 }
 
 var updateVersion = function(mod, region) {
-    data = {};
-
-    url = website + '/version?module=' + mod + "&subRegion=" + region;
+    var data = {};
+    var url = website + '/version?module=' + mod + "&subRegion=" + region;
     ajaxGet(url, function(result) {
-        data = {};
         url = website + '/version';
         if(result[0]) {
             data.module = result[0].module;
