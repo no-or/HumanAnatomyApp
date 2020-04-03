@@ -26,8 +26,8 @@ function deleteImage(){
 			} else{
 				$(".subRegionSelected").trigger("click");
 			}
-		}, function(){
-			alert("image was not deleted");
+		}, function(error){
+			alert("image was not deleted\n error: " + error);
 		}, 1)
   	}
 }
