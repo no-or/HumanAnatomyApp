@@ -7,7 +7,7 @@
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/ha_icon.png",
+    "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/images/ha_icon.png",
       "resizeMode": "contain",
@@ -18,7 +18,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.humananatomyapp.humananatomyapp"
     }
   }
 }
