@@ -7,42 +7,50 @@ info:
   termsOfService: "http://swagger.io/terms/"
   contact:
     email: "noor_khan@alumni.ubc.ca"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "petstore.swagger.io" #replace this with the server domain
-basePath: "/v2" 
+host: "www.humanAnatomy.com" #replace this with the server domain
 tags:
-- name: "admin"
-  description: "Everything related to admin"
-- name: "quiz"
-  description: "Everything related to quiz"
-- name: "flashcard"
-  description: "Everything related to flashcard"
-- name: "explore"
-  description: "Everything related to explore"
+  - name: "admin"
+    description: "Rosources related to admin"
+  - name: "quiz"
+    description: "Rosources related to quiz"
+  - name: "flashcard"
+    description: "Rosources related to flashcard"
+  - name: "explore"
+    description: "Rosources related to explore"
+  - name: "code"
+    description: "Rosources related to code"
+  - name: "hierarchy"
+    description: "Rosources related to hierarchy"
+  - name: "image"
+    description: "Rosources related to image"
+  - name: "video"
+    description: "Rosources related to video"
+  - name: "stat"
+    description: "Rosources related to stat"
+  - name: "version"
+    description: "Rosources related to version"
 
 schemes:
-- "https"
-- "http"
+  - "http"
 paths:
   /admin/{adminId}:
     delete:
       tags:
-      - "admin"
-      summary: "Removes an admin"
-      description: "Note: There needs to be atleast one admin the database in all time"
+        - "admin"
+      summary: "Removes an admin provided the id of the admin as a parameter"
+      description: ""
       parameters:
-      - name: "adminId"
-        in: "path"
-        description: "ID of the admin to remove"
-        required: true
-        type: "integer"
-      - name: "Authorization"
-        in: "header"
-        description: "Access token of the admin making the request"
-        required: true
-        type: "string"
+        - name: "adminId"
+          in: "path"
+          description: "ID of the admin to remove"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
       responses:
         200:
           description: "successful deletion"
@@ -51,23 +59,23 @@ paths:
         404:
           description: "when no admin found with the given adminId"
 
-  /admin/login:
-    post:
+  /admin:
+    delete:
       tags:
-      - "admin"
-      summary: "Signs in an admin"
-      description: "Note: There needs to be atleast one admin the database in all time"
+        - "admin"
+      summary: "Removes an admin provided the email of the admin in the query"
+      description: ""
       parameters:
-      - name: "email"
-        in: "query"
-        description: "email of the admin to remove"
-        required: true
-        type: "string"
-      - name: "Authorization"
-        in: "header"
-        description: "Access token of the admin making the request"
-        required: true
-        type: "string"
+        - name: "email"
+          in: "query"
+          description: "email of the admin to remove"
+          required: true
+          type: "string"
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
       responses:
         200:
           description: "successful deletion"
@@ -75,650 +83,1073 @@ paths:
           description: "when requested to remove the last admin in the database"
         404:
           description: "when no admin found with the given email"
-  /pet:
+        500:
+          description: "Internal server error"
+
+  /admin/login:
     post:
       tags:
-      - "pet"
-      summary: "Add a new pet to the store"
+        - "admin"
+      summary: "Signs in an admin"
       description: ""
-      operationId: "addPet"
       consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
+        - in: "body"
+          name: "email"
+          description: "email of the registered admin"
+          required: true
+          schema:
+            $ref: "#/definitions/AdminLogin"
       responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+        200:
+          description: "successful operation - returns a refreshToken and an aceessToken"
+        400:
+          description: "Admin does not exist or Invalid passoword"
+        500:
+          description: "Internal Server Error"
+
+  /admin/logout:
+    post:
+      tags:
+        - "admin"
+      summary: "Logs out an admin"
+      description: ""
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "refreshToken"
+          description: "RefreshToken - found when the admin logged in"
+          required: true
+          schema:
+            $ref: "#/definitions/Admin2"
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Success"
+        403:
+          description: "Forbidden - when refreshToken is not passed"
+        500:
+          description: "Internal server error"
+
+  /admin/refreshToken:
+    post:
+      tags:
+        - "admin"
+      summary: "Gets a new AccessToken for the admin"
+      description: ""
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "refreshToken"
+          description: "RefreshToken - found when the admin logged in"
+          required: true
+          schema:
+            $ref: "#/definitions/Admin2"
+      responses:
+        200:
+          description: "Success - returns the new AccessToken which will be valid for 5 minutes"
+        403:
+          description: "Forbidden - when refreshToken is not passed or incorrect"
+
+  /quiz:
+    get:
+      tags:
+        - "quiz"
+      summary: "Get all the quizzes or specific quizzes by query"
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: "question"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "region"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "correctAnswer"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "explanation"
+          in: "query"
+          required: false
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation - returns an array of the quizzez found from the query or all the quizzes if no query param was passed"
+        404:
+          description: "Not found"
+        500:
+          description: "Internal server error"
+
+    post:
+      tags:
+        - "quiz"
+      summary: "Create a quiz"
+      description: ""
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/QuizSchema"
+      responses:
+        200:
+          description: "Successful operation - returns the newly posted quiz"
+        400:
+          description: "Bad request"
+
+  /quiz/{quizId}:
+    get:
+      tags:
+        - "quiz"
+      summary: "Get a quiz by Id"
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: "quizId"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Successful operation - returns the quiz"
+        404:
+          description: "Not found"
+        500:
+          description: "Internal server error"
+
+    delete:
+      tags:
+        - "quiz"
+      summary: "Remove a quiz by Id"
+      description: ""
+      parameters:
+        - name: "quizId"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Deletion successful"
+        404:
+          description: "Not found"
+        500:
+          description: "Internal server error"
+
+  /flashcard:
+    get:
+      tags:
+        - "flashcard"
+      summary: "Get all the flashcards or specific flashcards by query"
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: "region"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "question"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "answer"
+          in: "query"
+          required: false
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation - returns an array of the flashcards found from the query or all the flashcards if no query param was passed"
+        404:
+          description: "Not found"
+        500:
+          description: "Internal server error"
+
+    post:
+      tags:
+        - "flashcard"
+      summary: "Create a flashcard"
+      description: ""
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/FlashCardSchema"
+      responses:
+        200:
+          description: "Successful operation - returns the newly posted flashcard"
+        400:
+          description: "Bad request"
+
+  /flashcard/{flashcardId}:
+    get:
+      tags:
+        - "flashcard"
+      summary: "Get a flashcard by Id"
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: "flashcardId"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Successful operation - returns the flashcard"
+        404:
+          description: "Not found"
+        500:
+          description: "Internal server error"
+
+    delete:
+      tags:
+        - "flashcard"
+      summary: "Remove a flashcard by Id"
+      description: ""
+      parameters:
+        - name: "flashcardId"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Deletion successful"
+        404:
+          description: "Not found"
+        500:
+          description: "Internal server error"
+
+  /explore:
+    get:
+      tags:
+        - "explore"
+      summary: "Get all the explore components or specific explore components by query"
+      description: ""
+      produces:
+        - "application/json"
+      parameters:
+        - name: "region"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "title"
+          in: "query"
+          required: false
+          type: "string"
+      responses:
+        200:
+          description: "Successful operation - returns an array of the explore components found from the query or all the explore components if no query param was passed"
+        404:
+          description: "Not found"
+        500:
+          description: "Internal server error"
+
+    post:
+      tags:
+        - "explore"
+      summary: "Create a explore component"
+      description: ""
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/ExploreSchema"
+      responses:
+        200:
+          description: "Successful operation - returns the newly posted explore component"
+        400:
+          description: "Bad request"
+
+  /explore/{exploreId}:
+    delete:
+      tags:
+        - "explore"
+      summary: "Remove a explore component by Id"
+      description: ""
+      parameters:
+        - name: "exploreId"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Deletion successful"
+        404:
+          description: "Not found"
+        500:
+          description: "Internal server error"
+
+  /hierarchy:
+    get:
+      tags:
+        - "hierarchy"
+      summary: "Get the hierarchy for the app"
+      description: ""
+      responses:
+        200:
+          description: "Successful operation - returns the hierarchy"
+        404:
+          description: "Not found"
+        500:
+          description: "Internal server error"
+
+    post:
+      tags:
+        - "hierarchy"
+      summary: "Create a hierarchy"
+      description: "Note: More than one hierarchy for the application can not be created"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/HierarchySchema"
+      responses:
+        200:
+          description: "Successful operation - returns the newly posted hierarchy"
+        400:
+          description: "Bad request"
+
     put:
       tags:
-      - "pet"
-      summary: "Update an existing pet"
+        - "hierarchy"
+      summary: "Modifies the existing hierarchy"
       description: ""
-      operationId: "updatePet"
       consumes:
-      - "application/json"
-      - "application/xml"
+        - "application/json"
       produces:
-      - "application/json"
-      - "application/xml"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-        405:
-          description: "Validation exception"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByStatus:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by status"
-      description: "Multiple status values can be provided with comma separated strings"
-      operationId: "findPetsByStatus"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "status"
-        in: "query"
-        description: "Status values that need to be considered for filter"
-        required: true
-        type: "array"
-        items:
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
           type: "string"
-          enum:
-          - "available"
-          - "pending"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/HierarchySchema"
       responses:
         200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
+          description: "Successful operation"
         400:
-          description: "Invalid status value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByTags:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by tags"
-      description: "Multiple tags can be provided with comma separated strings. Use\
-        \ tag1, tag2, tag3 for testing."
-      operationId: "findPetsByTags"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "tags"
-        in: "query"
-        description: "Tags to filter by"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid tag value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-      deprecated: true
-  /pet/{petId}:
-    get:
-      tags:
-      - "pet"
-      summary: "Find pet by ID"
-      description: "Returns a single pet"
-      operationId: "getPetById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to return"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - api_key: []
-    post:
-      tags:
-      - "pet"
-      summary: "Updates a pet in the store with form data"
-      description: ""
-      operationId: "updatePetWithForm"
-      consumes:
-      - "application/x-www-form-urlencoded"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet that needs to be updated"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "name"
-        in: "formData"
-        description: "Updated name of the pet"
-        required: false
-        type: "string"
-      - name: "status"
-        in: "formData"
-        description: "Updated status of the pet"
-        required: false
-        type: "string"
-      responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+          description: "Bad request"
+
     delete:
       tags:
-      - "pet"
-      summary: "Deletes a pet"
+        - "hierarchy"
+      summary: "Removes the existing hierarchy"
       description: ""
-      operationId: "deletePet"
-      produces:
-      - "application/json"
-      - "application/xml"
       parameters:
-      - name: "api_key"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "petId"
-        in: "path"
-        description: "Pet id to delete"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /store/order:
-    post:
-      tags:
-      - "store"
-      summary: "Place an order for a pet"
-      description: ""
-      operationId: "placeOrder"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "order placed for purchasing the pet"
-        required: true
-        schema:
-          $ref: "#/definitions/Order"
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
       responses:
         200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
+          description: "Successful operation"
         400:
-          description: "Invalid Order"
-  /store/order/{orderId}:
+          description: "Bad request"
+        404:
+          description: "Not Found"
+
+  /code:
     get:
       tags:
-      - "store"
-      summary: "Find purchase order by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.\
-        \ Other values will generated exceptions"
-      operationId: "getOrderById"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - "code"
+      summary: "Get all the admins who have codes"
+      description: ""
       parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of pet that needs to be fetched"
-        required: true
-        type: "integer"
-        maximum: 10
-        minimum: 1
-        format: "int64"
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
       responses:
         200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid ID supplied"
+          description: "Successful operation - returns all admins who have code and the date the codes were created"
         404:
-          description: "Order not found"
+          description: "Not found"
+        500:
+          description: "Internal server error"
+
+    post:
+      tags:
+        - "code"
+      summary: "Create a secret code"
+      description: "Note: One admin can not possess more than one secret code at a time"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/CodeSchema"
+      responses:
+        200:
+          description: "Successful operation - returns the newly posted hierarchy"
+        400:
+          description: "Bad request"
+        500:
+          description: "Internal server error"
+
     delete:
       tags:
-      - "store"
-      summary: "Delete purchase order by ID"
-      description: "For valid response try integer IDs with positive integer value.\
-        \ Negative or non-integer values will generate API errors"
-      operationId: "deleteOrder"
-      produces:
-      - "application/json"
-      - "application/xml"
+        - "code"
+      summary: "Removes an existing code for an admin"
+      description: ""
       parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of the order that needs to be deleted"
-        required: true
-        type: "integer"
-        minimum: 1
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-  /store/inventory:
-    get:
-      tags:
-      - "store"
-      summary: "Returns pet inventories by status"
-      description: "Returns a map of status codes to quantities"
-      operationId: "getInventory"
-      produces:
-      - "application/json"
-      parameters: []
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+        - in: "query"
+          name: "createdBy"
+          description: "Name of the admin whose code is going to be removed"
+          required: true
+          type: "string"
       responses:
         200:
-          description: "successful operation"
+          description: "Successful operation"
+        400:
+          description: "Bad request"
+        404:
+          description: "Not Found"
+
+  /code/compare:
+    post:
+      tags:
+        - "code"
+      summary: "Compare secret code provided by a new admin"
+      description: "This api will be used for registering a new admin"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
           schema:
-            type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
-      security:
-      - api_key: []
-  /user/createWithArray:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithArrayInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/createWithList:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithListInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/{username}:
-    get:
-      tags:
-      - "user"
-      summary: "Get user by user name"
-      description: ""
-      operationId: "getUserByName"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be fetched. Use user1 for testing. "
-        required: true
-        type: "string"
+            $ref: "#/definitions/CodeCompareSchema"
       responses:
         200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/User"
+          description: "Successful operation - returns the newly posted hierarchy"
+        401:
+          description: "Invalid Code or Unauthorized"
         400:
-          description: "Invalid username supplied"
+          description: "Bad request"
+        500:
+          description: "Internal server error"
+
+  /image/s3:
+    post:
+      tags:
+        - "image"
+      summary: "Post an image to S3"
+      description: ""
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+        - name: "image"
+          in: "formData"
+          description: "image (jpeg/png) to upload"
+          required: true
+          type: "file"
+      responses:
+        200:
+          description: "Successful operation - returns the cloudfront url of the newly posted image"
+        422:
+          description: "File Upload Error"
+
+  /image/s3/{imageId}:
+    delete:
+      tags:
+        - "image"
+      summary: "Delete an image from S3 by Id"
+      description: ""
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+        - name: "imageId"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Successful deletion from S3"
+        422:
+          description: "File Deletion Error"
+
+  /image:
+    post:
+      tags:
+        - "image"
+      summary: "Create an image doc in MongoDB"
+      description: ""
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/ImageSchema"
+      responses:
+        200:
+          description: "Successful creation of the image doc in MongoDB"
+        400:
+          description: "Bad Request"
+
+    get:
+      tags:
+        - "image"
+      summary: "Get all the image docs or specified image docs by query from MongoDB"
+      description: ""
+      parameters:
+        - name: "region"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "imageUrl"
+          in: "query"
+          required: false
+          type: "string"
+      responses:
+        200:
+          description: "Operation Successful - returns an array of the found images"
         404:
-          description: "User not found"
+          description: "Not Found"
+        500:
+          description: "Internal server error"
+
+  /image/{imageId}:
+    delete:
+      tags:
+        - "image"
+      summary: "Delete an image doc from MongoDB by Id"
+      description: ""
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+        - name: "imageId"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        200:
+          description: "Successful deletion from S3"
+        404:
+          description: "Not found"
+        500:
+          description: "Internal server error"
+          
+  /stat:
+    post:
+      tags:
+        - "stat"
+      summary: "Create a stat doc"
+      description: ""
+      parameters:
+        - in: "body"
+          name: "body"
+          description: ""
+          required: false
+          schema:
+            $ref: "#/definitions/StatSchema"
+      responses:
+        200:
+          description: "Successful creation of the doc"
+        500:
+          description: "Internal server error"
+    get:
+      tags:
+        - "stat"
+      summary: "Get all stat docs or specified stat docs by query"
+      description: ""
+      parameters:
+        - name: "university"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "degree"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "educationLevel"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "year"
+          in: "query"
+          required: false
+          type: "string"
+      responses:
+        200:
+          description: "Successful operations - retuns an array of the stat docs found"
+        500:
+          description: "Internal server error"
+        404:
+          description: "No stat docs found"
+          
+          
+  /video:
+    post:
+      tags:
+        - "video"
+      summary: "Create a video doc"
+      description: ""
+      parameters:
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/VideoSchema"
+      responses:
+        200:
+          description: "Successful creation of the doc"
+        400:
+          description: "Bad Request"
+    get:
+      tags:
+        - "video"
+      summary: "Get all video docs or specified video docs by query"
+      description: ""
+      parameters:
+        - name: "title"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "region"
+          in: "query"
+          required: false
+          type: "string"
+      responses:
+        200:
+          description: "Successful operations - retuns an array of the video docs found"
+        500:
+          description: "Internal server error"
+        404:
+          description: "No video docs found"
+          
+    delete:
+      tags:
+        - "video"
+      summary: "Remove a video doc by title (query)"
+      description: ""
+      parameters:
+        - name: "title"
+          in: "query"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful deletion"
+        500:
+          description: "Internal server error"
+        404:
+          description: "No video doc found with the given title"
+        400:
+          description: "Bad Request"
+          
+  /video/{videoId}:
+    get:
+      tags:
+        - "video"
+      summary: "Get a video doc by Id"
+      description: ""
+      parameters:
+        - name: "videoId"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful operations - retuns the video doc found"
+        500:
+          description: "Internal server error"
+        404:
+          description: "No video doc found with the provided id"
+          
+    delete:
+      tags:
+        - "video"
+      summary: "Remove a video doc by Id"
+      description: ""
+      parameters:
+        - name: "videoId"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Successful deletion"
+        500:
+          description: "Internal server error"
+        404:
+          description: "No video doc found with the given id"
+          
+  /version:
+    post:
+      tags:
+        - "version"
+      summary: "Create a version doc"
+      description: "Note: In the body, the value of 'module' can only be flashcard/quiz/explore"
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/VersionSchema"
+      responses:
+        200:
+          description: "Successful creation of the doc"
+        400:
+          description: "Bad Request"
     put:
       tags:
-      - "user"
-      summary: "Updated user"
-      description: "This can only be done by the logged in user."
-      operationId: "updateUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "name that need to be updated"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Updated user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        400:
-          description: "Invalid user supplied"
-        404:
-          description: "User not found"
-    delete:
-      tags:
-      - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be deleted"
-        required: true
-        type: "string"
-      responses:
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-  /user/login:
-    get:
-      tags:
-      - "user"
-      summary: "Logs user into the system"
+        - "version"
+      summary: "Modify a version doc"
       description: ""
-      operationId: "loginUser"
-      produces:
-      - "application/json"
-      - "application/xml"
       parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name for login"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
-        description: "The password for login in clear text"
-        required: true
-        type: "string"
+        - name: "Authorization"
+          in: "header"
+          description: "Access token of the admin making the request"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/VersionSchema"
       responses:
         200:
-          description: "successful operation"
-          headers:
-            X-Expires-After:
-              type: "string"
-              format: "date-time"
-              description: "date in UTC when token expires"
-            X-Rate-Limit:
-              type: "integer"
-              format: "int32"
-              description: "calls per hour allowed by the user"
-          schema:
-            type: "string"
+          description: "Successful operations - returns the modified doc"
         400:
-          description: "Invalid username/password supplied"
-  /user/logout:
+          description: "Bad requestr"
+        404:
+          description: "No version doc found similar to the passed body"
+          
     get:
       tags:
-      - "user"
-      summary: "Logs out current logged in user session"
+        - "version"
+      summary: "Get all version docs or specified version docs by query"
       description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters: []
-      responses:
-        default:
-          description: "successful operation"
-  /user:
-    post:
-      tags:
-      - "user"
-      summary: "Create user"
-      description: "This can only be done by the logged in user."
-      operationId: "createUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Created user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
+        - name: "subRegion"
+          in: "query"
+          required: false
+          type: "string"
+        - name: "module"
+          in: "query"
+          required: false
+          type: "string"
       responses:
-        default:
-          description: "successful operation"
-securityDefinitions:
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "https://petstore.swagger.io/oauth/authorize"
-    flow: "implicit"
-    scopes:
-      read:pets: "read your pets"
-      write:pets: "modify pets in your account"
+        200:
+          description: "Successful operation - returns an array of the matched versions"
+        500:
+          description: "Internal server error"
+        404:
+          description: "No version doc found with the query"
+
 definitions:
-  ApiResponse:
+  AdminLogin:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      passoword:
+        type: "string"
+    xml:
+      name: "AdminLogin"
+
+  Admin2:
+    type: "object"
+    properties:
+      refreshToken:
+        type: "string"
+    xml:
+      name: "Admin2"
+
+  QuizSchema:
+    type: "object"
+    properties:
+      imageUrl:
+        type: "string"
+      question:
+        type: "string"
+      questionType:
+        type: "string"
+      region:
+        type: "string"
+      correctAnswer:
+        type: "string"
+      explanation:
+        type: "string"
+      options:
+        type: "array"
+        items:
+          type: "string"
+    xml:
+      name: "Quiz"
+
+  FlashCardSchema:
+    type: "object"
+    properties:
+      region:
+        type: "string"
+      imageUrl:
+        type: "string"
+      question:
+        type: "string"
+      answer:
+        type: "string"
+    xml:
+      name: "FlashCard"
+
+  ExploreSchema:
+    type: "object"
+    properties:
+      region:
+        type: "string"
+      imageUrl:
+        type: "string"
+      title:
+        type: "string"
+      explanation:
+        type: "string"
+    xml:
+      name: "Explore"
+
+  HierarchySchema:
+    type: "object"
+    properties:
+      regions:
+        type: "array"
+        items:
+          $ref: "#/definitions/HierarchyRegion"
+    xml:
+      name: "HierarchySchema"
+
+  HierarchyRegion:
+    type: "object"
+    properties:
+      region:
+        type: "string"
+      imageUrl:
+        type: "string"
+      subRegions:
+        type: "array"
+        items:
+          $ref: "#/definitions/HierarchySubRegion"
+    xml:
+      name: "HierarchyRegion"
+
+  HierarchySubRegion:
+    type: "object"
+    properties:
+      subRegion:
+        type: "string"
+      imageUrl:
+        type: "string"
+      subSubRegions:
+        type: "array"
+        items:
+          $ref: "#/definitions/HierarchySubSubRegion"
+    xml:
+      name: "HierarchySubRegion"
+
+  HierarchySubSubRegion:
+    type: "object"
+    properties:
+      subSubRegion:
+        type: "string"
+    xml:
+      name: "HierarchySubSubRegion"
+
+  CodeSchema:
     type: "object"
     properties:
       code:
-        type: "integer"
-        format: "int32"
-      type:
         type: "string"
-      message:
+      createdBy:
         type: "string"
-  Category:
+    xml:
+      name: "CodeSchema"
+
+  CodeCompareSchema:
     type: "object"
     properties:
-      id:
-        type: "integer"
-        format: "int64"
+      code:
+        type: "string"
+      authorizedBy:
+        type: "string"
       name:
-        type: "string"
-    xml:
-      name: "Category"
-  Pet:
-    type: "object"
-    required:
-    - "name"
-    - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          type: "string"
-          xml:
-            name: "photoUrl"
-      tags:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          xml:
-            name: "tag"
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-        - "available"
-        - "pending"
-        - "sold"
-    xml:
-      name: "Pet"
-  Tag:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Tag"
-  Order:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      petId:
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int32"
-      shipDate:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "placed"
-        - "approved"
-        - "delivered"
-      complete:
-        type: "boolean"
-    xml:
-      name: "Order"
-  User:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
         type: "string"
       password:
         type: "string"
-      phone:
+      email:
         type: "string"
-      userStatus:
-        type: "integer"
-        format: "int32"
-        description: "User Status"
     xml:
-      name: "User"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+      name: "CodeCompareSchema"
+
+  ImageSchema:
+    type: "object"
+    properties:
+      imageUrl:
+        type: "string"
+      region:
+        type: "string"
+    xml:
+      name: "ImageSchema"
+      
+  StatSchema:
+    type: "object"
+    properties:
+      university:
+        type: "string"
+      degree:
+        type: "string"
+      educationLevel:
+        type: "string"
+      year:
+        type: "string"
+    xml:
+      name: "StatSchema"
+      
+  VideoSchema:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+      link:
+        type: "string"
+      region:
+        type: "string"
+    xml:
+      name: "VideoSchema"
+      
+  VersionSchema:
+    type: "object"
+    properties:
+      subRegion:
+        type: "string"
+      module:
+        type: "string"
+    xml:
+      name: "VersionSchema"
