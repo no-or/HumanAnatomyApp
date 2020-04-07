@@ -31,7 +31,7 @@
     "multer-s3": "^2.9.0",
     "redis": "^3.0.2",
     "supertest": "^4.0.2",
-    "swagger-ui": "^3.25.0"
+    "swagger-ui-express": "^4.1.4"
   },
   "jest": {
     "testEnvironment": "node"
