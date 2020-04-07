@@ -8,7 +8,7 @@ export default class offline {
     constructor() {
 
         this.state = {
-            //JSON of the regions of flashcards that are offline. If true, app uses the stored values; else, fetch from API. These are default.
+            //the below variable flashcard has nothing to do with flashcards. Its just the default data if fetches fail. I'm too lazy to change it.
             flashcard: {
                 Heart: false,
                 Trunk: false,
@@ -36,6 +36,7 @@ export default class offline {
       }
     };
     
+    //chack what state the specified toggle that calls this was left in (on or off)
     checkButton = async (region, type) => {
       try {
         const value = await AsyncStorage.getItem(type);
@@ -76,7 +77,7 @@ export default class offline {
         _storeData();
     }
 
-    //where region is region of the body (use same as API endpoints), and type is flashcard, quiz, etc... use same as API endpoints
+    //where region is subregion of the body (use same as API endpoints), and type is flashcard, quiz, etc... use same as API endpoints
     grabData(region, type){
         //Retrieve the data for a type of functionality and region of the app
         _retrieveData = async () => {
@@ -119,6 +120,7 @@ export default class offline {
         return _retrieveData();
   }
 
+  //updates the stored menu hierarchy on the phone locally to be used offline
   UpdateHierarchy() {
     var host = HOST_NAME;
 
@@ -164,6 +166,7 @@ export default class offline {
     });
   }
 
+  //Retrieve hierarchy data from local storage.
   FetchHierarchy() {
     _retrieveData = async () => {
       try {
@@ -184,7 +187,8 @@ export default class offline {
     return _retrieveData();
   }
 
-    //where region is region of the body (use same as API endpoints), and type is flashcard, quiz, etc... use same as API endpoints
+    //Populate Data: Populates the local storage with data from the DB for a type and subregion
+    //where region is subregion of the body (use same as API endpoints), and type is flashcard, quiz, etc... use same as API endpoints
     popData(region, type){
         _storeData = async () => {
             try {
@@ -195,7 +199,7 @@ export default class offline {
 
                 responseJson.forEach(function (tmp) {
 
-                  //This piece of code hashes the image path so that each image is only stored once on the device
+                  //This piece of code hashes the image path and uses it as internal path so that each image is only stored once on the device
                   var hash = 0; 
         
                   if (tmp.imageUrl.length == 0) return hash; 
@@ -261,6 +265,7 @@ export default class offline {
           _storeDate();
     }
 
+    //retrieves the last date a subregion/type combo was updated for a specific subregion and type
     _retrieveDate = async (region, type) => {
       try {
       return fetch('http://137.82.155.92:8090/version?module=' + type + '&subRegion=' + region)
@@ -278,6 +283,7 @@ export default class offline {
         console.error(error);
       }
     };
+
 
     storeImage(url, id){
         FileSystem.downloadAsync(

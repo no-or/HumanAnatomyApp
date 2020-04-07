@@ -21,13 +21,6 @@ export default class FlashStack extends Component {
 
     this.state = {
       data: [],
-      // data: [{
-      //   "id": "1",
-      //   "answer": "data1"
-      // }, {
-      //   "id": "2",
-      //   "answer": "data2"
-      // }],
       right: 0,
       region: this.props.navigation.getParam("title", "brain"),
       offline: false,
@@ -69,11 +62,7 @@ export default class FlashStack extends Component {
 
 
   componentDidMount(){
-      //run this function if you want to connect to DB and not run demo JSON
-      //this.apiFetch();
-      //this.off.popData('Heart', 'flashcard');
-      //this.setState({data: this.off.grabData('Heart', 'flashcard')});
-
+    // Unused.
   }
 
   //populates state.data with flashcards
@@ -90,6 +79,7 @@ export default class FlashStack extends Component {
     });
   }
 
+  // Header navigation code
   static navigationOptions = ({navigation}) => ({
     title: navigation.getParam("title", "Flashcards"),
     headerStyle: {
@@ -113,18 +103,21 @@ export default class FlashStack extends Component {
     this.setState({ swiped: this.state.swiped + 1});
   };
 
+  // Opens the zoom pop-up.
   openModal = () =>{
     this.setState({
     isModalVisible:true
     })
     }
 
+  // Makes the Modal visible/not
   toggleModal = () =>{
     this.setState({
     isModalVisible:!this.state.isModalVisible
     })
     }
 
+  // Closes the Modal
   closeModal = () =>{
     this.setState({
     isModalVisible:false
@@ -134,11 +127,9 @@ export default class FlashStack extends Component {
 
   render() {
 
-    var stack = [];
-    var totalSwiped = 0;
-    var uris = [];
-
-    //console.log(this.state.data[this.state.total - this.state.swiped]);
+    var stack = []; // Stack of flashcards generated (DOM)
+    var totalSwiped = 0; // This is the total number of cards, not cards swiped. Too lazy to change the name, sorry.
+    var uris = []; // URI list to push image paths to, allowing modal to display the correct image based on flashcard at top of stack.
 
     if(this.state.data != null){
 
