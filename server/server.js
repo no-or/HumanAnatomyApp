@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-var path = require("path");
+const path = require("path");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
 // Import routes
 const bodyParser = require("body-parser");
@@ -21,6 +23,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.static(path.join(__dirname, "/../WebApp/")));
 app.use(express.static(path.join(__dirname, "/../WebApp/css")));
