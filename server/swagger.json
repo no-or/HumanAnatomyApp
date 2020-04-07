@@ -12,55 +12,50 @@
   "tags": [
     {
       "name": "admin",
-      "description": "Rosources related to admin"
+      "description": "Resources related to admin"
     },
     {
       "name": "quiz",
-      "description": "Rosources related to quiz"
+      "description": "Resources related to quiz"
     },
     {
       "name": "flashcard",
-      "description": "Rosources related to flashcard"
+      "description": "Resources related to flashcard"
     },
     {
       "name": "explore",
-      "description": "Rosources related to explore"
+      "description": "Resources related to explore"
     },
     {
       "name": "code",
-      "description": "Rosources related to code"
+      "description": "Resources related to code"
     },
     {
       "name": "hierarchy",
-      "description": "Rosources related to hierarchy"
+      "description": "Resources related to hierarchy"
     },
     {
       "name": "image",
-      "description": "Rosources related to image"
+      "description": "Resources related to image"
     },
     {
       "name": "video",
-      "description": "Rosources related to video"
+      "description": "Resources related to video"
     },
     {
       "name": "stat",
-      "description": "Rosources related to stat"
+      "description": "Resources related to stat"
     },
     {
       "name": "version",
-      "description": "Rosources related to version"
+      "description": "Resources related to version"
     }
   ],
-  "schemes": [
-    "http",
-    "https"
-  ],
+  "schemes": ["http", "https"],
   "paths": {
     "/admin/{adminId}": {
       "delete": {
-        "tags": [
-          "admin"
-        ],
+        "tags": ["admin"],
         "summary": "Removes an admin provided the id of the admin as a parameter",
         "description": "",
         "parameters": [
@@ -95,9 +90,7 @@
     },
     "/admin": {
       "delete": {
-        "tags": [
-          "admin"
-        ],
+        "tags": ["admin"],
         "summary": "Removes an admin provided the email of the admin in the query",
         "description": "",
         "parameters": [
@@ -134,14 +127,10 @@
     },
     "/admin/login": {
       "post": {
-        "tags": [
-          "admin"
-        ],
+        "tags": ["admin"],
         "summary": "Signs in an admin",
         "description": "",
-        "consumes": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
         "parameters": [
           {
             "in": "body",
@@ -168,14 +157,10 @@
     },
     "/admin/logout": {
       "post": {
-        "tags": [
-          "admin"
-        ],
+        "tags": ["admin"],
         "summary": "Logs out an admin",
         "description": "",
-        "consumes": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
         "parameters": [
           {
             "in": "body",
@@ -209,14 +194,10 @@
     },
     "/admin/refreshToken": {
       "post": {
-        "tags": [
-          "admin"
-        ],
+        "tags": ["admin"],
         "summary": "Gets a new AccessToken for the admin",
         "description": "",
-        "consumes": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
         "parameters": [
           {
             "in": "body",
@@ -240,14 +221,10 @@
     },
     "/quiz": {
       "get": {
-        "tags": [
-          "quiz"
-        ],
+        "tags": ["quiz"],
         "summary": "Get all the quizzes or specific quizzes by query",
         "description": "",
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "question",
@@ -287,17 +264,11 @@
         }
       },
       "post": {
-        "tags": [
-          "quiz"
-        ],
+        "tags": ["quiz"],
         "summary": "Create a quiz",
         "description": "",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Authorization",
@@ -328,14 +299,10 @@
     },
     "/quiz/{quizId}": {
       "get": {
-        "tags": [
-          "quiz"
-        ],
+        "tags": ["quiz"],
         "summary": "Get a quiz by Id",
         "description": "",
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "quizId",
@@ -358,9 +325,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "quiz"
-        ],
+        "tags": ["quiz"],
         "summary": "Remove a quiz by Id",
         "description": "",
         "parameters": [
@@ -394,14 +359,10 @@
     },
     "/flashcard": {
       "get": {
-        "tags": [
-          "flashcard"
-        ],
+        "tags": ["flashcard"],
         "summary": "Get all the flashcards or specific flashcards by query",
         "description": "",
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "region",
@@ -435,17 +396,11 @@
         }
       },
       "post": {
-        "tags": [
-          "flashcard"
-        ],
+        "tags": ["flashcard"],
         "summary": "Create a flashcard",
         "description": "",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Authorization",
@@ -476,14 +431,10 @@
     },
     "/flashcard/{flashcardId}": {
       "get": {
-        "tags": [
-          "flashcard"
-        ],
+        "tags": ["flashcard"],
         "summary": "Get a flashcard by Id",
         "description": "",
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "flashcardId",
@@ -506,9 +457,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "flashcard"
-        ],
+        "tags": ["flashcard"],
         "summary": "Remove a flashcard by Id",
         "description": "",
         "parameters": [
@@ -542,14 +491,10 @@
     },
     "/explore": {
       "get": {
-        "tags": [
-          "explore"
-        ],
+        "tags": ["explore"],
         "summary": "Get all the explore components or specific explore components by query",
         "description": "",
-        "produces": [
-          "application/json"
-        ],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "region",
@@ -577,17 +522,11 @@
         }
       },
       "post": {
-        "tags": [
-          "explore"
-        ],
+        "tags": ["explore"],
         "summary": "Create a explore component",
         "description": "",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Authorization",
@@ -618,9 +557,7 @@
     },
     "/explore/{exploreId}": {
       "delete": {
-        "tags": [
-          "explore"
-        ],
+        "tags": ["explore"],
         "summary": "Remove a explore component by Id",
         "description": "",
         "parameters": [
@@ -654,9 +591,7 @@
     },
     "/hierarchy": {
       "get": {
-        "tags": [
-          "hierarchy"
-        ],
+        "tags": ["hierarchy"],
         "summary": "Get the hierarchy for the app",
         "description": "",
         "responses": {
@@ -672,17 +607,11 @@
         }
       },
       "post": {
-        "tags": [
-          "hierarchy"
-        ],
+        "tags": ["hierarchy"],
         "summary": "Create a hierarchy",
         "description": "Note: More than one hierarchy for the application can not be created",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Authorization",
@@ -711,17 +640,11 @@
         }
       },
       "put": {
-        "tags": [
-          "hierarchy"
-        ],
+        "tags": ["hierarchy"],
         "summary": "Modifies the existing hierarchy",
         "description": "",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Authorization",
@@ -750,9 +673,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "hierarchy"
-        ],
+        "tags": ["hierarchy"],
         "summary": "Removes the existing hierarchy",
         "description": "",
         "parameters": [
@@ -779,9 +700,7 @@
     },
     "/code": {
       "get": {
-        "tags": [
-          "code"
-        ],
+        "tags": ["code"],
         "summary": "Get all the admins who have codes",
         "description": "",
         "parameters": [
@@ -806,17 +725,11 @@
         }
       },
       "post": {
-        "tags": [
-          "code"
-        ],
+        "tags": ["code"],
         "summary": "Create a secret code",
         "description": "Note: One admin can not possess more than one secret code at a time",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Authorization",
@@ -848,9 +761,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "code"
-        ],
+        "tags": ["code"],
         "summary": "Removes an existing code for an admin",
         "description": "",
         "parameters": [
@@ -884,17 +795,11 @@
     },
     "/code/compare": {
       "post": {
-        "tags": [
-          "code"
-        ],
+        "tags": ["code"],
         "summary": "Compare secret code provided by a new admin",
         "description": "This api will be used for registering a new admin",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "in": "body",
@@ -924,17 +829,11 @@
     },
     "/image/s3": {
       "post": {
-        "tags": [
-          "image"
-        ],
+        "tags": ["image"],
         "summary": "Post an image to S3",
         "description": "",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "application/json"
-        ],
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "Authorization",
@@ -963,9 +862,7 @@
     },
     "/image/s3/{imageId}": {
       "delete": {
-        "tags": [
-          "image"
-        ],
+        "tags": ["image"],
         "summary": "Delete an image from S3 by Id",
         "description": "",
         "parameters": [
@@ -996,9 +893,7 @@
     },
     "/image": {
       "post": {
-        "tags": [
-          "image"
-        ],
+        "tags": ["image"],
         "summary": "Create an image doc in MongoDB",
         "description": "",
         "parameters": [
@@ -1029,9 +924,7 @@
         }
       },
       "get": {
-        "tags": [
-          "image"
-        ],
+        "tags": ["image"],
         "summary": "Get all the image docs or specified image docs by query from MongoDB",
         "description": "",
         "parameters": [
@@ -1063,9 +956,7 @@
     },
     "/image/{imageId}": {
       "delete": {
-        "tags": [
-          "image"
-        ],
+        "tags": ["image"],
         "summary": "Delete an image doc from MongoDB by Id",
         "description": "",
         "parameters": [
@@ -1099,9 +990,7 @@
     },
     "/stat": {
       "post": {
-        "tags": [
-          "stat"
-        ],
+        "tags": ["stat"],
         "summary": "Create a stat doc",
         "description": "",
         "parameters": [
@@ -1125,9 +1014,7 @@
         }
       },
       "get": {
-        "tags": [
-          "stat"
-        ],
+        "tags": ["stat"],
         "summary": "Get all stat docs or specified stat docs by query",
         "description": "",
         "parameters": [
@@ -1171,9 +1058,7 @@
     },
     "/video": {
       "post": {
-        "tags": [
-          "video"
-        ],
+        "tags": ["video"],
         "summary": "Create a video doc",
         "description": "",
         "parameters": [
@@ -1197,9 +1082,7 @@
         }
       },
       "get": {
-        "tags": [
-          "video"
-        ],
+        "tags": ["video"],
         "summary": "Get all video docs or specified video docs by query",
         "description": "",
         "parameters": [
@@ -1229,9 +1112,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "video"
-        ],
+        "tags": ["video"],
         "summary": "Remove a video doc by title (query)",
         "description": "",
         "parameters": [
@@ -1260,9 +1141,7 @@
     },
     "/video/{videoId}": {
       "get": {
-        "tags": [
-          "video"
-        ],
+        "tags": ["video"],
         "summary": "Get a video doc by Id",
         "description": "",
         "parameters": [
@@ -1286,9 +1165,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "video"
-        ],
+        "tags": ["video"],
         "summary": "Remove a video doc by Id",
         "description": "",
         "parameters": [
@@ -1314,9 +1191,7 @@
     },
     "/version": {
       "post": {
-        "tags": [
-          "version"
-        ],
+        "tags": ["version"],
         "summary": "Create a version doc",
         "description": "Note: In the body, the value of 'module' can only be flashcard/quiz/explore",
         "parameters": [
@@ -1347,9 +1222,7 @@
         }
       },
       "put": {
-        "tags": [
-          "version"
-        ],
+        "tags": ["version"],
         "summary": "Modify a version doc",
         "description": "",
         "parameters": [
@@ -1383,9 +1256,7 @@
         }
       },
       "get": {
-        "tags": [
-          "version"
-        ],
+        "tags": ["version"],
         "summary": "Get all version docs or specified version docs by query",
         "description": "",
         "parameters": [
