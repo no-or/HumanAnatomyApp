@@ -25,7 +25,6 @@
     ],
     "ios": {
       "supportsTablet": true,
-<<<<<<< HEAD
       "bundleIdentifier": "com.ubc.humananatomyteachingapp",
       "buildNumber": "1.0.0"
     },
@@ -34,9 +33,5 @@
       "versionCode": 1
     },
     "description": ""
-=======
-      "bundleIdentifier": "com.humananatomyapp.humananatomyapp"
-    }
->>>>>>> 808090cba42e8d24e32336edc4cb55e84d27e168
   }
 }

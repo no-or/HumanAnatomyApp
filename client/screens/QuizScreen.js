@@ -72,19 +72,26 @@ export default class Quizzes extends Component {
     }
   }
 
+  /**
+   * Function to answer question and update state based 
+   * on correct or incorrect answer.
+   */
   _answerQuestion = (answer) => {
     if(this.state.questions[this.state.questionIndex].chosenAnswer === "") {
 
       let scoreIncrement = 1;
 
+      // update chosen answer in state
       let questionsArr = this.state.questions;
       questionsArr[this.state.questionIndex].chosenAnswer = answer;
 
+      // update answer color to red if incorrect answer is chosen
       if(answer !== this.state.questions[this.state.questionIndex].correctAnswer) {
         questionsArr[this.state.questionIndex].answerColors[answer] = "red";
         scoreIncrement = 0;
       }
 
+      // increment score - score will increase by 1 or stay unchanged
       this.setState(prevState => ({
         questions: questionsArr,
         score: prevState.score + scoreIncrement
@@ -93,16 +100,26 @@ export default class Quizzes extends Component {
     }
   }
 
+  /**
+   * Alert user with explanation for correct answer if 
+   * question mark icon is clicked.
+   */
   _getExplanation = (questionIndex) => {
-    // update this to properly index explanation array!!!!
     Alert.alert("Why " + this.state.questions[questionIndex].correctAnswer + "?", 
                 this.state.questions[questionIndex].explanation[0]);
   }
 
+  /**
+   * Load data before screen renders
+   */
   componentDidMount() {
     this.loadData();
   }
 
+  /**
+   * Loads data from local storage or server depending if 
+   * data is downloaded to device or not. 
+   */
   loadData() {
     let off = new offline; // create new offline class
     let subregion = this.props.navigation.getParam("title"); // get subregion 
@@ -115,6 +132,8 @@ export default class Quizzes extends Component {
 
     promise.then((data) => {
       if(data == undefined) { // pull data from server
+        // Check if device is offline
+        // If online pull data from server
         NetInfo.getConnectionInfo().then(state => {
           // alert(state.type);
           if (state.type !== "none" && state.type !== "unknown") {
@@ -123,14 +142,14 @@ export default class Quizzes extends Component {
             Alert.alert("You are offline, or there was an issue with the server!");
           }
         });
-      } else { // use local data
+      } else { // use local data from LocalStorage
         var questions = data.map(question => {
           var answerColors = {};
           for (var index in question.options) {
             var answer = question.options[index];
             answerColors[answer] = (answer === question.correctAnswer) ? "green" : colors.primary;
           }
-          return {
+          return { // transform data 
             question: question.question,
             answers: question.options,
             answerColors: answerColors,
@@ -138,7 +157,6 @@ export default class Quizzes extends Component {
             image: question.imageUrl,
             chosenAnswer: "",
             explanation: question.explanation,
-            // quizAvailable: true
           };
         });
   
@@ -149,6 +167,9 @@ export default class Quizzes extends Component {
     });
   }
 
+  /**
+   * Fetch quiz data for specific region from the server
+   */
   apiFetch() {
     let subregion = this.props.navigation.getParam("title");
     let subregionParam = subregion.replace(" ", "+");
@@ -266,7 +287,6 @@ export default class Quizzes extends Component {
                               color: "white",
                               opacity: 0.8
                             }}
-                            // onPress={() => this._getExplanation(this.state.questionIndex)}
                           />
                           </TouchableOpacity>
                         </View> 
@@ -294,7 +314,6 @@ export default class Quizzes extends Component {
                     <View style={styles.nextContainer}>
                       <TouchableOpacity 
                         style={{
-                          // backgroundColor: (this.state.questionIndex == (this.state.questions.length - 1)) ? "#cccccc" : colors.primary,
                           backgroundColor: (this.state.questionIndex == (this.state.questions.length - 1)) ? colors.secondary : colors.primary,
                           borderColor: (this.state.questionIndex == (this.state.questions.length - 1)) ? "#999999" : colors.primary,
                           ...styles.nextButton
@@ -336,7 +355,6 @@ export default class Quizzes extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     backgroundColor: "#fff",
     height: "100%"
   },
@@ -392,8 +410,6 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     height: "100%",
-    // paddingTop: 10,
-    // paddingBottom: 10,
     paddingLeft: 20,
     paddingRight: 20,
     borderWidth: 1,
@@ -401,7 +417,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     justifyContent: "center",
-    // backgroundColor: colors.primary
   },
   question: {
     fontWeight: "bold",
@@ -418,7 +433,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: Dimensions.get('window').width - 40,
     height: "100%",
-    // padding: 10,
     borderWidth: 1,
     borderRadius: 40,
     alignItems: "center",
@@ -426,15 +440,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 5,
     marginBottom: 5,
-    // opacity: 10
-    // backgroundColor: colors.primary
   },
   buttonTextStyle: {
     color: colors.primaryText
   },
   buttonContainer: {
     flex: 1,
-    // flexDirection: "row"
   },
   progressIndicator: {
     position: "absolute",
@@ -468,8 +479,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignContent: "center",
-    // flex: 1,
-    // width: "100%",
     height: "100%",
     backgroundColor: colors.primary
   },
