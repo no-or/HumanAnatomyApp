@@ -27,24 +27,23 @@ export default class Flashcard extends Component {
       this._val = { x:0, y:0 }
       this.state.pan.addListener((value) => this._val = value);
   
+      // The majority of the panResponder stuff done here is standard. Look up documentation for it.
       this.panResponder = PanResponder.create({
           onMoveShouldSetPanResponder : (e, gesture) => {
           const {dx, dy} = gesture;
-          //if(Math.abs(gesture.dx) + Math.abs(gesture.dy) < normalize(2))
-              //return false;
-          return  true;//Math.abs(dy) > normalize(25);
+
+          return  true;
       },
           onPanResponderGrant: (e, gesture) => {
             this.state.pan.setOffset({
               x: this._val.x,
               y: this._val.y
             })
-            //this.state.pan.setValue({ x:0, y:0})
-            //this.changeColour(gesture, 0);
+
           },
           onPanResponderMove: (evt, gesture) => {
             if((Math.abs(gesture.dx) + Math.abs(gesture.dy) > normalize(10)) || this.state.movement){
-              //this.changeColour(gesture, 1);
+
               this.state.pan.x.setValue(gesture.dx);
               this.state.pan.y.setValue(gesture.dy);
               this.state.movement = true;
@@ -83,7 +82,7 @@ export default class Flashcard extends Component {
                   }));
                 }
             } else{
-                  //else, if the card wasn't dragged into the target zone, spring it back into it's original place 
+                  //else, if the card was dragged not clicked, and wasn't dragged into the target zone, spring it back into it's original place 
                   Animated.spring(this.state.pan, {
                       toValue: { x: 0, y: 0 },
                       friction: 6
@@ -104,7 +103,7 @@ export default class Flashcard extends Component {
     );
   }
 
-  //is the area where the top card is dragged far enough to remove the card from the deck?
+  //Is the area where the top card is dragged far enough to remove the card from the deck?
   isDropArea(gesture) {
     if(gesture.moveX < deviceWidth*.1)
       this.props.handleSwipe(0);
@@ -113,6 +112,8 @@ export default class Flashcard extends Component {
     return gesture.moveX < deviceWidth*.1 || gesture.moveX > deviceWidth*.9;
   }
 
+  //Change the colour of the card proportionally with the amount dragged. Theres a bug that the touch is relative to the center,
+  //which gives the full colour if you start the drag on the edge. Didn't have time to fix, look into event.Location in panResponder.
   changeColor(gesture){
     if(gesture.moveX > deviceWidth*0.5){
       this.state.bgcolor.setValue(0.5 + (0.5 - (deviceWidth*0.85 - gesture.moveX)/(deviceWidth*0.85 - deviceWidth*0.5)/2));
@@ -125,7 +126,6 @@ export default class Flashcard extends Component {
   renderDraggable() {
     const cardStyle = function(color) {
      return {
-      //backgroundColor: color,
       backgroundColor: color.interpolate({
         inputRange: [0, 0.5, 1],
         outputRange: ['red', 'white', 'green']
@@ -149,7 +149,7 @@ export default class Flashcard extends Component {
         justifyContent: 'center',
         alignItems: 'center'
       }
-
+      //If the card is not flipped, render this
       if (this.state.showDraggable && !this.state.isFlipped) {
         return (
             <View style={{ position: "absolute" }}>
@@ -166,7 +166,7 @@ export default class Flashcard extends Component {
 
           </View>
 
-        );
+        );//If the card is flipped, render this instead. PanStyle creates the flip animation. Not perfect, but whatever. It's Capstone.
       }else if (this.state.showDraggable && this.state.isFlipped) {
         return (
           

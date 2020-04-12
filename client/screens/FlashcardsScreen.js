@@ -19,14 +19,14 @@ export default class FlashcardsScreen extends Component {
       menu: null,
     }
 
+    //instantiate new instance of Offline class to latch into local storage methods.
     this.off =  new offline;
 
-        //These nested promises are meant to see if online or offline mode should be used.
+      //This promise is meant to retrive the hierarchy data from local storage to populate the menu with.
       let promise = new Promise((resolve, reject) => {
           resolve(this.off.FetchHierarchy());
       }) 
       
-      //depending whether the offline button is toggled on or off, fetch from local or remote, respectively.
       promise.then((data) => {
         this.setState({menu: data});
       })
@@ -37,9 +37,10 @@ export default class FlashcardsScreen extends Component {
     };
 
     componentDidMount() {
-      //this.apiFetch();
+      // Unused.
     }
   
+    // fetch flashcard data from server as JSON data
     apiFetch() {
       var host = HOST_NAME
   
@@ -47,14 +48,13 @@ export default class FlashcardsScreen extends Component {
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({menu: responseJson[0]});
-        // alert(JSON.stringify(this.state.menu))
-        // alert(JSON.stringify(responseJson[0].regions));
       })
       .catch((error) => {
         console.error(error);
       });
     }
 
+    // top nav bar details
   static navigationOptions = ({navigation}) => ({
     title: "Flashcards",
     headerStyle: {
@@ -74,8 +74,9 @@ export default class FlashcardsScreen extends Component {
   });
 
   render() {
-    //return (
-      const items = [];
+
+    const items = [];
+    //generate the region/subregion menu
     if (this.state.menu) {
       this.state.menu.regions.map((item) => {
         items.push(
@@ -97,36 +98,6 @@ export default class FlashcardsScreen extends Component {
       {items}
       </ScrollView>
     );
-      // <SafeAreaView style={styles.wrapper}>
-      //   <View style={styles.content}>
-      //     <ScrollView
-      //       style={styles.container}
-      //       contentContainerStyle={styles.contentContainer}
-      //     >
-      //       <Card
-      //         uri={FileSystem.documentDirectory + 'kittycat.jpg'}
-      //         cardTitle="Heart"
-      //         callback={() => this.props.navigation.navigate("FlashStack", {region: "Larynx"})}
-      //       ></Card><OnlineToggle region="Larynx"></OnlineToggle>
-      //       <Card
-      //         uri="https://www.simtics.com/media/28745/mlla.jpg"
-      //         cardTitle="Trunk"
-      //         callback={() => this.props.navigation.navigate("FlashStack", {region: "Trunk"})}
-      //       /><OnlineToggle region="Trunk"></OnlineToggle>
-      //       <Card
-      //         uri="http://www.interactive-biology.com/wp-content/uploads/2012/10/Hand-and-arm-bone-1280x640.jpg"
-      //         cardTitle="Upper Limb"
-      //         callback={() => this.props.navigation.navigate("FlashStack", {region: "Upper Limb"})}
-      //       /><OnlineToggle region="UpperLimbs"></OnlineToggle>
-      //       <Card
-      //         uri="https://st.depositphotos.com/2363887/2564/i/950/depositphotos_25640047-stock-photo-man-anatomy-thorax-cutaway-with.jpg"
-      //         cardTitle="Lower Limb"
-      //         callback={() => this.props.navigation.navigate("FlashStack", {region: "Lower Limb"})}
-      //       /><OnlineToggle region="LowerLimbs"></OnlineToggle>
-      //     </ScrollView>
-      //   </View>
-      // </SafeAreaView>
-    //);
   }
 }
 

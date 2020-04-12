@@ -20,41 +20,32 @@ export default class OnlineToggle extends Component {
     
       let promise = new Promise((resolve, reject) => {
         // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+        //checkButton is called on the OnlineToggle to see if it should be on or off on render, based on the local storage.
           resolve(this.off.checkButton(this.props.region, this.props.type));
       }) 
       
       promise.then((data) => {
-        // successMessage is whatever we passed in the resolve(...) function above.
-///
-///
-///
-        //if data == true
-          //promise fetch external date(
-            //fetch internal date(
-              //compare internal and external, if false call popData();
-            //))
-            ///
-            //
-            ///
+
             if(data == true){
               let promise2 = new Promise((resolve, reject) => {
-                // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+                // If the toggle is on, then it means offline use is enabled. To keep the subregion it represents up to date,
+                // grabDate is called to see when it was updated last.
                   resolve(this.off.grabDate(this.props.region, this.props.type));
               }) 
               
               promise2.then((dIn) => {
-                // successMessage is whatever we passed in the resolve(...) function above.
 
                 dInternal = new Date(dIn);
 
                 let promise3 = new Promise((resolve, reject) => {
-                  // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+                  // Here we grab the external date (API endpoint date) of when it was updated last.
                     resolve(this.off._retrieveDate(this.props.region, this.props.type));
                 }) 
                 
                 promise3.then((dEx) => {
                   dExternal = new Date(dEx);
 
+                  // If the external date is more recent that the one stored, call popData to populate the local storage.
                   if(dExternal.getTime() > dInternal.getTime()){
                     this.off.popData(this.props.region, this.props.type);
                   }
@@ -62,6 +53,7 @@ export default class OnlineToggle extends Component {
               });
             }
 
+            //set the toggle to whatever the first promise grabbed.
         this.setState({switchOn1: data});
     });
   }
@@ -83,6 +75,8 @@ export default class OnlineToggle extends Component {
         );
   }
 
+  //onpress function changes the visuals of the toggle, calls UpdateButton to update the local storage of the buttons state,
+  // and repopulates the subregion sotrage locally if its going to the on state.
   onPress1 = () => {
     temp = !this.state.switchOn1;
     this.setState({ switchOn1: temp });
