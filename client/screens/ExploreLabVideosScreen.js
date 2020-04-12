@@ -28,6 +28,7 @@ export default class ExploreLabVideosScreen extends Component {
     this.apiFetch();
   }
 
+  // This funciton retrieves all the video data from the database
   apiFetch() {
     var host = HOST_NAME
     fetch(host+'/video')
@@ -40,6 +41,7 @@ export default class ExploreLabVideosScreen extends Component {
     });
   }
 
+  // This function is in charge of rendering the videos per region 
   renderVideos=()=> {
     const videoCards = [];
     const tempArray = [];
@@ -98,6 +100,7 @@ export default class ExploreLabVideosScreen extends Component {
     ),
   });
 
+  // This code is in charge of rendering all the content in this file
   render() {
     return (
       <ScrollView style={styles.container}>

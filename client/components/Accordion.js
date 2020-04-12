@@ -28,6 +28,7 @@ export default class Accordion extends Component{
             {
                 this.state.expanded &&
                 <View style={{}}>
+                    {/* This code creates a list of the regions */}
                     <FlatList
                     data={this.state.data}
                     numColumns={1}
@@ -52,6 +53,7 @@ export default class Accordion extends Component{
     )
   }
 
+  // This function is responsible for rerouting the user to the correct selection
   onClick=(item, index, navigation)=>{
     const temp = this.state.data.slice()
     temp[index].value = !temp[index].value

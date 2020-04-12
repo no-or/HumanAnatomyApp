@@ -21,6 +21,7 @@ export default class HomeScreen extends React.Component {
     this.apiFetch();
   }
 
+  // Function to retrieve all the regions/subregions
   apiFetch() {
     var host = HOST_NAME
     fetch(host+'/hierarchy')
@@ -34,6 +35,7 @@ export default class HomeScreen extends React.Component {
     });
   }
 
+  // Function to select random regions
   randomRegions = () => {
     regionArray = [];
     this.state.response.regions.map((region) => {
@@ -44,6 +46,7 @@ export default class HomeScreen extends React.Component {
     this.setState({regionArray: regionArray})
   }
 
+  // Function to determine the random path 
   randomPath = (path) => {
     let {regionArray} = this.state
     let randomRegionIndex = Math.floor(Math.random()*regionArray.length)
@@ -53,7 +56,7 @@ export default class HomeScreen extends React.Component {
       navigation: this.props.navigation
     })
   }
-
+  // This code is in charge of rendering all the content in this file
   render() {
     return (
       <SafeAreaView style={styles.wrapper}>

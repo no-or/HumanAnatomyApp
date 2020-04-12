@@ -25,6 +25,7 @@ export default class ExploreLabLearnScreen extends Component {
       menu : null,
      }
 
+    //  This logic handles all the offline functionality
      this.off =  new offline;
 
         //These nested promises are meant to see if online or offline mode should be used.
@@ -46,6 +47,7 @@ export default class ExploreLabLearnScreen extends Component {
     //this.apiFetch();
   }
 
+  // This function fetches all the regions and their associated subregions
   apiFetch() {
     var host = HOST_NAME
 
@@ -59,6 +61,7 @@ export default class ExploreLabLearnScreen extends Component {
     });
   }
 
+  // This function renders all the regions and subregions into a hierarchy menu
   renderAccordions=()=> {
     const items = [];
     if (this.state.menu) {
@@ -98,6 +101,7 @@ export default class ExploreLabLearnScreen extends Component {
     ),
   });
 
+  // This code is in charge of rendering all the content in this file
   render() {
     return (
       <ScrollView style={styles.container}>

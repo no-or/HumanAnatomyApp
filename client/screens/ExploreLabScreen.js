@@ -31,6 +31,7 @@ export default class ExploreLabScreen extends Component {
     ),
   });
 
+  // This code is in charge of rendering all the content in this file
   render() {
     return (
       <SafeAreaView style={styles.wrapper}>
@@ -39,6 +40,7 @@ export default class ExploreLabScreen extends Component {
             style={styles.container}
             contentContainerStyle={styles.contentContainer}
           >
+            {/* These are the elements responsible for showing the Learn and Videos pages */}
             <Card
               uri={'randomExploreImage'}
               cardTitle="Learn"
