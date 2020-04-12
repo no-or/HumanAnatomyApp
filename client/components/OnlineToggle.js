@@ -68,7 +68,7 @@ export default class OnlineToggle extends Component {
 
   render() {
         return (
-            <View style = {{flexDirection: "row", alignItems: "center"}}>
+            <View style = {{flexDirection: "row", alignItems: "center", flex: 1}}>
                 <Text style={{fontSize: 12, padding: 10}}>Downloaded </Text>
                 <SwitchToggle
                     backgroundColorOn="#00A7E1"
