@@ -15,9 +15,14 @@ import colors from '../assets/colors';
 import Card from "../components/Card";
 import TabBarIcon from "../components/TabBarIcon";
 
+import {HOST_NAME} from "../constants/Constants";
+
 const DATA = [
-  {title: 'Developers', data: ['Nishat Gupta', 'Noor Khan', 'Kyle Martin', 'Antoine Torossian', 'Adrian Viquez']},
-  {title: 'Executives', data: ['Majid Doroudi', 'Tim Bateman', 'Clare Newlands']},
+  {title: 'Project Lead and Content Expert', data: ['Majid Doroudi, B.Sc. (PT), M.Sc., Ph.D.']},
+  {title: 'Web-based Prototype Development', data: ['Emily Michael Hamel, M.Sc. (MD cand.)']},
+  {title: 'Software Developers', data: ['Adrian Viquez', 'Antoine Torossian', 'Kyle Martin', 'Nishat Gupta', 'Noor Khan']},
+  {title: 'Contributors', data: ['Majid Doroudi', 'Tim Bateman', 'Clare Newlands']},
+  {title: 'Acknowledgments', data: ['Timothy Bateman','Clare Newlands','Monika Fetjtek','Metha Kijsawangwong']},
 ];
 
 const assets = require('../utils/assets')
@@ -61,14 +66,53 @@ export default class AboutUsScreen extends Component {
               </Text>
            </View>
            <View style={styles.divider}></View>
-           <SectionList
-              sections={DATA}
-              keyExtractor={(item, index) => item + index}
-              renderItem={({ item }) => <Item title={item} />}
-              renderSectionHeader={({ section: { title } }) => (
-                <Text style={styles.header}>{title}</Text>
-              )}
-            />
+           <ScrollView nestedScrollEnabled={true} style={{maxHeight: 350}}>
+              <Text style={styles.header}>Project Lead and Content Expert</Text>
+                <View style={styles.item}><Text style={styles.title}>Majid Doroudi, B.Sc. (PT), M.Sc., Ph.D.</Text></View>
+              <Text style={styles.header}>Web-based Prototype Development</Text>
+                <View style={styles.item}><Text style={styles.title}>Emily Michael Hamel, M.Sc. (MD cand.)</Text></View>
+              <Text style={styles.header}>Software Developers</Text>
+                <View style={styles.item}><Text style={styles.title}>Adrian Viquez</Text></View>
+                <View style={styles.item}><Text style={styles.title}>Antonie Torossian</Text></View>
+                <View style={styles.item}><Text style={styles.title}>Kyle Martin</Text></View>
+                <View style={styles.item}><Text style={styles.title}>Nishat Gupta</Text></View>
+                <View style={styles.item}><Text style={styles.title}>Noor Khan</Text></View>
+              <Text style={styles.header}>Contributors</Text>
+                <Text style={styles.subHeader}>UBC Medical Students</Text>
+                  <View style={styles.item}><Text style={styles.title}>Gregory Jen</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Natasha Young</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Mike Peabody</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Lauren Andye-White</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Gulaab Sara</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Faran Rashid</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Deanna Klonarakis</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Vishesh Oberoi</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Victoria Peterson</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Cyrus Matheson</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Alex Rebchuk</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Ryan Kohler</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Alice Wong</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Nancy Lin</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Joel Perren</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Daniel Hui</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Yuda Shih</Text></View>
+                  <View style={styles.item}><Text style={styles.title}>Reed Huber</Text></View>
+              <Text style={styles.header}>Contributors</Text>
+                <Text style={styles.subHeader}>UBC Faculty</Text>
+                  <View style={styles.item}><Text style={styles.title}>Dr. Majid Alimohammadi</Text></View>
+              <Text style={styles.header}>Acknowledgments</Text>
+                <View style={styles.item}><Text style={styles.title}>Timothy Bateman</Text></View>
+                <View style={styles.item}><Text style={styles.title}>Clare Newlands</Text></View>
+                <View style={styles.item}><Text style={styles.title}>Monika Fetjtek</Text></View>
+                <View style={styles.item}><Text style={styles.title}>Metha Kijsawangwong </Text></View>
+            </ScrollView>
+            <Text style={styles.updatedContributors}
+                  onPress={() => Linking.openURL(HOST_NAME+'/about.html')}>
+              List of All Collaborators
+            </Text>
+            <View style={styles.specialThanks}>
+              <Text style={styles.description}>Special thanks go to Dr. Paul Lucina and Dr. Terry Lee and all other Capstone faculties in the Department of Electrical & Computer Engineering at University of British Columba for their collaboration in the development of this APP.</Text>
+            </View>
             <View style={styles.divider}></View>
             <View style={styles.contactUs}>
               <Text style={styles.headerCU}>Contact Us</Text>
@@ -130,6 +174,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: '5%'
   },
+  specialThanks: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: '5%'
+  },
   image: {
     width: "80%",
     height: 100,
@@ -149,8 +198,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontWeight: 'bold',
     textAlign: 'center',
-    paddingHorizontal: '10%',
+    paddingHorizontal: '6%',
     color: colors.primary
+  },
+  subHeader: {
+    fontSize: 18,
+    marginBottom: 5,
+    textDecorationLine: 'underline',
+    textAlign: 'center',
+    paddingHorizontal: '6%',
+    color: 'dodgerblue'
+  },
+  updatedContributors: {
+    fontSize: 16,
+    marginTop: 20,
+    marginBottom: 10,
+    textAlign: 'center',
+    paddingHorizontal: '6%',
+    color: 'dodgerblue'
   },
   title: {
     fontSize: 16,
@@ -179,6 +244,7 @@ const styles = StyleSheet.create({
   },
   email: {
     fontSize: 18,
-    marginLeft: 10
+    marginLeft: 10,
+    color: 'dodgerblue'
   }
 });
