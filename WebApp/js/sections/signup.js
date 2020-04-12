@@ -39,6 +39,9 @@ function makeNewAdmin(){
 	}
 	var data = {};
 	data.code = $("#code").val();
+	data.code = data.code.replace(/(\r\n|\n|\r)/gm, "");
+	data.code = data.code.trim();
+
 	var token = getCookie("accessToken");
 	if(!token){
 		alert("login again")
@@ -53,6 +56,6 @@ function makeNewAdmin(){
 		$("#signup").trigger("click")
 	}, function(error){
 		console.log(error)
-		alert("failed to add admin, double check Both names have at least first and last names")
+		alert("failed to add admin, double check Both names have at least first and last names\n error: " + error)
 	}, 1)
 }

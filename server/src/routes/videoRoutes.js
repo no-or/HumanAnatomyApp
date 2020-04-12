@@ -2,7 +2,7 @@ const express = require("express");
 const VideoModel = require("../models/videos");
 const verifyAdmin = require("../util/verifyToken");
 
-const initializeVideoRoutes = app => {
+const initializeVideoRoutes = (app) => {
   const videoRouter = express.Router();
   app.use("/video", videoRouter);
 
@@ -10,7 +10,7 @@ const initializeVideoRoutes = app => {
   videoRouter.post("/", verifyAdmin, async (req, res) => {
     const video = new VideoModel(req.body);
     try {
-      await video.save().then(item => res.send(item));
+      await video.save().then((item) => res.send(item));
     } catch (e) {
       res.status(400).send(`Could not create the video for ${e.message}`);
     }
@@ -74,7 +74,6 @@ const initializeVideoRoutes = app => {
   /* remove a video with the title (in the query) */
   videoRouter.delete("/", verifyAdmin, async (req, res) => {
     const title = req.query.title;
-    console.log(title);
     if (!title) {
       res
         .status(400)

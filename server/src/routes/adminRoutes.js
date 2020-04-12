@@ -6,7 +6,7 @@ const verifyAdmin = require("../util/verifyToken");
 const generateToken = require("../util/generateToken");
 const refreshTokenService = require("../services/refreshTokenService");
 
-const initializeAdminRoutes = app => {
+const initializeAdminRoutes = (app) => {
   const adminRouter = express.Router();
   app.use("/admin", adminRouter);
 
@@ -71,7 +71,7 @@ const initializeAdminRoutes = app => {
   adminRouter.post("/login", async (req, res) => {
     //Check if email exists
     const admin = await AdminModel.findOne({ email: req.body.email });
-    if (!admin) return res.status(400).send(`User does not exist`);
+    if (!admin) return res.status(400).send(`Admin does not exist`);
 
     //Check if the password is right
     const validPass = await bcrypt.compare(req.body.password, admin.password);

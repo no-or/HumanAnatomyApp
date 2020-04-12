@@ -1,7 +1,8 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
-var path = require("path");
+const path = require("path");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
 // Import routes
 const bodyParser = require("body-parser");
@@ -16,14 +17,13 @@ const initializeVideoRoutes = require("./src/routes/videoRoutes");
 const initializeHierarchyRoutes = require("./src/routes/hierarchyRoutes");
 const initializeVersionRoutes = require("./src/routes/versionRoutes");
 
-const PORT = process.env.PORT;
-const DB_CONNECTION_STRING = String(process.env.DB_CONNECTION);
 const app = express();
 
 // middle wares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.static(path.join(__dirname, "/../WebApp/")));
 app.use(express.static(path.join(__dirname, "/../WebApp/css")));
@@ -41,20 +41,4 @@ initializeVideoRoutes(app);
 initializeHierarchyRoutes(app);
 initializeVersionRoutes(app);
 
-// Connect to DB
-mongoose
-  .connect(DB_CONNECTION_STRING, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useCreateIndex: true
-  })
-  .then(() => console.log("Connected to MongoDB Atlas!"));
-
-try {
-  app.listen(PORT);
-  console.log(`Server listening on port ${PORT}`);
-} catch (e) {
-  console.error(e);
-  throw e;
-}
+module.exports = app;

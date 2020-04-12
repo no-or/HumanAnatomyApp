@@ -2,7 +2,7 @@ const express = require("express");
 const FlashcardModel = require("../models/flashcards");
 const verifyAdmin = require("../util/verifyToken");
 
-const initializeFlashcardRoutes = app => {
+const initializeFlashcardRoutes = (app) => {
   const flashcardRouter = express.Router();
   app.use("/flashcard", flashcardRouter);
 
@@ -10,9 +10,11 @@ const initializeFlashcardRoutes = app => {
   flashcardRouter.post("/", verifyAdmin, async (req, res) => {
     const flashcard = new FlashcardModel(req.body);
     try {
-      await flashcard.save().then(item => res.send(item));
+      await flashcard.save().then((item) => res.send(item));
     } catch (e) {
-      res.status(400).send(`Could not create the flashcard for ${e.message}`);
+      return res
+        .status(400)
+        .send(`Could not create the flashcard for ${e.message}`);
     }
   });
 
@@ -21,7 +23,9 @@ const initializeFlashcardRoutes = app => {
     try {
       const flashcard = await FlashcardModel.findById(req.params.id);
       if (flashcard === null) {
-        res.status(404).send(`No flashcard found with id ${req.params.id}`);
+        return res
+          .status(404)
+          .send(`No flashcard found with id ${req.params.id}`);
       } else {
         res.status(200).send(flashcard);
       }
@@ -39,13 +43,13 @@ const initializeFlashcardRoutes = app => {
     try {
       const flashcards = await FlashcardModel.find(req.query);
       if (flashcards === null || flashcards.length === 0) {
-        res.status(404).send(`No such flashcards found`);
+        return res.status(404).send(`No such flashcards found`);
       } else {
         res.status(200);
-        await res.json(flashcards);
+        res.json(flashcards);
       }
     } catch (e) {
-      res
+      return res
         .status(500)
         .send(
           `Could not get the flashcards with query ${req.query} for ${e.message}`
@@ -59,12 +63,14 @@ const initializeFlashcardRoutes = app => {
     try {
       const flashcard = await FlashcardModel.findByIdAndDelete(id);
       if (flashcard === null) {
-        res.status(404).send(`No flashcard found with id ${req.params.id}`);
+        return res
+          .status(404)
+          .send(`No flashcard found with id ${req.params.id}`);
       } else {
-        res.status(200).send(`removed the flashcard with id ${id}`);
+        return res.status(200).send(`removed the flashcard with id ${id}`);
       }
     } catch (e) {
-      res
+      return res
         .status(500)
         .send(
           `Could not remove the flashcard with id ${req.params.id} for ${e.message}`

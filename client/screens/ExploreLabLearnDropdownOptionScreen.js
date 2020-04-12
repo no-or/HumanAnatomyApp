@@ -19,6 +19,7 @@ import offline from "../Offline";
 
 const assets = require('../utils/assets')
 
+// This function returns a zoomable image for both android and ios platforms
 function Item({ content }) {
 
     return (
@@ -68,6 +69,7 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
         region: this.props.navigation.getParam("title", ""),
       }
 
+      // This logic below handles all the offline functionality
       this.off = new offline;
 
       let promise = new Promise((resolve, reject) => {
@@ -92,6 +94,7 @@ export default class ExploreLabLearnDropdownOptionScreen extends Component {
       });
     }
 
+    // This function retrieves the information based on the querried route
     apiFetch() {
       const {navigation} = this.props; 
       var host = HOST_NAME

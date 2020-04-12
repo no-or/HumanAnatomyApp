@@ -170,7 +170,7 @@ function addMenu(title) {
     ajaxPut(url, menu[0], function(result) {
     	console.log(result);
     }, function (error) {
-    	console.log(error);
+    	alert("unable to update menu\n error: " + error);
     }, 1)
     if(title) {
     	updateVersion("flashcard", title)

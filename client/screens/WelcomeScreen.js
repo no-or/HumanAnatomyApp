@@ -16,6 +16,7 @@ import colors from "../assets/colors"
 import { ButtonStyled } from "../components/ButtonStyled";
 import { HOST_NAME } from "../constants/Constants";
 
+// This function allows the user to tap anywhere in the screen to hide the keyboard
 const DismissKeyboard = ({children}) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     {children}
@@ -24,6 +25,7 @@ const DismissKeyboard = ({children}) => (
 
 export default class WelcomeScreen extends Component {
 
+  // Initializes Welcome Screen
   constructor(props) {
     super(props);
     this.state = {
@@ -36,7 +38,7 @@ export default class WelcomeScreen extends Component {
      this._isMounted = false;
   }
 
-
+  // Chooses the navigation options
   static navigationOptions = {
     title: "Welcome",
     headerStyle: {
@@ -53,6 +55,7 @@ export default class WelcomeScreen extends Component {
     this._retrieveData();
   }
 
+  // This code is in charge of determining whether this is the first time the user has done the questionaire
   _retrieveData = async () => {
     if (this._isMounted) {
       try {
@@ -66,6 +69,7 @@ export default class WelcomeScreen extends Component {
     }
   };
 
+  // This code stores the users that have done the questionnaire
   _storeData = async () => {
     try {
       await AsyncStorage.setItem('hasStats', '1');
@@ -80,6 +84,7 @@ export default class WelcomeScreen extends Component {
     this._isMounted = false;
   }
 
+  // This code is responsible for posting the questionaire answers to the database
   postStats = (university, degree, educationLevel, year) => {
     this._storeData()
     fetch(HOST_NAME + "/stat", {
@@ -103,6 +108,7 @@ export default class WelcomeScreen extends Component {
       });
   }
 
+  // This code reroutes the user to the 
   navigateRoot = () => {
     let {university, degree, educationLevel, year} = this.state;
     if (!university && !degree && !educationLevel && !year) {
@@ -113,6 +119,7 @@ export default class WelcomeScreen extends Component {
     }
   }
 
+  // This code is in charge of rendering all the content in this file
   render() {
     const {hasStats} = this.state;
     return (
