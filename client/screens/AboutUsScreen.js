@@ -110,6 +110,9 @@ export default class AboutUsScreen extends Component {
                   onPress={() => Linking.openURL(HOST_NAME+'/about.html')}>
               List of All Collaborators
             </Text>
+            <View style={styles.specialThanks}>
+              <Text style={styles.description}>Special thanks go to Dr. Paul Lucina and Dr. Terry Lee and all other Capstone faculties in the Department of Electrical & Computer Engineering at University of British Columba for their collaboration in the development of this APP.</Text>
+            </View>
             <View style={styles.divider}></View>
             <View style={styles.contactUs}>
               <Text style={styles.headerCU}>Contact Us</Text>
@@ -167,6 +170,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: '5%'
   },
   termsOfUse: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: '5%'
+  },
+  specialThanks: {
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: '5%'
