@@ -69,8 +69,8 @@ export default class AboutUsScreen extends Component {
            <ScrollView nestedScrollEnabled={true} style={{maxHeight: 350}}>
               <Text style={styles.header}>Project Lead and Content Expert</Text>
                 <View style={styles.item}><Text style={styles.title}>Majid Doroudi, B.Sc. (PT), M.Sc., Ph.D.</Text></View>
-              <Text style={styles.header}>Web-based Prototype Development</Text>
-                <View style={styles.item}><Text style={styles.title}>Emily Michael Hamel, M.Sc. (MD cand.)</Text></View>
+              <Text style={styles.header}>Concept and Web-based Prototype Development</Text>
+                <View style={styles.item}><Text style={styles.title}>Emily Michael Hamel M.Sc., MD (cand. UBC)</Text></View>
               <Text style={styles.header}>Software Developers</Text>
                 <View style={styles.item}><Text style={styles.title}>Adrian Viquez</Text></View>
                 <View style={styles.item}><Text style={styles.title}>Antonie Torossian</Text></View>
