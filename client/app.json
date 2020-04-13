@@ -30,7 +30,7 @@
     },
     "android": {
       "package": "com.ubc.humananatomyteachingapp",
-      "versionCode": 1
+      "versionCode": 1.1
     },
     "description": ""
   }
