@@ -65,7 +65,7 @@ export default class HomeScreen extends React.Component {
             style={styles.container}
           >
             <HomeCard
-              uri={'randomQuizImage'}
+              uri={'randomQuiz'}
               cardTitle="Random Quizzes"
               callback={() => this.randomPath("Quiz")}
             />
