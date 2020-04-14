@@ -16,6 +16,7 @@ const initializeExploreRoutes = require("./src/routes/exploreRoutes");
 const initializeVideoRoutes = require("./src/routes/videoRoutes");
 const initializeHierarchyRoutes = require("./src/routes/hierarchyRoutes");
 const initializeVersionRoutes = require("./src/routes/versionRoutes");
+const initializeContributorRoutes = require("./src/routes/contributorRoutes");
 
 const app = express();
 
@@ -40,5 +41,6 @@ initializeExploreRoutes(app);
 initializeVideoRoutes(app);
 initializeHierarchyRoutes(app);
 initializeVersionRoutes(app);
+initializeContributorRoutes(app);
 
 module.exports = app;

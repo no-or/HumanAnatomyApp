@@ -68,13 +68,17 @@ $(document).ready(function(){
     if(token){
         var name = parseJwt(token);
         if(name == "Majid Doroudi" || name == "Admin Admin" || name == "Kyle Martin"){
-            $(".sidebar-options").append('<li id="signup">Sign Up</li> <li id="codeManager">Code Manager</li>');
+            $(".sidebar-options").append('<li id="signup">Sign Up</li> <li id="codeManager">Code Manager</li> <li id="contributorManager"> Contributor Manager</li>');
             $("#signup").click(function(){
                 buildSignupMenu("Sign Up");
             })
 
             $("#codeManager").click(function(){
                 buildCodeMenu("Code Manager");
+            })
+
+            $("#contributorManager").click(function(){
+                buildContributorMenu("Contributor Manager");
             })
         }
 
@@ -101,6 +105,5 @@ function logout(){
         window.location.href = 'login.html'
     }
 }
-
 
 
