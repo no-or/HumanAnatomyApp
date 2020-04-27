@@ -3,6 +3,7 @@ const CodeModel = require("../models/code");
 const verifyAdmin = require("../util/verifyToken");
 const bcrypt = require("bcryptjs");
 const registerAdmin = require("../services/registerAdmin");
+const AdminModel = require("../models/admins");
 
 const initializeCodeRoutes = app => {
   const codeRouter = express.Router();
@@ -36,6 +37,25 @@ const initializeCodeRoutes = app => {
     if (!req.body.createdBy) {
       return res.status(400).send("Please send the appropriate request body");
     }
+
+    //Check if admin has access
+    try {
+      const adminLevel = await AdminModel.findOne({name: req.body.authorizedBy});
+      if (!adminLevel){
+        return res
+          .status(401)
+          .send(`You do not have access`);
+      }
+      if(adminLevel.accessLevel != 1){
+        return res
+          .status(401)
+          .send(`You do not have access`);
+      }
+    } catch (e) {
+      console.error(e);
+      return next(e);
+    }
+    
 
     const adminCode = await CodeModel.findOne({
       createdBy: req.body.createdBy
@@ -79,6 +99,20 @@ const initializeCodeRoutes = app => {
         .send(`We do not recognize ${req.body.authorizedBy}`);
     }
 
+    //Check if admin has access
+    const adminLevel = await AdminModel.findOne({name: req.body.authorizedBy});
+    if (!adminLevel){
+      return res
+        .status(401)
+        .send(`We do not recognize ${req.body.authorizedBy}`);
+    }
+    if(adminLevel.accessLevel != 1){
+      return res
+        .status(401)
+        .send(`We do not recognize ${req.body.authorizedBy}`);
+    }
+
+
     //Check if the code is right
     const validCode = await bcrypt.compare(req.body.code, code.code);
     if (!validCode) {
@@ -96,6 +130,21 @@ const initializeCodeRoutes = app => {
       return res.status(400).send("Please pass createdBy as a query param");
     }
     try {
+
+      //Check if admin has access
+      const adminLevel = await AdminModel.findOne({name: req.body.authorizedBy});
+      if (!adminLevel){
+        return res
+          .status(401)
+          .send(`We do not recognize ${req.body.authorizedBy}`);
+      }
+      if(adminLevel.accessLevel != 1){
+        return res
+          .status(401)
+          .send(`We do not recognize ${req.body.authorizedBy}`);
+      }
+
+      //Check if user has code and if it matches
       const code = await CodeModel.findOneAndRemove({
         createdBy: req.query.createdBy
       });

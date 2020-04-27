@@ -14,6 +14,20 @@ const initializeAdminRoutes = (app) => {
   adminRouter.delete("/:id", verifyAdmin, async (req, res, next) => {
     const id = req.params.id.trim();
     try {
+
+      //Check if admin has access
+      const adminLevel = await AdminModel.findOne({name: req.body.authorizedBy});
+      if (!adminLevel){
+        return res
+          .status(401)
+          .send(`We do not recognize ${req.body.authorizedBy}`);
+      }
+      if(adminLevel.accessLevel != 1){
+        return res
+          .status(401)
+          .send(`We do not recognize ${req.body.authorizedBy}`);
+      }
+
       const count = await AdminModel.countDocuments();
       if (count === 1) {
         return res
@@ -45,6 +59,20 @@ const initializeAdminRoutes = (app) => {
         );
     }
     try {
+
+      //Check if admin has access
+      const adminLevel = await AdminModel.findOne({name: req.body.authorizedBy});
+      if (!adminLevel){
+        return res
+          .status(401)
+          .send(`We do not recognize ${req.body.authorizedBy}`);
+      }
+      if(adminLevel.accessLevel != 1){
+        return res
+          .status(401)
+          .send(`We do not recognize ${req.body.authorizedBy}`);
+      }
+
       const count = await AdminModel.countDocuments();
       if (count === 1) {
         return res
@@ -131,6 +159,24 @@ const initializeAdminRoutes = (app) => {
           }
         }
       );
+    }
+  });
+
+  /* get all admin entities or by query */
+  adminRouter.get("/", verifyAdmin, async (req, res) => {
+    try {
+      const admins = await AdminModel.find({accessLevel: "0"});
+      if (admins === null || admins.length === 0) {
+        res.status(404).send(`No such admins found`);
+      } else {
+        res.status(200).send(admins);
+      }
+    } catch (e) {
+      res
+        .status(500)
+        .send(
+          `Could not get the admins for ${e.message}`
+        );
     }
   });
 };

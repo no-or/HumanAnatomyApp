@@ -29,6 +29,10 @@ const AdminSchema = new mongoose.Schema({
     required: true,
     min: 6,
     max: 255
+  },
+  accessLevel: {
+    type: String,
+    default: 0,
   }
 });
 

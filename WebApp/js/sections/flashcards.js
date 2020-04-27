@@ -1,7 +1,10 @@
-//need to make
 
+
+/**
+ * @desc sets up the Flashcard interface
+ * @param section - name of the current section (Flashcard)
+*/
 function flashcardLayout(flashcards){
-    console.log(flashcards)
     loadFlashcardManager();
     $(".question").remove()
     if(flashcards.length == 0){
@@ -21,6 +24,11 @@ function flashcardLayout(flashcards){
 }
 
 
+/**
+ * @desc sets up the interface once a flashcard section that is selected by the user
+ * @param thisElement - region menu element selected by the user
+ * @param flashcards - object of all the flashcards in the selected region
+*/
 function flashcardOnclick(thisElement, flashcards){
     $(".qselected").removeClass("qselected");
     $(thisElement).addClass("qselected")
@@ -35,6 +43,10 @@ function flashcardOnclick(thisElement, flashcards){
     $(".options-panel").append('<button onclick="deleteFlashcard()">Delete Flashcard</button><button onclick="makeNewFlashcard()">Make New Flashcard</button>') 
 }
 
+
+/**
+ * @desc sets up the flashcard interface for viewing content
+*/
 function loadFlashcardManager() {
     $(".management-area").empty();
     $(".image-gallery").remove()
@@ -47,6 +59,10 @@ function loadFlashcardManager() {
     $(".options-panel").append('<button onclick="deleteFlashcard()">Delete Flashcard</button><button onclick="makeNewFlashcard()">Make New Flashcard</button>')         
 }
 
+
+/**
+ * @desc changes the interface to allow the user to make a flashcard
+*/
 function makeNewFlashcard() {
     $(".options-panel").empty();
     $(".image-gallery").empty();
@@ -59,6 +75,10 @@ function makeNewFlashcard() {
     inputElement.addEventListener("change", handleFiles, false);
 }
 
+
+/**
+ * @desc gets all the needed content for the new flashcard and submits it to the server
+*/
 function submitFlashcard() {
     var data = {};
 
@@ -78,6 +98,7 @@ function submitFlashcard() {
         return;
     }
 
+    //image is new and being uploaded, must be added to s3 and the image manager
     if(imageSelectedSource == 1){
         var imageFile = document.forms.myform.elements.filename.files[0];
         if(!(imageFile)){
@@ -90,9 +111,10 @@ function submitFlashcard() {
             link.imageUrl = realLink;
             addFlashcard(data, link);
             addImage(data, link);
-        }, function(){
-            alert("image failed to be added")
+        }, function(error){
+            alert("image failed to be added. \nerror: " + error)
         },1);
+    //images was selected from the gallery and doesn't need to be added to s3
     } else{
         var link = {};
         link.imageUrl = $("#yourImage").attr("src");
@@ -100,12 +122,17 @@ function submitFlashcard() {
     }
 }
 
+
+/**
+ * @desc submits the new flashcard to the server 
+*/
 function addFlashcard(data, link) {
-    console.log(link.imageUrl)
     var data2 = data;
     data2.imageUrl = link.imageUrl
     ajaxPost(website + "/flashcard", data2, function(){
         alert("item added correctly");
+
+        //update the version of flashcards for this region
         if($(".subSubRegionSelected")[0]){
             $(".subSubRegionSelected").trigger("click");
             updateVersion("flashcard", $(".subSubRegionSelected").attr("title"))
@@ -113,21 +140,34 @@ function addFlashcard(data, link) {
             $(".subRegionSelected").trigger("click");
             updateVersion("flashcard", $(".subRegionSelected").attr("title"))
         }
+
     }, function(error){
         alert("item failed to be added\n error: " + error)
     },1);
 }
 
+
+/**
+ * @desc disables all the fields when viewing current flashcards
+*/
 function disableFlashcardFields(){
 	$("#question").prop("readonly", true);
 	$("#answer").prop("readonly", true);
 }
 
+
+/**
+ * @desc enables are explore fields for adding a new flashcard
+*/
 function enableFlashcardFields(){
     $("#question").val("").prop("readonly", false);
 	$("#answer").val("").prop("readonly", false);
 }
 
+
+/**
+ * @desc removes the current explore section from the database
+*/
 function deleteFlashcard(){
     var id = $(".qselected").attr("id")
     if(id == undefined){
@@ -138,6 +178,8 @@ function deleteFlashcard(){
     if(x){
         ajaxDelete(website+ "/flashcard/" + id, function(){
             alert("flashcard deleted");
+
+            //update the version of flashcards for this region
             if($(".subSubRegionSelected")[0]){
                 $(".subSubRegionSelected").trigger("click");
                 updateVersion("flashcard", $(".subSubRegionSelected").attr("title"))
@@ -145,6 +187,7 @@ function deleteFlashcard(){
                 $(".subRegionSelected").trigger("click");
                 updateVersion("flashcard", $(".subRegionSelected").attr("title"))
             }
+
         }, function(error){
             alert("flashcard was not deleted\n error: " + error);
         }, 1)

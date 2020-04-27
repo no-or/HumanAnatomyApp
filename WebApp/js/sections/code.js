@@ -1,5 +1,9 @@
-//code 
 
+
+/**
+ * @desc sets up the Code Manager interface
+ * @param section - name of the current section (Code Manager)
+*/
 function buildCodeMenu(section){
     $(".content").children().remove()
     $(".content").append('<div class="topbar"><h2 class="topbar-title">' + section + '</h2></div>')  
@@ -15,13 +19,17 @@ function buildCodeMenu(section){
 	$(".options-panel").append('<button onclick="deleteCodePressed()">Delete Code</button>')
 };
 
+
+/**
+ * @desc deletes the code of the current user
+*/
 function deleteCodePressed() {
 	var x = confirm("Are you sure you want to delete your Code?");
   		if(x){
 			var data = {};
 			var token = getCookie("accessToken")
 			if(!token){
-				alert("login again")
+				window.location.href = 'login.html'
 			}
 			data.createdBy = parseJwt(token);
 			url = website + '/code?createdBy=' + data.createdBy;
@@ -29,12 +37,15 @@ function deleteCodePressed() {
 				alert("code deleted, you can now make a new one")
 				$("#codeManager").trigger("click")
 			}, function(error) {
-				alert(error);
+				alert("There was an error deleting your code.\nerror: " + error);
 			}, 1)
 		}
 }
 
 
+/**
+ * @desc sets a new code for the current user, only if they do not currently have one
+*/
 function makeNewCode(){
 	if($("#code").val() == ""){
 		alert("Please fill in code field");
@@ -59,7 +70,6 @@ function makeNewCode(){
 		alert("success")
 		$("#codeManager").trigger("click")
 	}, function(error){
-		console.log(error)
 		alert("failed to add code, you already have one")
 	}, 1)
 }

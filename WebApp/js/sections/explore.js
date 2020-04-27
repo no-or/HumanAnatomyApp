@@ -1,7 +1,10 @@
 
 
+/**
+ * @desc sets up the Explore Lab interface
+ * @param section - name of the current section (Explore Lab)
+*/
 function exploreLayout(explore){
-    console.log(explore)
     loadExploreManager();
     $(".question").remove()
     if(explore.length == 0){
@@ -21,6 +24,11 @@ function exploreLayout(explore){
 }
 
 
+/**
+ * @desc sets up the interface once an explore section that is selected by the user
+ * @param thisElement - region menu element selected by the user
+ * @param explore - object of all the explore sections in the region
+*/
 function exploreOnclick(thisElement, explore){
     $(".qselected").removeClass("qselected");
     $(thisElement).addClass("qselected")
@@ -36,6 +44,10 @@ function exploreOnclick(thisElement, explore){
     $(".options-panel").append('<button onclick="deleteExplore()">Delete Explore Section</button><button onclick="makeNewExplore()">Make New Explore Section</button>') 
 }
 
+
+/**
+ * @desc sets up the explore manager interface for viewing content
+*/
 function loadExploreManager() {
     $(".management-area").empty();
     $(".image-gallery").remove()
@@ -48,6 +60,10 @@ function loadExploreManager() {
     $(".options-panel").append('<button onclick="deleteExplore()">Delete Explore Section</button><button onclick="makeNewExplore()">Make New Explore Section</button>')         
 }
 
+
+/**
+ * @desc changes the interface to allow the user to make a new explore section
+*/
 function makeNewExplore() {
     $(".options-panel").empty();
     $(".image-gallery").empty();
@@ -60,6 +76,10 @@ function makeNewExplore() {
     inputElement.addEventListener("change", handleFiles, false);
 }
 
+
+/**
+ * @desc gets all the needed content for the new explore section and submits it to the server
+*/
 function submitExplore() {
     var data = {};
     if($("#title").val() == ""){
@@ -78,19 +98,18 @@ function submitExplore() {
     data.explanation = $("#explanation").val();
     data.title = $("#title").val()
 
-
     if(imageSelectedSource == 2){
         alert("select an image");
         return;
     }
 
+    //image is new and being uploaded, must be added to s3 and the image manager
     if(imageSelectedSource == 1){
         var imageFile = document.forms.myform.elements.filename.files[0];
         if(!(imageFile)){
             alert("please select an image")
             return;
         }
-
         ajaxPostImage(website + "/image/s3", imageFile, function(link){
             var realLink = 'http://' + link.imageUrl;
             link.imageUrl = realLink;
@@ -99,7 +118,7 @@ function submitExplore() {
         }, function(error){
             alert("image failed to be added\nerror: " + error)
         }, 1);
-
+    //images was selected from the gallery and doesn't need to be added to s3
     } else{
         var link = {};
         link.imageUrl = $("#yourImage").attr("src");
@@ -108,12 +127,17 @@ function submitExplore() {
 
 }
 
+
+/**
+ * @desc submits the new explore section to the server 
+*/
 function addExplore(data, link) {
-    console.log(link.imageUrl)
     var data2 = data;
     data2.imageUrl =  link.imageUrl
     ajaxPost(website + "/explore", data2, function(){
         alert("item added correctly");
+
+        //update the version of explore section for this region
         if($(".subSubRegionSelected")[0]){
             $(".subSubRegionSelected").trigger("click");
             updateVersion("explore", $(".subSubRegionSelected").attr("title"))
@@ -121,24 +145,37 @@ function addExplore(data, link) {
             $(".subRegionSelected").trigger("click");
             updateVersion("explore", $(".subRegionSelected").attr("title"))
         }
+
     },
     function(error){
         alert("item failed to be added\n" + error)
     },1);
 }
 
+
+/**
+ * @desc disables all the fields when viewing current explore labs
+*/
 function disableExploreFields(){
 	$("#title").prop("readonly", true);
 	$("#explanation").prop("readonly", true);
 	$("#image").prop("readonly", true);
 }
 
+
+/**
+ * @desc enables are explore fields for adding a new explore section
+*/
 function enableExploreFields(){
     $("#title").val("").prop("readonly", false);
 	$("#explanation").val("").prop("readonly", false);
 	$("#image").val("").prop("readonly", false);
 }
 
+
+/**
+ * @desc removes the current explore section from the database
+*/
 function deleteExplore(){
     var id = $(".qselected").attr("id")
     if(id == undefined){
@@ -149,6 +186,8 @@ function deleteExplore(){
     if(x){
         ajaxDelete(website+ "/explore/" + id, function(){
             alert("Explore section deleted");
+
+            //update the version of explore section for this region
             if($(".subSubRegionSelected")[0]){
                 $(".subSubRegionSelected").trigger("click");
                 updateVersion("explore", $(".subSubRegionSelected").attr("title"))
@@ -156,6 +195,7 @@ function deleteExplore(){
                 $(".subRegionSelected").trigger("click");
                 updateVersion("explore", $(".subRegionSelected").attr("title"))
             }
+            
         }, function(error){
             alert("Explore section was not deleted\n error: " + error);
         })

@@ -1,3 +1,9 @@
+
+
+/**
+ * @desc sets up the Contributor Manager interface
+ * @param section - name of the current section (Contributor Manager)
+*/
 function buildContributorMenu(section){
     $(".content").children().remove()
     $(".content").append('<div class="topbar"><h2 class="topbar-title">' + section + '</h2></div>')  
@@ -17,7 +23,7 @@ function buildContributorMenu(section){
                 $(".video-area2").append('<div class="videoMenu" id="videoRegion' + regionNumber + '" />')
             }
 			$("#videoRegion" + regionNumber).append('<h3>' + result[item].name + '</h3>');
-			$("#videoRegion" + regionNumber).append('<div class="video" id="video' + item + '" title="' + result[item]._id + '"/>');
+			$("#videoRegion" + regionNumber).append('<div class="video" id="video' + item + '" name="'+ result[item].name +'" title="' + result[item]._id + '"/>');
 			$("#video" + item).append("<h4>" + result[item].title + "</h4>");
 			$("#video" + item).append('<button onclick="deleteContributor(' + item + ')">Delete Contributor</button>');
 			regionNumber++;
@@ -27,25 +33,42 @@ function buildContributorMenu(section){
         $(".options-panel").append('<button onclick="goAbout()">Go to contributors page</button>')        
 
     }, function (error){
-    	console.log(error)
+    	alert("unable to get all current contributors. \nerror: " + error)
     });    
 };
 
+
+/**
+ * @desc go the contributor page
+*/
 function goAbout(){
     window.location.href = 'about.html'
 }
 
-function deleteContributor(number){
-	var id = document.getElementById("video" + number).getAttribute('title');
+
+/**
+ * @desc deletes the corresponding contributor
+ * @param index - index of the contributor in the list of all contributors
+*/
+function deleteContributor(index){
+	var id = document.getElementById("video" + index).getAttribute('title');
+    var name = document.getElementById("video" + index).getAttribute('name')
 	var url = website + "/contributor/" + id;
-	ajaxDelete(url, function(result){
-		alert("contributor deleted")
-		$("#contributorManager").trigger("click")
-	}, function(error){
-		alert("contributor failed to be deleted\n error: " + error)
-	}, 1)
+    var x = confirm("Are you sure you want to delete contributor= " + name);
+    if(x){
+    	ajaxDelete(url, function(result){
+    		alert("contributor deleted")
+    		$("#contributorManager").trigger("click")
+    	}, function(error){
+    		alert("contributor failed to be deleted\n error: " + error)
+    	}, 1)
+    }
 }
 
+
+/**
+ * @desc changes the interface to allow for adding a new contributor
+*/
 function makeNewContributor() {
 	$(".management-area").empty();
 	$(".management-area").append('<div class="question-content"</div>')
@@ -57,9 +80,18 @@ function makeNewContributor() {
     $(".options-panel").append('<button onclick="cancelContributor()">Cancel</button>');
 }
 
+
+/**
+ * @desc resets the interface if the user cancels making a new contributor 
+*/
 function cancelContributor() {
     $("#contributorManager").trigger("click");
 }
+
+
+/**
+ * @desc get all contributor details submits the new contributor to the server
+*/
 function submitContributor() {
     var data = {};
     if($("#title").val() == ""){
@@ -73,11 +105,10 @@ function submitContributor() {
     data.title = $("#title").val()
     data.name = $("#name").val()
 
-
     ajaxPost(website + "/contributor", data, function(){
         alert("contributor added correctly");
         $("#contributorManager").trigger("click")
-    }, function(){
+    }, function(error){
         alert("contributor failed to be added\n error: " + error)
     },1);
 }

@@ -1,8 +1,16 @@
+
+
 $(document).ready(function(){
 	$("#login-form").submit(function( event ) {
 	    userLogin(event, $(this).serializeArray())
 	  });
 })
+
+/**
+ * @desc Logs in the user
+ * @param event - event of log in submission
+ * @param values - email and password used for logging in
+*/
 function userLogin(event, values) {
     var data = {
       email: values[0].value,

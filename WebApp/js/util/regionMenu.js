@@ -1,3 +1,5 @@
+
+
 var selectedRegion; //stored onclick function for lowest level regions
 var menu; //current menu objext
 
@@ -15,7 +17,6 @@ function buildRegionMenu(section, onClick){
     for(item in menu[0].regions){
         $(".selection-container").append('<li id="' + menu[0].regions[item].region.replace(/\s/g, '') + '"name="' + item + '"><h3 class="category-title">' + menu[0].regions[item].region + '</h3><h4 class="category-question-number"> 20 Questions | Default</h4></li>')
         $("#" + menu[0].regions[item].region.replace(/\s/g, '')).unbind().click(function(){
-            console.log(this.getAttribute("name"));
             menuChange(menu[0].regions[this.getAttribute("name")], menu[0].regions[this.getAttribute("name")].region.replace(/\s/g, ''))
         })
     }
@@ -25,6 +26,7 @@ function buildRegionMenu(section, onClick){
         menuManager();
     }
 };
+
 
 /**
  * @desc alters the menu when a top level region is selected
@@ -49,6 +51,7 @@ function menuChange(region, regionName) {
     }
 }
 
+
 /**
  * @desc alters the menu when a second level region is selected
  * @param region - tree representation of the selected region holding any subregions
@@ -72,6 +75,7 @@ function subMenuChange(region, regionName) {
     }
 }
 
+
 /**
  * @desc adds all the specified regions subregions to the menu 
  * @param region - tree representation of the selected region holding any subregions
@@ -80,7 +84,6 @@ function subMenuChange(region, regionName) {
  * @param onClick - called when the new menu items are clicked
 */
 function addMenuItems(region, regionName, regionLevel, onClick){
-    console.log(region)
     $(".subSubRegion").remove();
     $(".management-area").empty();
     $(".management-area").append('<img src="https://www.medicalexamprep.co.uk/wp-content/uploads/2017/10/Anatomy-Prep-Banner.jpg" id="banner">')
@@ -111,13 +114,13 @@ function addMenuItems(region, regionName, regionLevel, onClick){
     }
 }
 
+
 /**
  * @desc fetches all the menu hierarchy from the server and stores it in the global menu object
 */
 function getMenuObject() {
     ajaxGet(website + "/hierarchy" , function(response) {
         menu = JSON.parse(JSON.stringify(response));
-        console.log(menu)
     }, function(error){
         alert("could not load region menu \n error: " + error)
     })

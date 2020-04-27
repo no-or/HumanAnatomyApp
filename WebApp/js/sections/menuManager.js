@@ -1,4 +1,8 @@
 
+
+/**
+ * @desc sets up the Menu Manager interface
+*/
 function menuManager(){
     $(".content").children().remove()
     $(".content").append('<div class="topbar"><h2 class="topbar-title"> Menu Manager</h2></div>')  
@@ -22,6 +26,12 @@ function menuManager(){
     inputElement.addEventListener("change", menuHandleFiles, false);
 };
 
+
+/**
+ * @desc alters the menu when a top level region is selected
+ * @param region - tree representation of the selected region holding any subregions
+ * @param string regionName - name for the selected region
+*/
 function managerMenuChange(region, regionName) {
 	$(".subRegion").remove();
     $(".subSubRegion").remove();
@@ -48,9 +58,17 @@ function managerMenuChange(region, regionName) {
     }
 }
 
+
+
+/**
+ * @desc adds all the specified regions subregions to the menu 
+ * @param region - tree representation of the selected region holding any subregions
+ * @param string regionName - name for the selected region
+ * @param string regionLevel - level of the selected region (subRegion or region)
+ * @param onClick - called when the new menu items are clicked
+*/
 function addMenuManagerItems(region, regionName, regionLevel, onClick){
     $(".subSubRegion").remove();
-    //$(".question").remove();
     $("#" + regionName).addClass(regionLevel + "Selected");
     for(item in region.subRegions){
         $("#" + regionName).after('<li id="' + region.subRegions[item].subRegion.replace(/\s/g, '') + '"name="' + item +  '" class="subRegion"' +  ' title="' + region.subRegions[item].subRegion + '"> ' )
@@ -63,6 +81,9 @@ function addMenuManagerItems(region, regionName, regionLevel, onClick){
     }
 }
 
+/**
+ * @desc creates an uploadable image object for when the user uploads the question
+*/
 function menuHandleFiles() {
     const imageFile = this.files[0];
     var reader  = new FileReader();
@@ -79,6 +100,9 @@ function menuHandleFiles() {
      $(".options-panel").append('<button id="submit" onclick="submitMenu()">Submit</button>')
 }
 
+/**
+ * @desc gets all the needed content for the new Menu Region and submits it to the server
+*/
 function submitMenu() {
     var data = {};
   	if($("#regionName").val() == ""){
@@ -91,6 +115,7 @@ function submitMenu() {
   		alert("Please remove symbols from region name")
   		return;
   	}
+    //sub region is being added
   	if($(".regionSelected")[0]){
         var found = 0;
         var i = 0;
@@ -106,6 +131,7 @@ function submitMenu() {
         data.subRegion = $("#regionName").val();
         menu[0].regions[i].subRegions.push(data);
         addMenu(data.subRegion);
+    //main region is being added
     } else{
         var imageFile = document.forms.myform.elements.filename.files[0];
 		if(!(imageFile)){
@@ -128,6 +154,29 @@ function submitMenu() {
     }
 }
 
+
+/**
+ * @desc submits the new flashcard to the server 
+*/
+function addMenu(title) {
+    url = website + "/hierarchy";
+    ajaxPut(url, menu[0], function(result) {
+        
+    }, function (error) {
+        alert("unable to update menu\n error: " + error);
+    }, 1)
+    if(title) {
+        updateVersion("flashcard", title)
+        updateVersion("quiz", title)
+        updateVersion("explore", title)
+    }
+    $("#menuManager").trigger("click"); 
+}
+
+
+/**
+ * @desc removes the current Menu Region from the menu
+*/
 function deleteMenu(){
 	var found = 0;
     var i = 0;
@@ -162,20 +211,4 @@ function deleteMenu(){
 			addMenu();
 		}
 	}
-}
-
-
-function addMenu(title) {
-    url = website + "/hierarchy";
-    ajaxPut(url, menu[0], function(result) {
-    	console.log(result);
-    }, function (error) {
-    	alert("unable to update menu\n error: " + error);
-    }, 1)
-    if(title) {
-    	updateVersion("flashcard", title)
-    	updateVersion("quiz", title)
-    	updateVersion("explore", title)
-    }
-    $("#menuManager").trigger("click"); 
 }
