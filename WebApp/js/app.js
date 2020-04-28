@@ -1,15 +1,18 @@
 
 
 var website = "http://137.82.155.92:8090"
-
 //var website = "http://localhost:8090"
 
+
+/**
+* @desc Sets up the side column menu and links to their respective sections
+*
+*/
 $(document).ready(function(){
     updateAccessToken();
     getMenuObject();
 
     $("#quizzes").unbind().click(function(){
-        console.log(menu)
         buildRegionMenu("Quizzes", function(onClick, thisElement){
             ajaxGet(website + "/quiz?region=" + thisElement.title, function(response) {
                 quizLayout(response)
@@ -65,10 +68,11 @@ $(document).ready(function(){
         buildStatsMenu("User Analytics");
     })
     var token = getCookie("accessToken");
+    //only set admins will be able to modify admins so only show for them
     if(token){
         var name = parseJwt(token);
         if(name == "Majid Doroudi" || name == "Admin Admin" || name == "Kyle Martin"){
-            $(".sidebar-options").append('<li id="signup">Sign Up</li> <li id="codeManager">Code Manager</li> <li id="contributorManager"> Contributor Manager</li>');
+            $(".sidebar-options").append('<li id="signup">Sign Up</li> <li id="codeManager">Code Manager</li> <li id="contributorManager"> Contributor Manager</li><li id="adminManager"> Admin Manager</li>');
             $("#signup").click(function(){
                 buildSignupMenu("Sign Up");
             })
@@ -80,14 +84,19 @@ $(document).ready(function(){
             $("#contributorManager").click(function(){
                 buildContributorMenu("Contributor Manager");
             })
-        }
 
+            $("#adminManager").click(function(){
+                buildAdminMenu("Admin Manager");
+            })
+        }
     }
     $(".sidebar-options").append('<button onclick="logout()">Logout</button>');
 
 });
 
-
+/**
+* @desc Logs the user out removing all access to the webpage
+*/
 function logout(){
     var refreshToken = getCookie("refreshToken");
     if(refreshToken){

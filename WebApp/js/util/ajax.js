@@ -15,12 +15,12 @@ var ajaxDelete = function (url, onSuccess, onError, tryNumber){
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(xhttp.readyState == 4 && xhttp.status == 200) {
-            onSuccess(xhttp.responseText);            
+            newOnSuccess(xhttp.responseText);            
         }
         else {
             if(tryNumber == 2) {
                 if(xhttp.readyState == XMLHttpRequest.DONE)
-                onError(xhttp.responseText);
+                newOnError(xhttp.responseText);
             } else if(xhttp.readyState == XMLHttpRequest.DONE){
                 updateAccessToken(function(){
                     ajaxDelete(newUrl, newOnSuccess, newOnError, 2)
@@ -31,6 +31,11 @@ var ajaxDelete = function (url, onSuccess, onError, tryNumber){
 
 
     var token = getCookie("accessToken")
+    var name = parseJwt(token);
+    var data = {}
+    if(name){
+        data.authorizedBy = name;
+    }
     var accessToken = 'Bearer ' + token
     if(!(token)){
         window.location.href = 'login.html'
@@ -38,13 +43,14 @@ var ajaxDelete = function (url, onSuccess, onError, tryNumber){
         xhttp.open('DELETE', newUrl, true);
         xhttp.setRequestHeader('Authorization', accessToken);
         xhttp.setRequestHeader('Content-Type', "application/json")
-        xhttp.send();
+        xhttp.send(JSON.stringify(data));
     }
 }
 
 /**
  * @desc Ajax call for posting content
  * @param url - website url 
+ * @param data - data being added to the database
  * @param onSuccess - callback for a successful post
  * @param onError - callback for a failed post
  * @param tryNumber - number of attempts to post content, used for authentication synchronization. Set to 1 when calling.
@@ -54,23 +60,20 @@ var ajaxPost = function (url, data, onSuccess, onError, tryNumber){
     var newData = data;
     var newOnSuccess = onSuccess;
     var newOnError = onError;
-
-    console.log("posting\n url=" + url + "\n data = " + JSON.stringify(data) + "\n tryNumber = " + tryNumber) 
     
     var xhttp1 = new XMLHttpRequest();
 
     xhttp1.onreadystatechange = function() {
         if(xhttp1.readyState == 4 && xhttp1.status == 200) {
-            onSuccess(xhttp1.responseText);
+            newOnSuccess(xhttp1.responseText);
         }
         else {
             if(tryNumber == 2) { 
                 if(xhttp1.readyState == XMLHttpRequest.DONE){
-                    onError(xhttp1.responseText);
+                    newOnError(xhttp1.responseText);
                 }
             } else if(xhttp1.readyState == XMLHttpRequest.DONE){
                 updateAccessToken(function(){
-                    console.log("posting from inside post");
                     ajaxPost(newUrl, newData, newOnSuccess, newOnError, 2)
                 });
             }
@@ -79,6 +82,12 @@ var ajaxPost = function (url, data, onSuccess, onError, tryNumber){
 
     var token = getCookie("accessToken")
     var accessToken = 'Bearer ' + token
+    if(!data.authorizedBy){
+        var name = parseJwt(token);
+        if(name){
+            data.authorizedBy = name;
+        }
+    }
     if(!(token)){
         window.location.href = 'login.html'
     }else{
@@ -110,12 +119,12 @@ var ajaxPostImage = function (url, file, onSuccess, onError, tryNumber){
 
     xhttp.onreadystatechange = function() {
         if(xhttp.readyState == 4 && xhttp.status == 200) {
-            onSuccess(JSON.parse(xhttp.responseText));
+            newOnSuccess(JSON.parse(xhttp.responseText));
         }
         else {
             if(tryNumber == 2) {
                 if(xhttp.readyState == 4){
-                    onError(xhttp.responseText);
+                    newOnError(xhttp.responseText);
                 }
             } else if(xhttp.readyState == 4){
                 updateAccessToken(function(){
@@ -138,6 +147,13 @@ var ajaxPostImage = function (url, file, onSuccess, onError, tryNumber){
 
 }
 
+
+/**
+ * @desc Ajax call for getting content
+ * @param url - website url 
+ * @param onSuccess - callback for a successful post
+ * @param onError - callback for a failed post
+*/
 var ajaxGet = function (url, onSuccess, onError) {
     var newUrl = url;
     var newOnSuccess = onSuccess;
@@ -148,14 +164,10 @@ var ajaxGet = function (url, onSuccess, onError) {
     xhttp.timeout = 5000;
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState == XMLHttpRequest.DONE && xhttp.status == 200) {
-            console.log("response: ");
-            console.log(typeof(JSON.parse(xhttp.responseText)));
             newOnSuccess(JSON.parse(xhttp.responseText));
         }
         else {
             if (i > 2) {
-                console.log("error: ");
-                console.log(xhttp.responseText);
                 if(xhttp.status == 404){
                     var obj = [];
                     newOnSuccess(obj);
@@ -169,17 +181,20 @@ var ajaxGet = function (url, onSuccess, onError) {
         }
     }
     xhttp.ontimeout = function (e) {
-        alert("fail")
-        console.log("error: ");
-        console.log("timeout");
-        newOnError(xhttp.responseText);
+        newOnError(e);
     }
     xhttp.open("GET", newUrl, true);
     xhttp.send();
 }
 
 
-
+/**
+ * @desc Ajax call for getting content requiring authentication
+ * @param url - website url 
+ * @param onSuccess - callback for a successful post
+ * @param onError - callback for a failed post
+ * @param tryNumber - number of attempts to post content, used for authentication synchronization. Set to 1 when calling.
+*/
 var ajaxGetAuth = function (url, onSuccess, onError, tryNumber) {
     var newUrl = url;
     var newOnSuccess = onSuccess;
@@ -215,10 +230,7 @@ var ajaxGetAuth = function (url, onSuccess, onError, tryNumber) {
         }
     }
     xhttp.ontimeout = function (e) {
-      alert("fail")
-        console.log("error: ");
-        console.log("timeout");
-        newOnError(xhttp.responseText);
+        newOnError(e);
     }
 
     var token = getCookie("accessToken")
@@ -233,7 +245,11 @@ var ajaxGetAuth = function (url, onSuccess, onError, tryNumber) {
 }
 
 
-
+/**
+ * @desc Gets a new accessToken to continue using the web portal
+ * @param onSuccess - function to call once the accessToken is refreshed, used
+ *                    to redo ajax call with new token
+*/
 var updateAccessToken = function(onSuccess) {
     var newOnSuccess = onSuccess;
     var refreshToken = getCookie("refreshToken");
@@ -248,7 +264,6 @@ var updateAccessToken = function(onSuccess) {
             if (xhttp.readyState == XMLHttpRequest.DONE && xhttp.status == 200) {
                 var response = JSON.parse(xhttp.responseText);
                 if(response.accessToken){
-                    //console.log("new token: " + response.accessToken)
                     setCookie("accessToken", response.accessToken);
                     if(newOnSuccess){
                         newOnSuccess()
@@ -259,8 +274,6 @@ var updateAccessToken = function(onSuccess) {
             }
             else {
                 if (i > 2) {
-                    console.log("error: ");
-                    console.log(xhttp.responseText);
                     window.location.href = 'login.html'
                     i = 0;
                 }else{
@@ -271,13 +284,19 @@ var updateAccessToken = function(onSuccess) {
         xhttp.open("POST", newUrl, true);
         xhttp.setRequestHeader('Content-Type', "application/json")
         xhttp.send(JSON.stringify(body));
-
     } else{
         window.location.href = 'login.html'
     }
 }
 
-
+/**
+ * @desc Ajax call for updating content
+ * @param url - website url 
+ * @param data - updated data object
+ * @param onSuccess - callback for a successful post
+ * @param onError - callback for a failed post
+ * @param tryNumber - number of attempts to post content, used for authentication synchronization. Set to 1 when calling.
+*/
 var ajaxPut = function (url, data, onSuccess, onError, tryNumber){
     var newUrl = url;
     var newData = data;
@@ -316,6 +335,13 @@ var ajaxPut = function (url, data, onSuccess, onError, tryNumber){
 
 }
 
+
+/**
+ * @desc Updates the version number of content. Each region gets updated when content is modified signalling the app
+ *       to download the new content if it is selected for offline capability on the users phone
+ * @param mod - module that has been updated (quiz, flashcard, or explore)
+ * @param region - region that has been updated (lowest level region in menu)
+*/
 var updateVersion = function(mod, region) {
     var data = {};
     var url = website + '/version?module=' + mod + "&subRegion=" + region;
@@ -327,7 +353,7 @@ var updateVersion = function(mod, region) {
             ajaxPut(url, data, function(result) {
 
             }, function(error) {
-                console.log(error);
+                alert("error updating version \nerror:" + error);
             }, 1)
         } else{
             data.module = mod;
@@ -335,10 +361,10 @@ var updateVersion = function(mod, region) {
             ajaxPost(url, data, function(result) {
 
             }, function(error){
-                console.log(error);
+                alert("error updating version \nerror:" + error);
             }, 1)
         }
     }, function(error) {
-        console.log(error);
+        alert("error updating version \nerror:" + error);
     })
 }

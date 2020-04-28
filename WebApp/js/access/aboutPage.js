@@ -1,7 +1,11 @@
 
+
 var website = "http://137.82.155.92:8090"
 //var website = "http://localhost:8090"
 
+/**
+ * @desc gets and displays all contributors
+*/
 $(document).ready(function(){
 	ajaxGet(website + "/contributor", function(contributors) {
 		if(contributors == null || contributors.length == 0){

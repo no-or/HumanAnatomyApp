@@ -1,4 +1,5 @@
 
+
 /**
  * @desc sets a cookie for to a desired value
  * @param string name - name of the cookie
@@ -16,6 +17,7 @@ function setCookie(name, value, hours) {
     }
     document.cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value) + expires + "; path=/";
 }
+
 
 /**
  * @desc gets the value from a desired cookie
@@ -35,6 +37,7 @@ function getCookie(name) {
     return null;
 }
 
+
 /**
  * @desc deletes a specified cookie
  * @param string name - name of the cookie to be deleted
@@ -43,6 +46,11 @@ function eraseCookie(name) {
     setCookie(name, "", -1);
 }
 
+
+/**
+ * @desc gets the name of the current user from a jwt token stored in a cookie
+ * @param token - jwt token needing to be parsed 
+*/
 function parseJwt (token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');

@@ -1,5 +1,10 @@
 
 
+/**
+ * @desc builds the interface for managing videos
+ * @param string section - representation for the current section (Singup Menu)
+ * @param function onClick - called when the lowest level region is selected
+*/
 function buildVideoMenu(section, onClick){
     $(".content").children().remove()
     $(".content").append('<div class="topbar"><h2 class="topbar-title">' + section + '</h2></div>')  
@@ -37,10 +42,14 @@ function buildVideoMenu(section, onClick){
  		$(".options-panel").append('<button onclick="makeNewVideo()">Add New Video</button>')         
 
     }, function (error){
-    	console.log(error)
+    	alert("unable to set up region menu \nerror: " + error);
     });    
 };
 
+
+/**
+ * @desc deletes the selected video from the database
+*/
 function deleteVideo(number){
 	var id = document.getElementById("video" + number).getAttribute('title');
 	var url = website + "/video/" + id;
@@ -52,6 +61,10 @@ function deleteVideo(number){
 	}, 1)
 }
 
+
+/**
+ * @desc changes the interface to allow the user to make a new video
+*/
 function makeNewVideo() {
 	$(".management-area").empty();
 	$(".management-area").append('<div class="question-content"</div>')
@@ -64,9 +77,18 @@ function makeNewVideo() {
     $(".options-panel").append('<button onclick="cancelVideo()">Cancel</button>');
 }
 
+
+/*
+ *@desc changes the inreface from making a new video to viewing current ones
+*/ 
 function cancelVideo() {
     $("#videoManager").trigger("click");
 }
+
+
+/**
+ * @desc gets all the needed content for the new video and submits it to the server
+*/
 function submitVideo() {
     var data = {};
     if($("#title").val() == ""){

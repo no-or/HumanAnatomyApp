@@ -1,3 +1,5 @@
+
+
 var imageSelectedSource = 2; //used to determine if the user uploaded an image or selected an already existing one
 
 /**
@@ -7,7 +9,6 @@ var imageSelectedSource = 2; //used to determine if the user uploaded an image o
 function buildImageScroll(region) {
     ajaxGet(website + "/image?region=" + region, function(response) {
         $(".image-gallery").empty();
-        console.log(response)
         column1Length = response.length/2;
         column2Length = response.length/2;
         if(response.length == 0){
@@ -40,7 +41,6 @@ function buildImageScroll(region) {
 */
 function pictureSelected(imageSelected) {
     var id = "imageScroll" + imageSelected; 
-    console.log(id);
     var imageUrl = $("#imageScroll" + imageSelected).attr("src");
     var imageId = $("#imageScroll" + imageSelected).attr("title");
     $(".image-gallery").empty();
@@ -108,9 +108,9 @@ function addImage(data, link) {
     var data3 = {};
     data3.region = data.region;
     data3.imageUrl =  link.imageUrl;
-    ajaxPost(website + "/image", data3, function(){
+    ajaxPost(website + "/image", data3, function(result){
     },
-    function(){
-        alert("iamge failed to be added to scroll")
+    function(error){
+        alert("image failed to be added to scroll\nerror: " + error)
     });
 }

@@ -1,5 +1,9 @@
 
-
+/**
+ * @desc builds the interface for viewing statistics
+ * @param string section - representation for the current section (Singup Menu)
+ * @param function onClick - called when the lowest level region is selected
+*/
 function buildStatsMenu(section, onClick){
     $(".content").children().remove()
     $(".content").append('<div class="topbar"><h2 class="topbar-title">' + section + '</h2></div>')  
@@ -18,7 +22,8 @@ function buildStatsMenu(section, onClick){
     	var educationNum = [];
     	var year = [];
     	var yearNum = [];
-
+        
+        //parse all the data
     	for(item in result){
     		if(result[item].university){
 	    		var uniIndex = universities.indexOf(result[item].university.toLowerCase())
@@ -60,6 +65,7 @@ function buildStatsMenu(section, onClick){
 	    		}
 	    	}
     	}
+
         $(".management-area").append('<div id="uniT" class=statTable/>');
         $(".management-area").append('<div id="degT" class=statTable/>');
         $(".management-area").append('<div id="eduT" class=statTable/>');
@@ -74,6 +80,8 @@ function buildStatsMenu(section, onClick){
     	$("#degreeTable").append('<tr><th> Degree </th>' + '<th> Number of users </th></tr>')
     	$("#educationTable").append('<tr><th> Education Level </th>' + '<th> Number of users </th></tr>')
     	$("#yearTable").append('<tr><th> Education Year </th>' + '<th> Number of users </th></tr>')
+
+        //fill all the data
     	for(item in universities){
     		$("#uniTable").append('<tr><th>' + universities[item] + "</th>" + '<th>' + universityNum[item] + "</th></tr>")
     	}    

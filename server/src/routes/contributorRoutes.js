@@ -1,6 +1,7 @@
 const express = require("express");
 const ContributorModel = require("../models/contributor");
 const verifyAdmin = require("../util/verifyToken");
+const AdminModel = require("../models/admins");
 
 const initializeContributorRoutes = app => {
   const contributorRouter = express.Router();
@@ -10,7 +11,21 @@ const initializeContributorRoutes = app => {
   contributorRouter.post("/", verifyAdmin, async (req, res) => {
     const contributor = new ContributorModel(req.body);
     try {
+
+      //Check if admin has access
+      const adminLevel = await AdminModel.findOne({name: req.body.authorizedBy});
+      if (!adminLevel){
+        return res
+          .status(401)
+          .send(`We do not recognize ${req.body.authorizedBy}`);
+      }
+      if(adminLevel.accessLevel != 1){
+        return res
+          .status(401)
+          .send(`We do not recognize ${req.body.authorizedBy}`);
+      }
       await contributor.save().then(item => res.send(item));
+
     } catch (e) {
       res.status(400).send(`Could not create the contributor for ${e.message}`);
     }
@@ -40,6 +55,20 @@ const initializeContributorRoutes = app => {
   contributorRouter.delete("/:id", verifyAdmin,  async (req, res) => {
     const id = req.params.id.trim();
     try {
+
+      //Check if admin has access
+      const adminLevel = await AdminModel.findOne({name: req.body.authorizedBy});
+      if (!adminLevel){
+        return res
+          .status(401)
+          .send(`We do not recognize ${req.body.authorizedBy}`);
+      }
+      if(adminLevel.accessLevel != 1){
+        return res
+          .status(401)
+          .send(`We do not recognize ${req.body.authorizedBy}`);
+      }
+
       const contributor = await ContributorModel.findOneAndRemove({ _id: id });
       if (contributor === null || contributor.length === 0) {
         res.status(404).send(`No contributor found with id ${req.params.id}`);

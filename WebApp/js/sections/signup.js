@@ -1,4 +1,8 @@
 
+/**
+ * @desc builds the interface for signing new admins up
+ * @param string section - representation for the current section (Singup Menu)
+*/
 function buildSignupMenu(section){
     $(".content").children().remove()
     $(".content").append('<div class="topbar"><h2 class="topbar-title">' + section + '</h2></div>')  
@@ -16,6 +20,9 @@ function buildSignupMenu(section){
 	$(".options-panel").append('<button onclick="makeNewAdmin()">Submit Admin</button>')   
 };
 
+/**
+ * @desc gets all the needed content for the new admin and submits it to the server
+*/
 function makeNewAdmin(){
 	if($("#code").val() == ""){
 		alert("Please fill in code field");
@@ -55,7 +62,6 @@ function makeNewAdmin(){
 		alert("success")
 		$("#signup").trigger("click")
 	}, function(error){
-		console.log(error)
 		alert("failed to add admin, double check Both names have at least first and last names\n error: " + error)
 	}, 1)
 }

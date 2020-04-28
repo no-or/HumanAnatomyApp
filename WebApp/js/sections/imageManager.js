@@ -1,7 +1,10 @@
 
 
+/**
+ * @desc sets up the Image Manager interface
+ * @param section - name of the current section (Image Manager)
+*/
 function imageLayout(image){
-	console.log(image)
 	$(".management-area").empty();
 	$(".image-gallery").remove()
 	$(".management-area").append('<div class="image-gallery"></div>')
@@ -11,6 +14,9 @@ function imageLayout(image){
 	$(".options-panel").append('<button id="imageDeleteButton" onclick="deleteImage()">Delete Image</button>')
 }
 
+/**
+ * @desc deletes the selected image from s3
+*/
 function deleteImage(){
 	var imageID = $("#yourImage").attr("title");
 	if(!imageID){

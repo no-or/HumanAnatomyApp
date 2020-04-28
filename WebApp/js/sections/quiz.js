@@ -1,25 +1,10 @@
 
-function quizOptionSelected(number){
-    $(".optionSelected").removeClass("optionSelected")
-    switch(number) {
-        case 1: 
-        $("#opt-1").addClass("optionSelected");
-        break;
-    case 2: 
-        $("#opt-2").addClass("optionSelected");
-        break;
-    case 3: 
-        $("#opt-3").addClass("optionSelected");
-        break;
-    case 4: 
-        $("#opt-4").addClass("optionSelected");
-        break;
-    default : alert("none selected")
-    }
-}
 
+/**
+ * @desc sets up the Quizzes interface
+ * @param section - name of the current section (Quizzes)
+*/
 function quizLayout(quizzes){
-    console.log(quizzes)
     loadQuizManager();
     $(".question").remove()
     if(quizzes.length == 0){
@@ -38,6 +23,12 @@ function quizLayout(quizzes){
     }
 }
 
+
+/**
+ * @desc sets up the interface once a quiz section that is selected by the user
+ * @param thisElement - region menu element selected by the user
+ * @param quizzes - object of all the quizzes in the selected region
+*/
 function quizOnclick(thisElement, quizzes){
     $(".qselected").removeClass("qselected");
     $(thisElement).addClass("qselected")
@@ -72,6 +63,10 @@ function quizOnclick(thisElement, quizzes){
     $(".options-panel").append('<button onclick="deleteQuiz()">Delete Question</button><button onclick="makeNewQuiz()">Make New Quiz</button>') 
 }
 
+
+/**
+ * @desc sets up the flashcard interface for viewing content
+*/
 function loadQuizManager() {
     $(".management-area").empty();
     $(".management-area").append('<div class="question-content"</div>')
@@ -90,6 +85,10 @@ function loadQuizManager() {
     $(".options-panel").append('<button onclick="deleteQuiz()">Delete Question</button><button onclick="makeNewQuiz()">Make New Quiz</button>')   
 }
 
+
+/**
+ * @desc changes the interface to allow the user to make a quiz
+*/
 function makeNewQuiz() {
     $(".options-panel").empty();
     $(".image-gallery").empty();
@@ -103,6 +102,34 @@ function makeNewQuiz() {
     buildImageScroll(region);
 }
 
+
+/**
+ * @desc highlights which option was selected as the correct answer for the multiple choice quize=
+ * @param number - number of the selected option (1=A, 2=B, 3=C, 4=D)
+*/
+function quizOptionSelected(number){
+    $(".optionSelected").removeClass("optionSelected")
+    switch(number) {
+        case 1: 
+        $("#opt-1").addClass("optionSelected");
+        break;
+    case 2: 
+        $("#opt-2").addClass("optionSelected");
+        break;
+    case 3: 
+        $("#opt-3").addClass("optionSelected");
+        break;
+    case 4: 
+        $("#opt-4").addClass("optionSelected");
+        break;
+    default : alert("none selected")
+    }
+}
+
+
+/**
+ * @desc gets all the needed content for the new quiz and submits it to the server
+*/
 function submitQuiz() {
     var data = {};
     if($("#question").val() == ""){
@@ -143,6 +170,7 @@ function submitQuiz() {
     data.explanation = [$("#explanation").val()];
     data.question = $("#question").val()
 
+    //image is new and being uploaded, must be added to s3 and the image manager
     if(imageSelectedSource == 1){
         var imageFile = document.forms.myform.elements.filename.files[0];
         if(!(imageFile)){
@@ -158,6 +186,8 @@ function submitQuiz() {
         }, function(error){
             alert("image failed to be added\n error: " + error)
         },1);
+
+        //images was selected from the gallery and doesn't need to be added to s3
     } else{
         var link = {};
         link.imageUrl = $("#yourImage").attr("src");
@@ -165,12 +195,17 @@ function submitQuiz() {
     }
 }
 
+
+/**
+ * @desc submits the new quiz to the server 
+*/
 function addQuiz(data, link) {
-    console.log(link.imageUrl)
     var data2 = data;
     data2.imageUrl =  link.imageUrl
     ajaxPost(website + "/quiz", data2, function(){
         alert("item added correctly");
+
+        //update the version of quizzes for this region
         if($(".subSubRegionSelected")[0]){
             $(".subSubRegionSelected").trigger("click");
             updateVersion("quiz", $(".subSubRegionSelected").attr("title"))
@@ -178,11 +213,16 @@ function addQuiz(data, link) {
             $(".subRegionSelected").trigger("click");
             updateVersion("quiz", $(".subRegionSelected").attr("title"))
         }
+
     }, function(error){
         alert("item failed to be added\n error: " + error)
     },1);
 }
 
+
+/**
+ * @desc disables all the fields when viewing current quizzes
+*/
 function disableQuizFields(){
     $("#opt-1").prop("readonly", true);
     $("#opt-2").prop("readonly", true);
@@ -197,6 +237,10 @@ function disableQuizFields(){
     $("#image").prop("disabled", true);
 }
 
+
+/**
+ * @desc enables are explore fields for adding a new quiz
+*/
 function enableQuizFields(){
     $("#opt-1").val("").prop("readonly", false)
     $("#opt-2").val("").prop("readonly", false)
@@ -211,6 +255,10 @@ function enableQuizFields(){
     $("#image").val("").prop("disabled", false);
 }
 
+
+/**
+ * @desc removes the current quiz from the database
+*/
 function deleteQuiz(){
     var id = $(".qselected").attr("id")
     if(id == undefined){
@@ -221,6 +269,8 @@ function deleteQuiz(){
     if(x){
         ajaxDelete(website+ "/quiz/" + id, function(){
             alert("question deleted");
+
+            //update the version of quizzes for this region
             if($(".subSubRegionSelected")[0]){
                 $(".subSubRegionSelected").trigger("click");
                 updateVersion("quiz", $(".subSubRegionSelected").attr("title"))
@@ -228,6 +278,7 @@ function deleteQuiz(){
                 $(".subRegionSelected").trigger("click");
                 updateVersion("quiz", $(".subRegionSelected").attr("title"))
             }
+
         }, function(error){
             alert("question was not deleted\n error: " + error);
         })
