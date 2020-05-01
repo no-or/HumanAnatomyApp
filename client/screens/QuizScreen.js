@@ -344,7 +344,7 @@ export default class Quizzes extends Component {
             <View style={styles.scoreNumberContainer}>
               <Text style={styles.scoreNumber}>{"Correct: " + this.state.score}</Text>
               <Text style={styles.scoreNumber}>{"Incorrect: " + (this.state.questions.length - this.state.score)}</Text>
-              <Text style={styles.scoreNumber}>{"Percentage: " + (this.state.score/this.state.questions.length*100) + "%"}</Text>
+              <Text style={styles.scoreNumber}>{"Percentage: " + (Number(this.state.score/this.state.questions.length*100)).toFixed(2) + "%"}</Text>
             </View>
           </View>
         }
