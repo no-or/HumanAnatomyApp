@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { NetInfo, ScrollView, StyleSheet, SafeAreaView, View, Platform, Image, Text, Button, Dimensions, Alert } from "react-native";
-// import { useNetInfo } from "@react-native-community/netinfo";
+import { ScrollView, StyleSheet, SafeAreaView, View, Platform, Image, Text, Button, Dimensions, Alert } from "react-native";
 import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
 import colors from "../assets/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -134,14 +133,7 @@ export default class Quizzes extends Component {
       if(data == undefined) { // pull data from server
         // Check if device is offline
         // If online pull data from server
-        NetInfo.getConnectionInfo().then(state => {
-          // alert(state.type);
-          if (state.type !== "none" && state.type !== "unknown") {
-            this.apiFetch();
-          } else {
-            Alert.alert("You are offline, or there was an issue with the server!");
-          }
-        });
+        this.apiFetch();
       } else { // use local data from LocalStorage
         var questions = data.map(question => {
           var answerColors = {};
